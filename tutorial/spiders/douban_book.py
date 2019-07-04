@@ -43,14 +43,32 @@ class DoubanBookSpider(scrapy.Spider):
     def parse(self, response):
         # js = json.loads(response.body)
         # html = js['html']
-        TITLE_SEL = '#wrapper > h1 > span::text';
+        DETAIL_BOOK_INFO_BLOCK_SEL = '#info';
+        DETAIL_PAGE_BOOK_INFO_LEN_SEL = '#info > span';
+        DETAIL_PAGE_BOOK_INFO_SEL = '#info > span:nth-child(INDEX)';
+        DETAIL_RATING_NUMBER_SEL = '#interest_sectl > div > div.rating_self.clearfix > strong';
+        DETAIL_RATING_USER_NUMBER_SEL = '#interest_sectl > div > div.rating_self.clearfix > div > div.rating_sum > span > a';
+        // DETAIL_BRIEF_SEL = '#link-report > span.short > div.intro';
+        DETAIL_BRIEF_SEL = '#link-report > * > div.intro';
+        // DETAIL_AUTHOR_BRIEF_SEL = 'div.related_info > div:nth-child(1) > * > div.intro';
+        DETAIL_AUTHOR_BRIEF_SEL ='#content > div > div.article > div.related_info > div:nth-child(4) > div > div';
+        DETAIL_TAGS_SEL = '#db-tags-section > div.indent  > span:nth-child(INDEX) > a';
+        DETAIL_TAGS_SEL2 = '#db-tags-section > div.indent  > span ';
+        DETAIL_TAGS_LEN_SEL = '#db-tags-section > div.indent > span';
+        DETAIL_COMMENTS = '#content > div > div.article > div.related_info > div.mod-hd > h2 > span.pl > a';
+        SEARCH_URL_TEMPLATE = 'https://book.douban.com/subject_search?search_text=ISBN&cat=1001';
+        REC_SECTION_SEL = '#db-rec-section > div > dl';
+        REC_SECTION_ARRAY_SEL = '#db-rec-section > div > dl > dt > a';
+        TITLE_SEL = '#wrapper > h1 > span';
+        COVER_SEL = '#mainpic > a > img';
+        TITLE_SEL = '#wrapper > h1 > span';
         titleXpath = '//*[@id="wrapper"]/h1/span/text()';
         recommendsXpath = '//*[@id="db-rec-section"]/div';
         r1Xpath = '//*[@id="db-rec-section"]/div/dl[1]/dd';
         title = response.css(TITLE_SEL);
         items = response.xpath(r1Xpath);
         print('book title:');
-        print(title.extract_first());
+        print(title.css(::text).extract_first());
         host = 'https://book.douban.com'
         x = 1
         y = 1
