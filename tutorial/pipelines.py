@@ -92,6 +92,26 @@ class ZhipinPipeline(object):
         self.file.write(line)
         return item
 
+class DoubanBookPipeline(object):
+    def open_spider(self, spider):
+        # self.file = open('output3.json', 'w')
+    def close_spider(self, spider):
+        # self.file.close()
+    def process_item(self, item, spider):
+        # client = pymongo.MongoClient(host="127.0.0.1", port=27017)
+        # db = client['job']
+        # collection =  db['position']
+        # # item['salary'] = clear_salary(item['salary'])
+        # # item['create_time'] = clear_time(item['create_time'])
+        # # item['educational'] = clean_education(item['educational'],item['body'])
+        # # is_php = clean_name(item['position_name'])
+        # # if is_php is True:
+        # collection.insert(dict(item))
+        # client.close()
+        # line = json.dumps(dict(item)) + "\n"
+        # self.file.write(line)
+        return item
+
 class BossOfMinePipeline(object):
     def open_spider(self, spider):
         self.file = open('output3.json', 'w')
