@@ -7,6 +7,21 @@
 
 from scrapy import signals
 from scrapy.conf import settings
+from tutorial.resource import USER_AGENT_LIST
+from tutorial.resource import PROXIES
+
+import random
+
+class RandomProxy(object):
+    def process_request(self,request, spider):
+        proxy = random.choice(PROXIES)
+        request.meta['proxy'] = 'http://%s'% proxy
+
+class RandomUserAgent(object):
+    def process_request(self, request, spider):
+        ua = random.choice(USER_AGENT_LIST)
+        request.headers.setdefault('User-Agent', ua)
+
 
 class TutorialSpiderMiddleware(object):
     # Not all methods need to be defined. If a method is not defined,
@@ -59,7 +74,6 @@ class TutorialSpiderMiddleware(object):
 class ProxyMiddleware(object):
 
     def process_request(self, request, spider):
-
         request.meta['proxy'] = settings.get('HTTP_PROXY')
         pass
 
