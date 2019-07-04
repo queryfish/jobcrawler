@@ -15,6 +15,7 @@ import  random
 import redis
 from scrapy.conf import settings
 
+
 #zhipin 爬虫
 class DoubanBookSpider(scrapy.Spider):
 
@@ -32,10 +33,10 @@ class DoubanBookSpider(scrapy.Spider):
         "ITEM_PIPELINES":{
             'tutorial.pipelines.DoubanBookPipeline': 300,
         },
-        # "DOWNLOADER_MIDDLEWARES":{
-        #     'tutorial.middlewares.ScriptSlugMiddleware': 299,
-        #  #   'tutorial.middlewares.ProxyMiddleware':301
-        # },
+        "DOWNLOADER_MIDDLEWARES":{
+            'tutorial.middlewares.RandomUserAgent': 299,
+           'tutorial.middlewares.RandomProxy':301
+        },
         "DEFAULT_REQUEST_HEADERS":{
             'Accept': 'application/json',
             'Accept-Language': 'zh-CN,zh;q=0.9',
