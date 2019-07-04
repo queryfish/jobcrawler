@@ -45,10 +45,11 @@ class DoubanBookSpider(scrapy.Spider):
         # html = js['html']
         titleXpath = '//*[@id="wrapper"]/h1/span';
         recommendsXpath = '//*[@id="db-rec-section"]/div';
+        r1Xpath = '//*[@id="db-rec-section"]/div/dl[1]/dd/a';
         title = response.xpath(titleXpath);
-        items = response.xpath(recommendsXpath);
+        items = response.xpath(r1Xpath);
         print('book title:');
-        print(title);
+        print(title.extract());
         host = 'https://book.douban.com'
         x = 1
         y = 1
