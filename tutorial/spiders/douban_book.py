@@ -103,7 +103,7 @@ class DoubanBookSpider(scrapy.Spider):
         bookItem['doubanRatingUser'] = response.css(DETAIL_RATING_USER_NUMBER_SEL).css('::text').extract_first();
         bookItem['doubanBookBrief'] = bookbrief;
         bookItem['doubanAuthorBrief'] = authorInfo;
-        bookItem['doubanCrawlDate'] = datetime.datetime.utcfromtimestamp(time.time()).strftime("%Y-%m-%d %H:%M:%S");
+        bookItem['doubanCrawlDate'] = datetime.datetime.utcnow();
         # bookItem['doubanISBN']=
         yield bookItem
         self.counter = self.counter+1
