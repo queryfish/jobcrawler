@@ -20,3 +20,20 @@ class TutorialItem(scrapy.Item):
     work_year = scrapy.Field()
     educational =scrapy.Field()
     pass
+
+class doubanBookItem(scrapy.Item):
+    # define the fields for your item here like:
+    doubanId = scrapy.Field()
+    doubanBookBrief =scrapy.Field()
+    doubanAuthorBrief =scrapy.Field()
+    doubanTags =scrapy.Field()
+    doubanRating = scrapy.Field()
+    doubanRatingUser = scrapy.Field()
+    doubanBookMeta = scrapy.Field()
+    doubanUrl = scrapy.Field()
+    doubanCrawlDate =scrapy.Field()
+    doubanBookName =scrapy.Field()
+    doubanBookCover =scrapy.Field()
+    doubanISBN =scrapy.Field()
+
+    pass

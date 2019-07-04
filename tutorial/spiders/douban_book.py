@@ -2,7 +2,7 @@
 #coding:utf-8
 
 import scrapy
-from tutorial.items import TutorialItem
+from tutorial.items import doubanBookItem
 from scrapy.http import Request
 from scrapy.spiders import CrawlSpider
 from scrapy.selector import Selector
@@ -16,7 +16,7 @@ from scrapy.conf import settings
 class DoubanBookSpider(scrapy.Spider):
 
     name = "doubanbook"
-    allowed_domains = ["www.douban.com"]
+    allowed_domains = ["book.douban.com", "www.douban.com"]
 
     current_page = 1 #开始页码
     max_page = 15 #最大页码
@@ -44,15 +44,17 @@ class DoubanBookSpider(scrapy.Spider):
         # js = json.loads(response.body)
         # html = js['html']
         DETAIL_BOOK_INFO_BLOCK_SEL = '#info';
-        DETAIL_PAGE_BOOK_INFO_LEN_SEL = '#info > span';
-        DETAIL_PAGE_BOOK_INFO_SEL = '#info > span:nth-child(INDEX)';
+        DETAIL_PAGE_BOOK_INFO_LEN_SEL = '#info';
+        DETAIL_PAGE_BOOK_INFO_SEL = '#info > span:nth-child(INDEX';
         DETAIL_RATING_NUMBER_SEL = '#interest_sectl > div > div.rating_self.clearfix > strong';
         DETAIL_RATING_USER_NUMBER_SEL = '#interest_sectl > div > div.rating_self.clearfix > div > div.rating_sum > span > a';
         DETAIL_BRIEF_SEL = '#link-report ';
         DETAIL_BRIEF_SEL = '#link-report > * > div.intro';
+        DETAIL_BRIEF_SEL = '#link-report > span.short > div > p';
         # DETAIL_AUTHOR_BRIEF_SEL = 'div.related_info > div:nth-child(1) > * > div.intro';
-        DETAIL_AUTHOR_BRIEF_SEL ='#content > div > div.article > div.related_info > div:nth-child(4) > div > div';
-        DETAIL_TAGS_SEL = '#db-tags-section > div.indent  > span:nth-child(INDEX) > a';
+        DETAIL_AUTHOR_BRIEF_SEL ='#content > div > div.article > div.related_info > div:nth-child(4) > span.short > div > p';
+
+        DETAIL_TAGS_SEL = '#db-tags-section > div.indent  > span > a';
         DETAIL_TAGS_SEL2 = '#db-tags-section > div.indent  > span ';
         DETAIL_TAGS_LEN_SEL = '#db-tags-section > div.indent > span';
         DETAIL_COMMENTS = '#content > div > div.article > div.related_info > div.mod-hd > h2 > span.pl > a';
@@ -62,30 +64,45 @@ class DoubanBookSpider(scrapy.Spider):
         TITLE_SEL = '#wrapper > h1 > span';
         COVER_SEL = '#mainpic > a > img';
 
-        # titleXpath = '//*[@id="wrapper"]/h1/span/text()';
-        # recommendsXpath = '//*[@id="db-rec-section"]/div';
-        # recommends = '//*[@id="db-rec-section"]/div';
 
-        title = response.css(TITLE_SEL);
-        items = response.css(REC_SECTION_SEL);
         print('book info:');
-        print(title.css('::text').extract_first());
-        print(response.css(DETAIL_BRIEF_SEL).css('::text').extract_first());
-        print(response.css(DETAIL_AUTHOR_BRIEF_SEL).css('::text').extract_first());
-        print(response.css(DETAIL_RATING_NUMBER_SEL).css('::text').extract_first());
-        print(response.css(DETAIL_RATING_USER_NUMBER_SEL).css('::text').extract_first());
-        print(response.css(DETAIL_TAGS_SEL2).css('::text').extract_first());
+        bookbrief = response.css(DETAIL_BRIEF_SEL).css('::text').extract()
+        authorInfo = (response.css(DETAIL_AUTHOR_BRIEF_SEL).css('::text').extract());
+        bookInfo = (response.css(DETAIL_PAGE_BOOK_INFO_LEN_SEL).css('::text').extract());
+
+        item = doubanBookItem()
+        item['doubanUrl'] = response.request.url;
+        item['doubanBookName'] = response.css(TITLE_SEL).css('::text').extract_first();
+        item['doubanBookMeta'] = bookInfo
+        item['doubanTags'] = response.css(DETAIL_TAGS_SEL).css('::text').extract();
+        item['doubanRating'] = response.css(DETAIL_RATING_NUMBER_SEL).css('::text').extract_first();
+        item['doubanRatingUser'] = response.css(DETAIL_RATING_USER_NUMBER_SEL).css('::text').extract_first();
+        item['doubanBookBrief'] = bookbrief;
+        item['doubanAuthorBrief'] = authorInfo;
+        # item['doubanCrawlDate'] =
+        # item['doubanISBN']=
+        print(item);
+        yield item
 
         host = 'https://book.douban.com'
-        x = 1
-        y = 1
+        items = response.css(REC_SECTION_SEL);
+
+        # for item in items:
+        #     # print('extracting href from alink')
+        #     # print(detail_url);
+        #
+        #     href = (item.css('a::attr(href)').extract()[0]);
+        #     print(href);
+        #     urlOnly = doubanBookItem();
+        #     urlOnly['doubanUrl'] = href;
+        #     yield urlOnly;
+
         for item in items:
-            detail_url = item.extract()
-            print('extracting href from alink')
-            print(detail_url);
-            print(item.css('a::text').extract_first())
-            print(item.css('a::attr(href)').extract()[0])
-            # print(item.extract_first())
+            href = (item.css('a::attr(href)').extract()[0]);
+            print(href)
+            yield Request(href ,callback=self.parse)
+            time.sleep(int(random.uniform(5, 10)))
+            
             # position_name = item.css('h4::text').extract_first() #职位名称
             # salary = item.css('.salary::text').extract_first() or  '' #薪资
             # work_year = item.css('.msg em:nth-child(2)::text').extract_first() or '不限' #工作年限
@@ -121,9 +138,9 @@ class DoubanBookSpider(scrapy.Spider):
         #     yield  Request(api_url,callback=self.parse)
         # pass
 
+
     def parse_item(self,response):
-        # target = response.css('.script-single__download').xpath('./@href').extract_first()
-        item = TutorialItem()
+        item = doubanBookItem()
         print('Company Name')
         company_name  = response.xpath('//div[@class="info-primary"]/div/div[@class="name"]/text()').extract_first()
         print(company_name)
@@ -137,7 +154,7 @@ class DoubanBookSpider(scrapy.Spider):
         item['body']=jd
         item['salary']=s
         yield item
-        time.sleep(8)
+        time.sleep(2)
 
         # item = TutorialItem()
         # q = response.css
