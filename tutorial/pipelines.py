@@ -92,25 +92,33 @@ class ZhipinPipeline(object):
         self.file.write(line)
         return item
 
+
 class DoubanBookPipeline(object):
     def open_spider(self, spider):
-        self.file = open('output3.json', 'w')
+        self.client = pymongo.MongoClient(host="127.0.0.1", port=27017)
+        collectionName = 'books';
+        db = self.client['sobooks'];
+        self.collection =  db[collectionName];
     def close_spider(self, spider):
-        self.file.close()
+        self.client.close()
     def process_item(self, item, spider):
         # client = pymongo.MongoClient(host="127.0.0.1", port=27017)
-        # db = client['job']
-        # collection =  db['position']
-        # # item['salary'] = clear_salary(item['salary'])
-        # # item['create_time'] = clear_time(item['create_time'])
-        # # item['educational'] = clean_education(item['educational'],item['body'])
-        # # is_php = clean_name(item['position_name'])
-        # # if is_php is True:
+        # collectionName = 'books';
+        # db = client['test'];
+        # collection =  db[collectionName];
+        # item['salary'] = clear_salary(item['salary'])
+        # item['create_time'] = clear_time(item['create_time'])
+        # item['educational'] = clean_education(item['educational'],item['body'])
+        # is_php = clean_name(item['position_name'])
+        # if is_php is True:
+        ## assert(doubanUrl is not empty);
+        # print(item['doubanUrl']);
+        self.collection.replace_one({'doubanUrl':item['doubanUrl']}, dict(item), True);
         # collection.insert(dict(item))
-        # client.close()
         # line = json.dumps(dict(item)) + "\n"
         # self.file.write(line)
         return item
+
 
 class BossOfMinePipeline(object):
     def open_spider(self, spider):
