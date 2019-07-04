@@ -43,10 +43,11 @@ class DoubanBookSpider(scrapy.Spider):
     def parse(self, response):
         # js = json.loads(response.body)
         # html = js['html']
+        TITLE_SEL = '#wrapper > h1 > span::text()';
         titleXpath = '//*[@id="wrapper"]/h1/span/text()';
         recommendsXpath = '//*[@id="db-rec-section"]/div';
         r1Xpath = '//*[@id="db-rec-section"]/div/dl[1]/dd';
-        title = response.xpath(titleXpath);
+        title = response.css(TITLE_SEL);
         items = response.xpath(r1Xpath);
         print('book title:');
         print(title.extract_first());
