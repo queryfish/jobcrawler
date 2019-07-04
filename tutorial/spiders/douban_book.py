@@ -56,7 +56,8 @@ class DoubanBookSpider(scrapy.Spider):
         for item in items:
             detail_url = item.extract()
             print('extracting href from alink')
-            print(item.css('a::text').extract())
+            print(item.css('a::text').extract_first())
+            print(item.css('a::attr(href)').extract()[0])
             # print(item.extract_first())
             # position_name = item.css('h4::text').extract_first() #职位名称
             # salary = item.css('.salary::text').extract_first() or  '' #薪资
