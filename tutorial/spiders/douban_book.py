@@ -48,9 +48,9 @@ class DoubanBookSpider(scrapy.Spider):
         DETAIL_PAGE_BOOK_INFO_SEL = '#info > span:nth-child(INDEX)';
         DETAIL_RATING_NUMBER_SEL = '#interest_sectl > div > div.rating_self.clearfix > strong';
         DETAIL_RATING_USER_NUMBER_SEL = '#interest_sectl > div > div.rating_self.clearfix > div > div.rating_sum > span > a';
-        // DETAIL_BRIEF_SEL = '#link-report > span.short > div.intro';
+        # DETAIL_BRIEF_SEL = '#link-report > span.short > div.intro';
         DETAIL_BRIEF_SEL = '#link-report > * > div.intro';
-        // DETAIL_AUTHOR_BRIEF_SEL = 'div.related_info > div:nth-child(1) > * > div.intro';
+        # DETAIL_AUTHOR_BRIEF_SEL = 'div.related_info > div:nth-child(1) > * > div.intro';
         DETAIL_AUTHOR_BRIEF_SEL ='#content > div > div.article > div.related_info > div:nth-child(4) > div > div';
         DETAIL_TAGS_SEL = '#db-tags-section > div.indent  > span:nth-child(INDEX) > a';
         DETAIL_TAGS_SEL2 = '#db-tags-section > div.indent  > span ';
