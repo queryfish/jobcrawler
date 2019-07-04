@@ -45,18 +45,18 @@ class DoubanBookSpider(scrapy.Spider):
         # html = js['html']
         titleXpath = '//*[@id="wrapper"]/h1/span/text()';
         recommendsXpath = '//*[@id="db-rec-section"]/div';
-        r1Xpath = '//*[@id="db-rec-section"]/div/dl[1]/dd/a';
+        r1Xpath = '//*[@id="db-rec-section"]/div/dl[1]/dd';
         title = response.xpath(titleXpath);
         items = response.xpath(r1Xpath);
         print('book title:');
-        print(title.extract());
+        print(title.extract_first());
         host = 'https://book.douban.com'
         x = 1
         y = 1
         for item in items:
             detail_url = item.extract()
             print('extracting href from alink')
-            print(item.extract())
+            print(item.css('a::text').extract())
             # print(item.extract_first())
             # position_name = item.css('h4::text').extract_first() #职位名称
             # salary = item.css('.salary::text').extract_first() or  '' #薪资
@@ -79,8 +79,8 @@ class DoubanBookSpider(scrapy.Spider):
             # print('key:', key, "value:", position_id);
             # print('parsing item: ...\n')
             # print(meta)
-            url = host + detail_url
-            print(url);
+            # url = host + detail_url
+            # print(url);
             # yield Request(url,callback=self.parse_item)
 
             # if (r.sadd(key,position_id)) == 1:
