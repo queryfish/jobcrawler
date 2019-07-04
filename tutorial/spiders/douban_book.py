@@ -68,7 +68,7 @@ class DoubanBookSpider(scrapy.Spider):
         title = response.css(TITLE_SEL);
         items = response.xpath(r1Xpath);
         print('book title:');
-        print(title.css(::text).extract_first());
+        print(title.css('::text').extract_first());
         host = 'https://book.douban.com'
         x = 1
         y = 1
