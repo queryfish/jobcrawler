@@ -21,7 +21,7 @@ class DoubanBookSpider(scrapy.Spider):
     current_page = 1 #开始页码
     max_page = 15 #最大页码
     start_urls = [
-        "https://book.douban.com/subject_search?search_text=ISBN&cat=1001",
+        "https://book.douban.com/subject/26389895/",
     ]
     custom_settings = {
         "ITEM_PIPELINES":{
@@ -43,7 +43,10 @@ class DoubanBookSpider(scrapy.Spider):
     def parse(self, response):
         # js = json.loads(response.body)
         # html = js['html']
-        items = response.xpath('//li[@class="item"]/a/@href')
+        titleXpath = '//*[@id="wrapper"]/h1/span';
+        recommendsXpath = '//*[@id="db-rec-section"]/div';
+        title = response.xpath(titleXpath);
+        items = response.xpath(recommendsXpath);
         print(items)
         host = 'https://book.douban.com'
         x = 1
@@ -75,7 +78,8 @@ class DoubanBookSpider(scrapy.Spider):
             # print('parsing item: ...\n')
             # print(meta)
             url = host + detail_url
-            yield Request(url,callback=self.parse_item)
+            print(url);
+            # yield Request(url,callback=self.parse_item)
 
             # if (r.sadd(key,position_id)) == 1:
             #     yield Request(url,callback=self.parse_item,meta=meta)
