@@ -57,26 +57,33 @@ class DoubanBookSpider(scrapy.Spider):
         DETAIL_TAGS_LEN_SEL = '#db-tags-section > div.indent > span';
         DETAIL_COMMENTS = '#content > div > div.article > div.related_info > div.mod-hd > h2 > span.pl > a';
         SEARCH_URL_TEMPLATE = 'https://book.douban.com/subject_search?search_text=ISBN&cat=1001';
-        REC_SECTION_SEL = '#db-rec-section > div > dl';
+        REC_SECTION_SEL       = '#db-rec-section > div > dl';
         REC_SECTION_ARRAY_SEL = '#db-rec-section > div > dl > dt > a';
         TITLE_SEL = '#wrapper > h1 > span';
         COVER_SEL = '#mainpic > a > img';
-        TITLE_SEL = '#wrapper > h1 > span';
-        titleXpath = '//*[@id="wrapper"]/h1/span/text()';
-        recommendsXpath = '//*[@id="db-rec-section"]/div';
-        r1Xpath = '//*[@id="db-rec-section"]/div/dl[1]/dd';
+
+        # titleXpath = '//*[@id="wrapper"]/h1/span/text()';
+        # recommendsXpath = '//*[@id="db-rec-section"]/div';
+        # recommends = '//*[@id="db-rec-section"]/div';
+
         title = response.css(TITLE_SEL);
-        items = response.xpath(r1Xpath);
-        print('book title:');
+        items = response.css(REC_SECTION_SEL);
+        print('book info:');
         print(title.css('::text').extract_first());
+        print(response.css(DETAIL_BRIEF_SEL).css('::text').extract_first());
+        print(response.css(DETAIL_AUTHOR_BRIEF_SEL).css('::text').extract_first());
+        print(response.css(DETAIL_RATING_NUMBER_SEL).css('::text').extract_first());
+        print(response.css(DETAIL_RATING_USER_NUMBER_SEL).css('::text').extract_first());
+        print(response.css(DETAIL_TAGS_SEL2).css('::text').extract_first());
+
         host = 'https://book.douban.com'
         x = 1
         y = 1
         for item in items:
             detail_url = item.extract()
             print('extracting href from alink')
-            print(item.css('a::text').extract_first())
-            print(item.css('a::attr(href)').extract()[0])
+            print(item.css('dt > a::text').extract_first())
+            print(item.css('dt > a::attr(href)').extract()[0])
             # print(item.extract_first())
             # position_name = item.css('h4::text').extract_first() #职位名称
             # salary = item.css('.salary::text').extract_first() or  '' #薪资
