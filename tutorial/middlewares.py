@@ -15,6 +15,8 @@ import random
 class RandomProxy(object):
     def process_request(self,request, spider):
         proxy = random.choice(PROXIES)
+        print('SWITCH PROXI');
+        print(proxy);
         request.meta['proxy'] = 'http://%s'% proxy
 
 class RandomUserAgent(object):
