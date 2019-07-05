@@ -9,8 +9,9 @@ from scrapy import signals
 from scrapy.conf import settings
 from tutorial.resource import USER_AGENT_LIST
 from tutorial.resource import PROXIES
-
 import random
+
+logger = logging.getLogger(__name__)
 
 class RandomProxy(object):
     def process_request(self,request, spider):
@@ -22,6 +23,7 @@ class RandomProxy(object):
 class RandomUserAgent(object):
     def process_request(self, request, spider):
         ua = random.choice(USER_AGENT_LIST)
+        logger.warn("SWITCHING UA \n{}".format(ua));
         request.headers.setdefault('User-Agent', ua)
 
 
