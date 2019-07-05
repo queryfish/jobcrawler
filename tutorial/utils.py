@@ -75,7 +75,10 @@ class ProxyManager(object):
             logger.info(p)
 
     def proxy(self):
-        return self.cur_proxy['proxy'];
+        # return self.cur_proxy['proxy'];
+        if(self.cur_url == ""):
+            self.cur_url = self.fetch_one_proxy_from_cloud();
+        return self.cur_url;
 
     def good(self):
         self.cur_proxy['good'] += 1;
