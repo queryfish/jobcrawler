@@ -88,10 +88,17 @@ class DoubanBookSpider(scrapy.Spider):
         DETAIL_RATING_NUMBER_SEL = '#interest_sectl > div > div.rating_self.clearfix > strong';
         DETAIL_RATING_USER_NUMBER_SEL = '#interest_sectl > div > div.rating_self.clearfix > div > div.rating_sum > span > a';
         DETAIL_BRIEF_SEL = '#link-report ';
-        DETAIL_BRIEF_SEL = '#link-report > * > div.intro';
-        DETAIL_BRIEF_SEL = '#link-report > span.short > div > p';
+        # DETAIL_BRIEF_SEL = '#link-report > * > div.intro';
+        # DETAIL_BRIEF_SEL = '#link-report > span.short > div > p';
+        DETAIL_BRIEF_SEL3 = '#link-report > * > div > p'
+
         # DETAIL_AUTHOR_BRIEF_SEL = 'div.related_info > div:nth-child(1) > * > div.intro';
-        DETAIL_AUTHOR_BRIEF_SEL ='#content > div > div.article > div.related_info > div:nth-child(4) > span.short > div > p';
+        DETAIL_AUTHOR_BRIEF_SEL = '#content > div > div.article > div.related_info > div:nth-child(4) > span.short > div > p';
+        DETAIL_AUTHOR_BRIEF_SEL2 = '#content > div > div > div.related_info > div:nth-child(4) > * > div > p'
+        # DETAIL_AUTHOR_BRIEF_SEL3 = '#content > div > div > div.related_info > div:nth-child(4) '
+
+        # DETAIL_AUTHOR_BRIEF_SEL = 'div.related_info > div:nth-child(1) > * > div.intro';
+        DETAIL_AUTHOR_BRIEF_SEL3 ='#content > div > div.article > div.related_info > div:nth-child(4) > span.short > div > p';
 
         DETAIL_TAGS_SEL = '#db-tags-section > div.indent  > span > a';
         DETAIL_TAGS_SEL2 = '#db-tags-section > div.indent  > span ';
@@ -102,8 +109,8 @@ class DoubanBookSpider(scrapy.Spider):
         REC_SECTION_ARRAY_SEL = '#db-rec-section > div > dl > dt > a';
         COVER_SEL = '#mainpic > a > img';
 
-        bookbrief = response.css(DETAIL_BRIEF_SEL).css('::text').extract()
-        authorInfo = (response.css(DETAIL_AUTHOR_BRIEF_SEL).css('::text').extract());
+        bookbrief = response.css(DETAIL_BRIEF_SEL3).css('::text').extract()
+        authorInfo = (response.css(DETAIL_AUTHOR_BRIEF_SEL2).css('::text').extract());
         bookInfo = (response.css(DETAIL_PAGE_BOOK_INFO_LEN_SEL).css('::text').extract());
 
         bookItem = doubanBookItem()
