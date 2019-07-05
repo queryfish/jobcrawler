@@ -75,7 +75,7 @@ class DoubanBookSpider(scrapy.Spider):
 
     def parse(self, response):
         bookTitle = response.css(TITLE_SEL).css('::text').extract_first();
-        if(bookTitle == None || bookTitle == '')
+        if bookTitle is None :
             print("wrong page ...");
             print(response.request.url);
             print(response);
