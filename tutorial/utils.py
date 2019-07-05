@@ -47,6 +47,8 @@ class ProxyManager(object):
         max_index = 0
         for i in range(1, n):
             p = self.proxy_pool[i];
+            if(p['proxy'] == self.cur_proxy['proxy']):
+                pass
             if p['good'] >= max:
                 max_index = i
         if(max == 0):
