@@ -39,6 +39,7 @@ class ProxyMiddleware(object):
             global fail_time, proxy, THRESHOLD
             if not(200 <= response.status < 300):
                 fail_time += 1
+                logger.warn("Request failed {}".format(fail_time));
                 if fail_time >= THRESHOLD:
                     proxy = fetch_one_proxy()
                     fail_time = 0

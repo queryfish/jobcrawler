@@ -23,9 +23,10 @@ def fetch_one_proxy():
             logger.error("fail to fetch proxy")
             return False
         content = json.loads(r.content.decode('utf-8'))
-        logger.info(content);
+
         ips = content['data']['proxy_list']
         left = content['data']['order_left_count']
-        if(left >= reserved_proxy_count)
+        if(left >= reserved_proxy_count):
             cur_proxy = ips[0];
+        logger.info("PROXY SWITCH TO"+cur_proxy);
         return cur_proxy;

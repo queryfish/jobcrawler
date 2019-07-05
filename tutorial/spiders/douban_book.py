@@ -74,6 +74,13 @@ class DoubanBookSpider(scrapy.Spider):
 
 
     def parse(self, response):
+        bookTitle = response.css(TITLE_SEL).css('::text').extract_first();
+        if(bookTitle == None || bookTitle == '')
+            print("wrong page ...");
+            print(response.request.url);
+            print(response);
+            return;
+
         DETAIL_BOOK_INFO_BLOCK_SEL = '#info';
         DETAIL_PAGE_BOOK_INFO_LEN_SEL = '#info';
         DETAIL_PAGE_BOOK_INFO_SEL = '#info > span:nth-child(INDEX';
@@ -101,7 +108,7 @@ class DoubanBookSpider(scrapy.Spider):
 
         bookItem = doubanBookItem()
         bookItem['doubanUrl'] = response.request.url;
-        bookItem['doubanBookName'] = response.css(TITLE_SEL).css('::text').extract_first();
+        bookItem['doubanBookName'] = bookTitle;
         bookItem['doubanBookMeta'] = bookInfo
         bookItem['doubanTags'] = response.css(DETAIL_TAGS_SEL).css('::text').extract();
         bookItem['doubanRating'] = response.css(DETAIL_RATING_NUMBER_SEL).css('::text').extract_first();
