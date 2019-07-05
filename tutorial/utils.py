@@ -16,6 +16,7 @@ class ProxyManager(object):
     switches = 0;
     proxy_pool = [];
     cur_proxy = {"proxy":"202.183.32.182:80", "good":0, "bad":0};
+    cur_url = '';
     PROXIES = [
         '202.183.32.182:80',
         '1.198.73.56:9999',
@@ -99,8 +100,8 @@ class ProxyManager(object):
 
         ips = content['data']['proxy_list']
         left = content['data']['order_left_count']
-        if(left >= self.reserved_proxy_count):
-            self.cur_proxy = ips[0];
-            self.switches = self.switches + 1;
-        logger.info("PROXY SWITCH TO"+self.cur_proxy);
-        return self.cur_proxy;
+        # if(left >= self.reserved_proxy_count):
+        self.cur_url = ips[0];
+        self.switches = self.switches + 1;
+        logger.info("PROXY SWITCH TO"+self.cur_url);
+        return self.cur_url;
