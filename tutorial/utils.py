@@ -94,7 +94,7 @@ class ProxyManager(object):
             logger.info("PROXY SWITCH TO 202.183.32.182:80");
             return "202.183.32.182:80";
 
-        fetch_url = self.api_url.format(orderid)
+        fetch_url = self.api_url.format(self.orderid)
         r = requests.get(fetch_url)
         if r.status_code != 200:
             logger.error("fail to fetch proxy")
