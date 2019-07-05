@@ -45,6 +45,18 @@ class ProxyMiddleware(object):
                     fail_time = 0
             return response
 
+        def process_exception(self, request, exception, spider):
+            global fail_time, proxy, THRESHOLD
+            logger.warn(exception)
+            # if not(200 <= response.status < 300):
+            fail_time += 1
+            logger.warn("Request failed {}".format(fail_time));
+            if fail_time >= THRESHOLD:
+                proxy = fetch_one_proxy()
+                fail_time = 0
+            return response
+
+
 class AgentMiddleware(UserAgentMiddleware):
         """
             User-Agent中间件, 设置User-Agent
