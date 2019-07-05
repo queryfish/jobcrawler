@@ -2,6 +2,7 @@
 
 import base64
 import logging
+from scrapy.downloadermiddlewares.retry import RetryMiddleware
 from scrapy.downloadermiddlewares.useragent import UserAgentMiddleware
 from .utils import fetch_one_proxy
 
@@ -14,6 +15,30 @@ THRESHOLD = 10  # 换ip阈值
 fail_time = 0  # 此ip异常次数
 
 logger = logging.getLogger(__name__)
+
+class CustomRetryMiddleware(RetryMiddleware):
+
+    def _retry(self, request, reason, spider):
+        global fail_time, proxy, THRESHOLD
+        retries = request.meta.get('retry_times', 0) + 1
+        if retries <= THRESHOLD:
+            logger.info(format="Retrying %(request)s (failed %(retries)d times): %(reason)s",
+                    level=log.DEBUG, spider=spider, request=request, retries=retries, reason=reason)
+            retryreq = request.copy()
+            retryreq.meta['retry_times'] = retries
+            # retryreq.dont_filter = True
+            # retryreq.priority = request.priority + self.priority_adjust
+            return retryreq
+        else:
+
+            # do something with the request: inspect request.meta, look at request.url...
+            log.msg(format="Gave up retrying %(request)s (failed %(retries)d times): %(reason)s",
+                    level=log.DEBUG, spider=spider, request=request, retries=retries, reason=reason)
+            proxy = fetch_one_proxy()
+            retryreq = request.copy()
+            retryreq.meta['proxy'] = "http://"+proxy  # 设置代理
+            return retryreq
+
 
     # 代理中间件
 class ProxyMiddleware(object):
