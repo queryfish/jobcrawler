@@ -4,26 +4,28 @@ import base64
 import logging
 from scrapy.downloadermiddlewares.retry import RetryMiddleware
 from scrapy.downloadermiddlewares.useragent import UserAgentMiddleware
-from .utils import fetch_one_proxy
+from .utils import ProxyManager
 
 # 非开放代理且未添加白名单，需用户名密码认证
 username = "yourusername"
 password = "yourpassword"
-proxy = fetch_one_proxy() # 获取一个代理
+# proxy = fetch_one_proxy() # 获取一个代理
 
-THRESHOLD = 10  # 换ip阈值
+THRESHOLD = 5  # 换ip阈值
 fail_time = 0  # 此ip异常次数
 retry_time = 0  # 此ip异常次数
 
 logger = logging.getLogger(__name__)
+proxyManager = ProxyManager();
 
 class CustomRetryMiddleware(RetryMiddleware):
 
     def _retry(self, request, reason, spider):
-        global retry_time, proxy, THRESHOLD
+        global retry_time, proxy, THRESHOLD, proxyManager
         logger.info("retrying something")
         # retries = request.meta.get('retry_times', 0) + 1
         retry_time += 1;
+        proxyManager.bad()
         if retry_time <= THRESHOLD:
             logger.info("Retring {} times, due to {}".format(retry_time, reason))
             # logger.info(format="Retrying %(request)s (failed %(retries)d times): %(reason)s",
@@ -38,7 +40,8 @@ class CustomRetryMiddleware(RetryMiddleware):
             # do something with the request: inspect request.meta, look at request.url...
             # logger.info(format="Gave up retrying %(request)s (failed %(retries)d times): %(reason)s",
             #         level=log.DEBUG, spider=spider, request=request, retries=retries, reason=reason)
-            proxy = fetch_one_proxy()
+            # proxy = fetch_one_proxy()
+            proxy = proxyManager.switch_proxy()
             logger.info("Gave up retring ...SWITCH PROXY to {}".format(proxy))
             retryreq = request.copy()
             retryreq.meta['proxy'] = "http://"+proxy  # 设置代理
@@ -49,12 +52,14 @@ class CustomRetryMiddleware(RetryMiddleware):
 class ProxyMiddleware(object):
 
         def process_request(self, request, spider):
-            proxy_url = 'http://%s:%s@%s' % (username, password, proxy)
-            request.meta['proxy'] = "http://"+proxy  # 设置代理
+            global proxyManager
+            # proxy_url = 'http://%s:%s@%s' % (username, password, proxy)
+            # print(proxyManager.proxy())
+            request.meta['proxy'] = "http://"+proxyManager.proxy()  # 设置代理
             logger.info("using proxy: {}".format(request.meta['proxy']))
             # 设置代理身份认证
             # Python3 写法
-            auth = "Basic %s" % (base64.b64encode(('%s:%s' % (username, password)).encode('utf-8'))).decode('utf-8')
+            # auth = "Basic %s" % (base64.b64encode(('%s:%s' % (username, password)).encode('utf-8'))).decode('utf-8')
             # Python2 写法
             # auth = "Basic " + base64.b64encode('%s:%s' % (username, password))
             # request.headers['Proxy-Authorization'] = auth
@@ -66,25 +71,29 @@ class ProxyMiddleware(object):
                 当异常次数达到阈值, 则更换ip,
                 此换ip策略比较简略, 仅供参考
             """
-            global fail_time, proxy, THRESHOLD
+            global fail_time, proxy, THRESHOLD, proxyManager
             if not(200 <= response.status < 300):
                 fail_time += 1
+                proxyManager.bad()
                 logger.warn("Request failed {}".format(fail_time));
                 if fail_time >= THRESHOLD:
-                    proxy = fetch_one_proxy()
+                    # proxy = fetch_one_proxy()
+                    proxy = proxyManager.switch_proxy()
                     fail_time = 0
+            else:
+                proxyManager.good()
             return response
 
-        def process_exception(self, request, exception, spider):
-            global fail_time, proxy, THRESHOLD
-            logger.warn(exception)
-            # if not(200 <= response.status < 300):
-            fail_time += 1
-            logger.warn("Request failed {}".format(fail_time));
-            if fail_time >= THRESHOLD:
-                proxy = fetch_one_proxy()
-                fail_time = 0
-            return response
+        # def process_exception(self, request, exception, spider):
+        #     global fail_time, proxy, THRESHOLD
+        #     logger.warn(exception)
+        #     # if not(200 <= response.status < 300):
+        #     fail_time += 1
+        #     logger.warn("Request failed {}".format(fail_time));
+        #     if fail_time >= THRESHOLD:
+        #         proxy = fetch_one_proxy()
+        #         fail_time = 0
+        #     return response
 
 
 class AgentMiddleware(UserAgentMiddleware):
