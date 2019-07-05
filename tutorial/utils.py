@@ -7,11 +7,13 @@ orderid = '956231220141933'  # 订单号
 # 提取代理链接，以私密代理为例
 api_url = "https://dps.kdlapi.com/api/getdps/?orderid={}&num=1&pt=1&format=json&sep=1"
 logger = logging.getLogger(__name__)
-
-def fetch_one_proxy():
-        return "202.183.32.182:80";
+cur_proxy = "202.183.32.182:80";
+reserved_proxy_count = 950;
 
 def fetch_one_proxy2():
+        return "202.183.32.182:80";
+
+def fetch_one_proxy():
         """
             提取一个代理
         """
@@ -21,6 +23,9 @@ def fetch_one_proxy2():
             logger.error("fail to fetch proxy")
             return False
         content = json.loads(r.content.decode('utf-8'))
-
+        logger.info(content);
         ips = content['data']['proxy_list']
-        return ips[0]
+        left = content['data']['order_left_count']
+        if(left >= reserved_proxy_count)
+            cur_proxy = ips[0];
+        return cur_proxy;

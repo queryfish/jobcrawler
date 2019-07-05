@@ -10,7 +10,7 @@ username = "yourusername"
 password = "yourpassword"
 proxy = fetch_one_proxy() # 获取一个代理
 
-THRESHOLD = 3  # 换ip阈值
+THRESHOLD = 10  # 换ip阈值
 fail_time = 0  # 此ip异常次数
 
 logger = logging.getLogger(__name__)

@@ -36,9 +36,9 @@ class DoubanBookSpider(scrapy.Spider):
         "DOWNLOADER_MIDDLEWARES":{
             # 'tutorial.middlewares.RandomUserAgent': 299,
             # 'tutorial.middlewares.RandomProxy':301,
-            'scrapy.contrib.downloadermiddleware.httpproxy.HttpProxyMiddleware': 110,
+            'scrapy.downloadermiddlewares.httpproxy.HttpProxyMiddleware': 110,
             'tutorial.middlewares_proxy.ProxyMiddleware': 100,
-            'scrapy.contrib.downloadermiddleware.useragent.UserAgentMiddleware': 2,
+            'scrapy.downloadermiddlewares.useragent.UserAgentMiddleware':2 ,
             'tutorial.middlewares_proxy.AgentMiddleware': 1,
         },
         "DEFAULT_REQUEST_HEADERS":{
