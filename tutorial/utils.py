@@ -8,7 +8,7 @@ orderid = '956231220141933'  # 订单号
 api_url = "https://dps.kdlapi.com/api/getdps/?orderid={}&num=1&pt=1&format=json&sep=1"
 logger = logging.getLogger(__name__)
 cur_proxy = "202.183.32.182:80";
-reserved_proxy_count = 950;
+reserved_proxy_count = 900;
 
 def fetch_one_proxy2():
         return "202.183.32.182:80";

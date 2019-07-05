@@ -6,7 +6,7 @@ SPIDER_MODULES = ['tutorial.spiders']
 NEWSPIDER_MODULE = 'tutorial.spiders'
 
 # LOG_LEVEL = 'ERROR'
-LOG_LEVEL = 'INFO'
+#LOG_LEVEL = 'INFO'
 LOG_STDOUT = True
 # LOG_FILE = './log.txt'
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
@@ -22,7 +22,7 @@ USER_AGENT = 'Mozilla/5.0 (iPhone; CPU iPhone OS 11_0 like Mac OS X) AppleWebKit
 # See http://scrapy.readthedocs.org/en/latest/topics/settings.html#download-delay
 # See also autothrottle settings and docs
 #5秒的下载延时 / 每秒
-DOWNLOAD_DELAY = 0.5
+DOWNLOAD_DELAY = 1.5
 # The download delay setting will honor only one of:
 #CONCURRENT_REQUESTS_PER_DOMAIN = 16
 #CONCURRENT_REQUESTS_PER_IP = 16

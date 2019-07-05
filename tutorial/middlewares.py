@@ -5,6 +5,7 @@
 # See documentation in:
 # http://doc.scrapy.org/en/latest/topics/spider-middleware.html
 
+import logging
 from scrapy import signals
 from scrapy.conf import settings
 from tutorial.resource import USER_AGENT_LIST
