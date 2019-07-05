@@ -57,7 +57,11 @@ class ProxyManager(object):
             p = self.proxy_pool[i];
             if p['good'] >= max:
                 max_index = i
-        self.cur_proxy = self.proxy_pool[max_index];
+        if(max == 0):
+            self.cur_proxy = random.choice(self.proxy_pool)
+        else:
+            self.cur_proxy = self.proxy_pool[max_index];
+        logger.info("SWITCHING PROXY : GOOD {}".format(max))
         return self.cur_proxy['proxy'];
 
     def proxy(self):
