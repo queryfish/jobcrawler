@@ -20,6 +20,10 @@ def fetch_one_proxy():
             提取一个代理
         """
         global switches, max_proxies
+        if(switches >= max_proxies):
+            logger.info("PROXY SWITCH TO 202.183.32.182:80");
+            return "202.183.32.182:80";
+
         fetch_url = api_url.format(orderid)
         r = requests.get(fetch_url)
         if r.status_code != 200:
@@ -29,9 +33,6 @@ def fetch_one_proxy():
 
         ips = content['data']['proxy_list']
         left = content['data']['order_left_count']
-        if(switches >= max_proxies):
-            logger.info("PROXY SWITCH TO 202.183.32.182:80");
-            return "202.183.32.182:80";
         if(left >= reserved_proxy_count):
             cur_proxy = ips[0];
             switches = switches + 1;

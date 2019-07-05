@@ -34,6 +34,7 @@ class CustomRetryMiddleware(RetryMiddleware):
             # retryreq.priority = request.priority + self.priority_adjust
             return retryreq
         else:
+            retry_time = 0;
             # do something with the request: inspect request.meta, look at request.url...
             # logger.info(format="Gave up retrying %(request)s (failed %(retries)d times): %(reason)s",
             #         level=log.DEBUG, spider=spider, request=request, retries=retries, reason=reason)
