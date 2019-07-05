@@ -11,7 +11,7 @@ username = "yourusername"
 password = "yourpassword"
 # proxy = fetch_one_proxy() # 获取一个代理
 
-THRESHOLD = 5  # 换ip阈值
+THRESHOLD = 1  # 换ip阈值
 fail_time = 0  # 此ip异常次数
 retry_time = 0  # 此ip异常次数
 
@@ -41,6 +41,8 @@ class CustomRetryMiddleware(RetryMiddleware):
             # logger.info(format="Gave up retrying %(request)s (failed %(retries)d times): %(reason)s",
             #         level=log.DEBUG, spider=spider, request=request, retries=retries, reason=reason)
             # proxy = fetch_one_proxy()
+            if(THRESHOLD < 5):
+                THRESHOLD += 1;
             proxy = proxyManager.switch_proxy()
             logger.info("Gave up retring ...SWITCH PROXY to {}".format(proxy))
             retryreq = request.copy()
@@ -78,6 +80,8 @@ class ProxyMiddleware(object):
                 logger.warn("Request failed {}".format(fail_time));
                 if fail_time >= THRESHOLD:
                     # proxy = fetch_one_proxy()
+                    if(THRESHOLD < 5):
+                        THRESHOLD += 1;
                     proxy = proxyManager.switch_proxy()
                     fail_time = 0
             else:
