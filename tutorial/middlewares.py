@@ -24,7 +24,7 @@ class RandomProxy(object):
 class RandomUserAgent(object):
     def process_request(self, request, spider):
         ua = random.choice(USER_AGENT_LIST)
-        logger.warn("SWITCHING UA \n{}".format(ua));
+        # logger.warn("SWITCHING UA \n{}".format(ua));
         request.headers.setdefault('User-Agent', ua)
 
 

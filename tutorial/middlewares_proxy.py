@@ -50,7 +50,7 @@ class ProxyMiddleware(object):
         def process_request(self, request, spider):
             proxy_url = 'http://%s:%s@%s' % (username, password, proxy)
             request.meta['proxy'] = "http://"+proxy  # 设置代理
-            logger.debug("using proxy: {}".format(request.meta['proxy']))
+            logger.info("using proxy: {}".format(request.meta['proxy']))
             # 设置代理身份认证
             # Python3 写法
             auth = "Basic %s" % (base64.b64encode(('%s:%s' % (username, password)).encode('utf-8'))).decode('utf-8')
