@@ -20,6 +20,7 @@ class CustomRetryMiddleware(RetryMiddleware):
 
     def _retry(self, request, reason, spider):
         global fail_time, proxy, THRESHOLD
+        logger.info("retrying something")
         retries = request.meta.get('retry_times', 0) + 1
         if retries <= THRESHOLD:
             logger.info("Retring {} times, due to {}".format(retries, reason))
