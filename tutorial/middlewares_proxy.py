@@ -32,7 +32,7 @@ class CustomRetryMiddleware(RetryMiddleware):
         else:
 
             # do something with the request: inspect request.meta, look at request.url...
-            log.msg(format="Gave up retrying %(request)s (failed %(retries)d times): %(reason)s",
+            logger.info(format="Gave up retrying %(request)s (failed %(retries)d times): %(reason)s",
                     level=log.DEBUG, spider=spider, request=request, retries=retries, reason=reason)
             proxy = fetch_one_proxy()
             retryreq = request.copy()
