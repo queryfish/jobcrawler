@@ -34,12 +34,12 @@ class DoubanBookSpider(scrapy.Spider):
             'tutorial.pipelines.DoubanBookPipeline': 300,
         },
         "DOWNLOADER_MIDDLEWARES":{
-            # 'tutorial.middlewares.RandomUserAgent': 299,
+            'tutorial.middlewares.RandomUserAgent': 2,
             # 'tutorial.middlewares.RandomProxy':301,
             'scrapy.downloadermiddlewares.httpproxy.HttpProxyMiddleware': 110,
             'tutorial.middlewares_proxy.ProxyMiddleware': 100,
-            'scrapy.downloadermiddlewares.useragent.UserAgentMiddleware':2 ,
-            'tutorial.middlewares_proxy.AgentMiddleware': 1,
+            # 'scrapy.downloadermiddlewares.useragent.UserAgentMiddleware':2 ,
+            # 'tutorial.middlewares_proxy.AgentMiddleware': 1,
         },
         "DEFAULT_REQUEST_HEADERS":{
             'Accept': 'application/json',
