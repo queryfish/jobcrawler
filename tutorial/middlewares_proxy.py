@@ -26,7 +26,7 @@ class CustomRetryMiddleware(RetryMiddleware):
         # retries = request.meta.get('retry_times', 0) + 1
         retry_time += 1;
         proxyManager.bad()
-        if retry_time <= THRESHOLD:
+        if retry_time <= proxyManager.threshold():
             logger.info("Retring {} times, due to {}".format(retry_time, reason))
             # logger.info(format="Retrying %(request)s (failed %(retries)d times): %(reason)s",
                     # level=log.DEBUG, spider=spider, request=request, retries=retries, reason=reason)
@@ -41,8 +41,8 @@ class CustomRetryMiddleware(RetryMiddleware):
             # logger.info(format="Gave up retrying %(request)s (failed %(retries)d times): %(reason)s",
             #         level=log.DEBUG, spider=spider, request=request, retries=retries, reason=reason)
             # proxy = fetch_one_proxy()
-            if(THRESHOLD < 5):
-                THRESHOLD += 1;
+            # if(THRESHOLD < 5):
+            #     THRESHOLD += 1;
             proxy = proxyManager.switch_proxy()
             logger.info("Gave up retring ...SWITCH PROXY to {}".format(proxy))
             retryreq = request.copy()
@@ -78,10 +78,10 @@ class ProxyMiddleware(object):
                 fail_time += 1
                 proxyManager.bad()
                 logger.warn("Request failed {}".format(fail_time));
-                if fail_time >= THRESHOLD:
+                if fail_time > proxyManager.threshold():
                     # proxy = fetch_one_proxy()
-                    if(THRESHOLD < 5):
-                        THRESHOLD += 1;
+                    # if(THRESHOLD < 5):
+                    #     THRESHOLD += 1;
                     proxy = proxyManager.switch_proxy()
                     fail_time = 0
             else:

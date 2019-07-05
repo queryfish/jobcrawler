@@ -17,6 +17,7 @@ class ProxyManager(object):
     proxy_pool = [];
     cur_proxy = {"proxy":"202.183.32.182:80", "good":0, "bad":0};
     PROXIES = [
+        '202.183.32.182:80',
         '1.198.73.56:9999',
         '45.125.32.180:3128',
         '1.202.245.84:8080',
@@ -39,6 +40,15 @@ class ProxyManager(object):
         self.cur_proxy = random.choice(self.proxy_pool)
         print(self.proxy_pool)
 
+    def threshold(self):
+        good = self.cur_proxy['good'];
+        if(good <= 0):
+            return 1;
+        else:
+            if( good > 5):
+                return 5;
+            else:
+                return good;
 
     def switch_proxy(self):
         # find the max goodness and the element except the current one ?
@@ -51,12 +61,17 @@ class ProxyManager(object):
                 pass
             if p['good'] >= max:
                 max_index = i
-        if(max == 0):
-            self.cur_proxy = random.choice(self.proxy_pool)
-        else:
-            self.cur_proxy = self.proxy_pool[max_index];
+        # if(max == 0):
+            # self.cur_proxy = random.choice(self.proxy_pool)
+        # else:
+        self.cur_proxy = self.proxy_pool[max_index];
         logger.info("SWITCHING PROXY : GOOD {}".format(max))
+        self.prettyList();
         return self.cur_proxy['proxy'];
+
+    def prettyList(self):
+        for p in self.proxy_pool:
+            logger.info(p)
 
     def proxy(self):
         return self.cur_proxy['proxy'];
