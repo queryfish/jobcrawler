@@ -74,6 +74,7 @@ class DoubanBookSpider(scrapy.Spider):
 
 
     def parse(self, response):
+        TITLE_SEL = '#wrapper > h1 > span';
         bookTitle = response.css(TITLE_SEL).css('::text').extract_first();
         if bookTitle is None :
             print("wrong page ...");
@@ -99,7 +100,6 @@ class DoubanBookSpider(scrapy.Spider):
         SEARCH_URL_TEMPLATE = 'https://book.douban.com/subject_search?search_text=ISBN&cat=1001';
         REC_SECTION_SEL       = '#db-rec-section > div > dl > dd';
         REC_SECTION_ARRAY_SEL = '#db-rec-section > div > dl > dt > a';
-        TITLE_SEL = '#wrapper > h1 > span';
         COVER_SEL = '#mainpic > a > img';
 
         bookbrief = response.css(DETAIL_BRIEF_SEL).css('::text').extract()
