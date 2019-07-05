@@ -22,8 +22,9 @@ class CustomRetryMiddleware(RetryMiddleware):
         global fail_time, proxy, THRESHOLD
         retries = request.meta.get('retry_times', 0) + 1
         if retries <= THRESHOLD:
-            logger.info(format="Retrying %(request)s (failed %(retries)d times): %(reason)s",
-                    level=log.DEBUG, spider=spider, request=request, retries=retries, reason=reason)
+            logger.info("Retring {} times, due to {}".format(retries, reason))
+            # logger.info(format="Retrying %(request)s (failed %(retries)d times): %(reason)s",
+                    # level=log.DEBUG, spider=spider, request=request, retries=retries, reason=reason)
             retryreq = request.copy()
             retryreq.meta['retry_times'] = retries
             # retryreq.dont_filter = True
@@ -32,9 +33,11 @@ class CustomRetryMiddleware(RetryMiddleware):
         else:
 
             # do something with the request: inspect request.meta, look at request.url...
-            logger.info(format="Gave up retrying %(request)s (failed %(retries)d times): %(reason)s",
-                    level=log.DEBUG, spider=spider, request=request, retries=retries, reason=reason)
+
+            # logger.info(format="Gave up retrying %(request)s (failed %(retries)d times): %(reason)s",
+            #         level=log.DEBUG, spider=spider, request=request, retries=retries, reason=reason)
             proxy = fetch_one_proxy()
+            logger.info("Gave up retring ...SWITCH PROXY to {}".format(proxy))
             retryreq = request.copy()
             retryreq.meta['proxy'] = "http://"+proxy  # 设置代理
             return retryreq
