@@ -5,7 +5,7 @@ import logging
 from scrapy.downloadermiddlewares.retry import RetryMiddleware
 from scrapy.downloadermiddlewares.useragent import UserAgentMiddleware
 from .freeProxyManager import FreeProxyManager
-from .freeProxyManager import PaidProxyManager
+from .paidProxyManager import PaidProxyManager
 
 # proxy = fetch_one_proxy() # 获取一个代理
 

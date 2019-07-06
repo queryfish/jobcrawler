@@ -26,6 +26,7 @@ class DoubanBookSpider(scrapy.Spider):
     collection =  db['books']
     step = 50;
     counter = 0;
+    handle_httpstatus_list = [301, 302];
 
     # start_urls = ['https://book.douban.com/subject/26389895/']
     start_urls = []
