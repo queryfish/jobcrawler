@@ -12,9 +12,10 @@ class PaidProxyManager(object):
     # 提取代理链接，以私密代理为例
     api_url = "https://dps.kdlapi.com/api/getdps/?orderid={}&num=1&pt=1&format=json&sep=1"
     reserved_proxy_count = 900;
-    max_proxies = 2;
+    max_proxies = 10;
     switches = 0;
     proxy_pool = [];
+    cloud_times = 0;
     cur_proxy = {"proxy":"202.183.32.182:80", "good":0, "bad":0};
     cur_url = '';
     PROXIES = [
@@ -49,14 +50,15 @@ class PaidProxyManager(object):
         print(self.proxy_pool)
 
     def threshold(self):
-        good = self.cur_proxy['good'];
-        if(good <= 0):
-            return 1;
-        else:
-            if( good > 5):
-                return 5;
-            else:
-                return good;
+        return 1;
+        # good = self.cur_proxy['good'];
+        # if(good <= 0):
+        #     return 1;
+        # else:
+        #     if( good > 5):
+        #         return 5;
+        #     else:
+        #         return good;
 
     def prettyList(self):
         for p in self.proxy_pool:
@@ -77,21 +79,27 @@ class PaidProxyManager(object):
         """
             提取一个代理
         """
+        self.switches = self.switches + 1;
         if(self.switches >= self.max_proxies):
-            logger.info("PROXY SWITCH TO 202.183.32.182:80");
-            return "202.183.32.182:80";
+            self.switches = 0;
+            self.cur_url = self.get_proxy_from_cloude();
+            logger.info("PROXY SWITCH TO"+self.cur_url);
+            return self.cur_url;
+        else :
+            return self.cur_url;
 
+    def get_proxy_from_cloude(self):
+        self.cloud_times += 1;
+        if(self.cloud_times > 2):
+            return self.cur_url;
         fetch_url = self.api_url.format(self.orderid)
         r = requests.get(fetch_url)
         if r.status_code != 200:
             logger.error("fail to fetch proxy")
             return False
         content = json.loads(r.content.decode('utf-8'))
-
+        logger.info(content);
         ips = content['data']['proxy_list']
         left = content['data']['order_left_count']
         # if(left >= self.reserved_proxy_count):
-        self.cur_url = ips[0];
-        self.switches = self.switches + 1;
-        logger.info("PROXY SWITCH TO"+self.cur_url);
-        return self.cur_url;
+        return ips[0];

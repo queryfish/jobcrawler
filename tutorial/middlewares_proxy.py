@@ -88,7 +88,7 @@ class ProxyMiddleware(object):
                 fail_time += 1
                 proxyManager.bad()
                 logger.warn("Request failed {}".format(fail_time));
-                if fail_time > proxyManager.threshold():
+                if fail_time >= proxyManager.threshold():
                     # proxy = fetch_one_proxy()
                     # if(THRESHOLD < 5):
                     #     THRESHOLD += 1;
