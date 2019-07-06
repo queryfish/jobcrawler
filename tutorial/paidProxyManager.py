@@ -58,25 +58,6 @@ class PaidProxyManager(object):
             else:
                 return good;
 
-    def switch_proxy(self):
-        # find the max goodness and the element except the current one ?
-        n = len(self.proxy_pool)
-        max = 0
-        max_index = 0
-        for i in range(1, n):
-            p = self.proxy_pool[i];
-            if(p['proxy'] == self.cur_proxy['proxy']):
-                pass
-            if p['good'] >= max:
-                max_index = i
-        # if(max == 0):
-            # self.cur_proxy = random.choice(self.proxy_pool)
-        # else:
-        self.cur_proxy = self.proxy_pool[max_index];
-        logger.info("SWITCHING PROXY : GOOD {}".format(max))
-        self.prettyList();
-        return self.cur_proxy['proxy'];
-
     def prettyList(self):
         for p in self.proxy_pool:
             logger.info(p)
@@ -92,7 +73,7 @@ class PaidProxyManager(object):
     def bad(self):
         self.cur_proxy['good'] -= 1;
 
-    def fetch_one_proxy_from_cloud(self):
+    def switch_proxy(self):
         """
             提取一个代理
         """
