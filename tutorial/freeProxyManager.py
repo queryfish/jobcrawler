@@ -53,6 +53,10 @@ class FreeProxyManager(object):
                 return good;
 
     def switch_proxy(self):
+        self.cur_proxy = random.choice(self.proxy_pool)
+        return self.cur_proxy['proxy'];
+
+    def switch_proxy2(self):
         # find the max goodness and the element except the current one ?
         n = len(self.proxy_pool)
         max = 0
@@ -71,9 +75,11 @@ class FreeProxyManager(object):
         self.prettyList();
         return self.cur_proxy['proxy'];
 
+
     def prettyList(self):
-        for p in self.proxy_pool:
-            logger.info(p)
+        return
+        # for p in self.proxy_pool:
+        #     logger.info(p)
 
     def proxy(self):
         return self.cur_proxy['proxy'];
