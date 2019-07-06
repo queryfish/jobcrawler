@@ -77,7 +77,8 @@ class PaidProxyManager(object):
 
     def get_proxy_from_cloude(self):
         self.cloud_times += 1;
-        if(self.cloud_times > 2):
+        if(self.cloud_times > 10):
+            self.cur_url = '202.183.32.185:80'
             return self.cur_url;
         fetch_url = self.api_url.format(self.orderid)
         r = requests.get(fetch_url)

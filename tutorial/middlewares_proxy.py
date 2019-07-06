@@ -24,6 +24,8 @@ class CustomRetryMiddleware(RetryMiddleware):
         logger.info("retrying on request {} with proxy {}".format(request.url, request.meta['proxy']))
         retries = request.meta.get('retry_times', 0) + 1
         req_proxy = request.meta.get('proxy', '')
+        logger.info(req_proxy)
+        logger.info(proxyManager.proxy())
         if(req_proxy == proxyManager.proxy()):
             retry_time += 1;
             proxyManager.bad()
