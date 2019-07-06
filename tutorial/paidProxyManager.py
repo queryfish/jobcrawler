@@ -34,20 +34,7 @@ class PaidProxyManager(object):
         '134.119.188.150:8080',
     ]
     def __init__(self):
-        filepath = './iptable.txt'
-        proxies = []
-        with open(filepath) as fp:
-            line = fp.readline()
-            cnt = 1
-            while line:
-                print("Line {}: {}".format(cnt, line.strip()))
-                proxies.append(line.strip())
-                line = fp.readline()
-                cnt += 1
-        for prx in proxies:
-            self.proxy_pool.append({"proxy":prx, "good":0});
-        self.cur_proxy = random.choice(self.proxy_pool)
-        print(self.proxy_pool)
+        self.cur_url = self.get_proxy_from_cloude()
 
     def threshold(self):
         return 1;
