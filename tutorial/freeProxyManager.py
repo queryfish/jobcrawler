@@ -6,17 +6,11 @@ import random
 
 logger = logging.getLogger(__name__)
 
-
-class ProxyManager(object):
-    orderid = '956231220141933'  # 订单号
-    # 提取代理链接，以私密代理为例
-    api_url = "https://dps.kdlapi.com/api/getdps/?orderid={}&num=1&pt=1&format=json&sep=1"
-    reserved_proxy_count = 900;
+class freeProxyManager(object):
     max_proxies = 2;
     switches = 0;
     proxy_pool = [];
     cur_proxy = {"proxy":"202.183.32.182:80", "good":0, "bad":0};
-    cur_url = '';
     PROXIES = [
         '202.183.32.185:80',
         '93.190.137.63:8080',
@@ -83,35 +77,9 @@ class ProxyManager(object):
 
     def proxy(self):
         return self.cur_proxy['proxy'];
-        # if(self.cur_url == ""):
-        #     self.cur_url = self.fetch_one_proxy_from_cloud();
-        # return self.cur_url;
 
     def good(self):
         self.cur_proxy['good'] += 1;
 
     def bad(self):
         self.cur_proxy['good'] -= 1;
-
-    def fetch_one_proxy_from_cloud2(self):
-        """
-            提取一个代理
-        """
-        if(self.switches >= self.max_proxies):
-            logger.info("PROXY SWITCH TO 202.183.32.182:80");
-            return "202.183.32.182:80";
-
-        fetch_url = self.api_url.format(self.orderid)
-        r = requests.get(fetch_url)
-        if r.status_code != 200:
-            logger.error("fail to fetch proxy")
-            return False
-        content = json.loads(r.content.decode('utf-8'))
-
-        ips = content['data']['proxy_list']
-        left = content['data']['order_left_count']
-        # if(left >= self.reserved_proxy_count):
-        self.cur_url = ips[0];
-        self.switches = self.switches + 1;
-        logger.info("PROXY SWITCH TO"+self.cur_url);
-        return self.cur_url;

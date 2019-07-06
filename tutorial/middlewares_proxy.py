@@ -4,11 +4,8 @@ import base64
 import logging
 from scrapy.downloadermiddlewares.retry import RetryMiddleware
 from scrapy.downloadermiddlewares.useragent import UserAgentMiddleware
-from .utils import ProxyManager
+from .freeProxyManager import freeProxyManager
 
-# 非开放代理且未添加白名单，需用户名密码认证
-username = "yourusername"
-password = "yourpassword"
 # proxy = fetch_one_proxy() # 获取一个代理
 
 THRESHOLD = 5  # 换ip阈值
@@ -16,7 +13,7 @@ fail_time = 0  # 此ip异常次数
 retry_time = 0  # 此ip异常次数
 
 logger = logging.getLogger(__name__)
-proxyManager = ProxyManager();
+proxyManager = freeProxyManager();
 
 class CustomRetryMiddleware(RetryMiddleware):
 
