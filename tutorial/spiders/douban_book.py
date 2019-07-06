@@ -24,7 +24,7 @@ class DoubanBookSpider(scrapy.Spider):
     client = pymongo.MongoClient(host="127.0.0.1", port=27017)
     db = client['sobooks']
     collection =  db['books']
-    step = 5;
+    step = 10;
     counter = 0;
     handle_httpstatus_list = [301, 302];
 
