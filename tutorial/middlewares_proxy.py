@@ -5,6 +5,7 @@ import logging
 from scrapy.downloadermiddlewares.retry import RetryMiddleware
 from scrapy.downloadermiddlewares.useragent import UserAgentMiddleware
 from .freeProxyManager import FreeProxyManager
+from .freeProxyManager import PaidProxyManager
 
 # proxy = fetch_one_proxy() # 获取一个代理
 
@@ -13,7 +14,8 @@ fail_time = 0  # 此ip异常次数
 retry_time = 0  # 此ip异常次数
 
 logger = logging.getLogger(__name__)
-proxyManager = FreeProxyManager();
+# proxyManager = FreeProxyManager();
+proxyManager = PaidProxyManager();
 
 class CustomRetryMiddleware(RetryMiddleware):
 
