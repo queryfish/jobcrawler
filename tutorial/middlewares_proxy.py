@@ -26,7 +26,7 @@ class CustomRetryMiddleware(RetryMiddleware):
         req_proxy = request.meta.get('proxy', '')
         logger.info(req_proxy)
         logger.info(proxyManager.proxy())
-        if(req_proxy == proxyManager.proxy()):
+        if(req_proxy == "http://"+proxyManager.proxy()):
             retry_time += 1;
             proxyManager.bad()
         # request.meta['retry_times'] = retries
