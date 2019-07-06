@@ -7,7 +7,9 @@ import random
 logger = logging.getLogger(__name__)
 
 class FreeProxyManager(object):
+    api_url = "https://proxyapi.mimvp.com/api/fetchopen.php?orderid=869080659322570605&num=20&country_group=1&http_type=1,2&result_fields=1,2&result_format=json"
     max_proxies = 2;
+    cloud_times = 0;
     switches = 0;
     proxy_pool = [];
     cur_proxy = {"proxy":"202.183.32.182:80", "good":0, "bad":0};
@@ -27,18 +29,19 @@ class FreeProxyManager(object):
         '134.119.188.150:8080',
     ]
     def __init__(self):
-        filepath = './iptable.txt'
-        proxies = []
-        with open(filepath) as fp:
-            line = fp.readline()
-            cnt = 1
-            while line:
-                print("Line {}: {}".format(cnt, line.strip()))
-                proxies.append(line.strip())
-                line = fp.readline()
-                cnt += 1
-        for prx in proxies:
-            self.proxy_pool.append({"proxy":prx, "good":0});
+        self.renew_proxy_pool()
+        # filepath = './iptable.txt'
+        # proxies = []
+        # with open(filepath) as fp:
+        #     line = fp.readline()
+        #     cnt = 1
+        #     while line:
+        #         print("Line {}: {}".format(cnt, line.strip()))
+        #         proxies.append(line.strip())
+        #         line = fp.readline()
+        #         cnt += 1
+        # for prx in proxies:
+        #     self.proxy_pool.append({"proxy":prx, "good":0});
         self.cur_proxy = random.choice(self.proxy_pool)
         print(self.proxy_pool)
 
@@ -89,3 +92,27 @@ class FreeProxyManager(object):
 
     def bad(self):
         self.cur_proxy['good'] -= 1;
+
+    def renew_proxy_pool(self):
+        self.cloud_times += 1;
+        if(self.cloud_times > 2):
+            self.proxy_pool = ['202.183.32.185:80']
+            return self.proxy_pool
+
+        fetch_url = self.api_url
+        r = requests.get(fetch_url)
+        if r.status_code != 200:
+            logger.error("fail to fetch proxy")
+            return False
+        content = json.loads(r.content.decode('utf-8'))
+        logger.info(content);
+        ips = content['result']
+        num = content['result_count']
+        if(num > 0 ):
+            self.proxy_pool = []
+            for ip_port in ips:
+                prx = ip_port['ip:port']
+                self.proxy_pool.append({"proxy":prx, "good":0});
+        # if(left >= self.reserved_proxy_count):
+        logger.info(self.proxy_pool)
+        return self.proxy_pool

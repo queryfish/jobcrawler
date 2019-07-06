@@ -14,8 +14,8 @@ fail_time = 0  # 此ip异常次数
 retry_time = 0  # 此ip异常次数
 
 logger = logging.getLogger(__name__)
-# proxyManager = FreeProxyManager();
-proxyManager = PaidProxyManager();
+proxyManager = FreeProxyManager();
+# proxyManager = PaidProxyManager();
 
 class CustomRetryMiddleware(RetryMiddleware):
 
