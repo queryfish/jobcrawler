@@ -23,12 +23,15 @@ class CustomRetryMiddleware(RetryMiddleware):
         global retry_time, proxy, THRESHOLD, proxyManager
         logger.info("retrying on request {} with proxy {}".format(request.url, request.meta['proxy']))
         retries = request.meta.get('retry_times', 0) + 1
-        request.meta['retry_times'] = retries
-        logger.info("trying {} times".format(retries))
-        retry_time += 1;
-        proxyManager.bad()
+        req_proxy = request.meta.get('proxy', '')
+        if(req_proxy == proxyManager.proxy()):
+            retry_time += 1;
+            proxyManager.bad()
+        # request.meta['retry_times'] = retries
+        # logger.info("trying {} times".format(retries))
+
         logger.info("Retring {} times, due to {}".format(retry_time, reason))
-        if retry_time%1 == 0:
+        if retry_time % 1 == 0 :
             proxy = proxyManager.switch_proxy()
             retryreq = request.copy()
             retryreq.meta['proxy'] = "http://"+proxy  # 设置代理
