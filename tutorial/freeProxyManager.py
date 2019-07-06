@@ -6,7 +6,7 @@ import random
 
 logger = logging.getLogger(__name__)
 
-class freeProxyManager(object):
+class FreeProxyManager(object):
     max_proxies = 2;
     switches = 0;
     proxy_pool = [];
