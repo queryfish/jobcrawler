@@ -64,7 +64,7 @@ class PaidProxyManager(object):
 
     def proxy(self):
         if(self.cur_url == ""):
-            self.cur_url = self.fetch_one_proxy_from_cloud();
+            self.cur_url = self.switch_proxy();
         return self.cur_url;
 
     def good(self):
