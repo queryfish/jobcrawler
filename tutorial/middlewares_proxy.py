@@ -26,7 +26,7 @@ class CustomRetryMiddleware(RetryMiddleware):
         req_proxy = request.meta.get('proxy', '')
         logger.info(req_proxy)
         logger.info(proxyManager.proxy())
-        if(req_proxy == "http://"+proxyManager.proxy()):
+        if(req_proxy == "https://"+proxyManager.proxy()):
             retry_time += 1;
             proxyManager.bad()
         # request.meta['retry_times'] = retries
@@ -36,7 +36,7 @@ class CustomRetryMiddleware(RetryMiddleware):
         if retry_time % 1 == 0 :
             proxy = proxyManager.switch_proxy()
             retryreq = request.copy()
-            retryreq.meta['proxy'] = "http://"+proxy  # 设置代理
+            retryreq.meta['proxy'] = "https://"+proxy  # 设置代理
             return retryreq
         else:
             retryreq = request.copy()
@@ -60,7 +60,7 @@ class CustomRetryMiddleware(RetryMiddleware):
             # proxy = proxyManager.fetch_one_proxy_from_cloud();
             logger.info("Gave up retring ...SWITCH PROXY to {}".format(proxy))
             retryreq = request.copy()
-            retryreq.meta['proxy'] = "http://"+proxy  # 设置代理
+            retryreq.meta['proxy'] = "https://"+proxy  # 设置代理
             return retryreq
 
 
@@ -72,7 +72,7 @@ class ProxyMiddleware(object):
             # proxy_url = 'http://%s:%s@%s' % (username, password, proxy)
             # print(proxyManager.proxy())
             # logger.info("processing request retry times, max {}".format(request.meta['max_retry_times']))
-            request.meta['proxy'] = "http://"+proxyManager.proxy()  # 设置代理
+            request.meta['proxy'] = "https://"+proxyManager.proxy()  # 设置代理
             logger.info("using proxy: {}".format(request.meta['proxy']))
             # 设置代理身份认证
             # Python3 写法
@@ -106,14 +106,17 @@ class ProxyMiddleware(object):
 
         def process_exception(self, request, exception, spider):
             global fail_time, proxy, THRESHOLD,proxyManager
+            req_proxy = request.meta.get('proxy', '')
+            logger.warn("Get exception with proxy: {}".format(req_proxy))
             logger.warn(exception)
             # if not(200 <= response.status < 300):
-            fail_time += 1
-            logger.warn("Request failed {}".format(fail_time));
-            if fail_time > 2:
-                proxy = proxyManager.switch_proxy()
-                fail_time = 0
-            return
+            # fail_time += 1
+            proxyManager.bad()
+            # logger.warn("Request failed {}".format(fail_time));
+            # if fail_time >= 1:
+            proxy = proxyManager.switch_proxy()
+            # fail_time = 0
+            return request
 
 
 class AgentMiddleware(UserAgentMiddleware):

@@ -15,6 +15,8 @@ import  random
 import redis
 from scrapy.conf import settings
 
+logger = logging.getLogger(__name__)
+
 
 #zhipin 爬虫
 class DoubanBookSpider(scrapy.Spider):
@@ -36,13 +38,13 @@ class DoubanBookSpider(scrapy.Spider):
         },
         "DOWNLOADER_MIDDLEWARES":{
             'tutorial.middlewares.RandomUserAgent': 2,
-            # 'tutorial.middlewares.RandomProxy':301,
-            'scrapy.downloadermiddlewares.httpproxy.HttpProxyMiddleware': 110,
-            'tutorial.middlewares_proxy.ProxyMiddleware': 100,
-            'scrapy.downloadermiddlewares.retry.RetryMiddleware': None,
-            'tutorial.middlewares_proxy.CustomRetryMiddleware': 500,
-            # 'scrapy.downloadermiddlewares.useragent.UserAgentMiddleware':2 ,
-            # 'tutorial.middlewares_proxy.AgentMiddleware': 1,
+            # # 'tutorial.middlewares.RandomProxy':301,
+            # 'scrapy.downloadermiddlewares.httpproxy.HttpProxyMiddleware': 110,
+            # 'tutorial.middlewares_proxy.ProxyMiddleware': 100,
+            # 'scrapy.downloadermiddlewares.retry.RetryMiddleware': None,
+            # 'tutorial.middlewares_proxy.CustomRetryMiddleware': 500,
+            # # 'scrapy.downloadermiddlewares.useragent.UserAgentMiddleware':2 ,
+            # # 'tutorial.middlewares_proxy.AgentMiddleware': 1,
         },
         "DEFAULT_REQUEST_HEADERS":{
             'Accept': 'application/json',
@@ -75,6 +77,10 @@ class DoubanBookSpider(scrapy.Spider):
             self.start_urls.append(url)
             # print(url);
 
+    def errback_httpbin(self, failure):
+        # log all failures
+        logger.error("errback get something")
+        logger.error(repr(failure))
 
     def parse(self, response):
         TITLE_SEL = '#wrapper > h1 > span';

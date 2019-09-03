@@ -29,21 +29,26 @@ class FreeProxyManager(object):
         '134.119.188.150:8080',
     ]
     def __init__(self):
-        self.renew_proxy_pool()
-        # filepath = './iptable.txt'
-        # proxies = []
-        # with open(filepath) as fp:
-        #     line = fp.readline()
-        #     cnt = 1
-        #     while line:
-        #         print("Line {}: {}".format(cnt, line.strip()))
-        #         proxies.append(line.strip())
-        #         line = fp.readline()
-        #         cnt += 1
-        # for prx in proxies:
-        #     self.proxy_pool.append({"proxy":prx, "good":0});
+        # self.renew_proxy_pool()
+        self.load_proxy_pool_from_file()
         self.cur_proxy = random.choice(self.proxy_pool)
         print(self.proxy_pool)
+
+    def load_proxy_pool_from_file(self):
+        filepath = './iptable.txt'
+        proxies = []
+        with open(filepath) as fp:
+            line = fp.readline()
+            cnt = 1
+            while line:
+                print("Line {}: {}".format(cnt, line.strip()))
+                proxies.append(line.strip())
+                line = fp.readline()
+                cnt += 1
+        for prx in proxies:
+            self.proxy_pool.append({"proxy":prx, "good":0, "bad":0});
+        # self.cur_proxy = random.choice(self.proxy_pool)
+        # print(self.proxy_pool)
 
     def threshold(self):
         good = self.cur_proxy['good'];
@@ -55,27 +60,28 @@ class FreeProxyManager(object):
             else:
                 return good;
 
-    def switch_proxy(self):
-        self.cur_proxy = random.choice(self.proxy_pool)
-        return self.cur_proxy['proxy'];
+    # def switch_proxy(self):
+    #     self.cur_proxy = random.choice(self.proxy_pool)
+    #     return self.cur_proxy['proxy'];
 
-    def switch_proxy2(self):
+    def switch_proxy(self):
         # find the max goodness and the element except the current one ?
-        n = len(self.proxy_pool)
-        max = 0
-        max_index = 0
-        for i in range(1, n):
-            p = self.proxy_pool[i];
-            if(p['proxy'] == self.cur_proxy['proxy']):
-                pass
-            if p['good'] >= max:
-                max_index = i
-        # if(max == 0):
-            # self.cur_proxy = random.choice(self.proxy_pool)
-        # else:
-        self.cur_proxy = self.proxy_pool[max_index];
-        logger.info("SWITCHING PROXY : GOOD {}".format(max))
-        self.prettyList();
+        # n = len(self.proxy_pool)
+        # max = 0
+        # max_index = 0
+        # for i in range(1, n):
+        #     p = self.proxy_pool[i];
+        #     if(p['proxy'] == self.cur_proxy['proxy']):
+        #         pass
+        #     if p['bad'] >= max:
+        #         max = p['bad']
+        #         max_index = i
+        # # if(max == 0):
+        self.cur_proxy = random.choice(self.proxy_pool)
+        # # else:
+        # self.cur_proxy = self.proxy_pool[max_index];
+        # logger.info("SWITCHING PROXY : GOOD {}".format(max))
+        # self.prettyList();
         return self.cur_proxy['proxy'];
 
 
@@ -91,7 +97,7 @@ class FreeProxyManager(object):
         self.cur_proxy['good'] += 1;
 
     def bad(self):
-        self.cur_proxy['good'] -= 1;
+        self.cur_proxy['bad'] -= 1;
 
     def renew_proxy_pool(self):
         self.cloud_times += 1;

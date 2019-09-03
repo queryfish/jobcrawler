@@ -11,11 +11,11 @@ LOG_STDOUT = True
 # LOG_FILE = './log.txt'
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 USER_AGENT = 'Mozilla/5.0 (iPhone; CPU iPhone OS 11_0 like Mac OS X) AppleWebKit/604.1.38 (KHTML, like Gecko) Version/11.0 Mobile/15A372 Safari/604.1'
-HTTPERROR_ALLOWED_CODES = [403,404,302]
+# HTTPERROR_ALLOWED_CODES = [403,404,302]
 # Obey robots.txt rules
 #ROBOTSTXT_OBEY = True
-# RETRY_ENABLED = False
-RETRY_TIMES = 5
+RETRY_ENABLED = False
+# RETRY_TIMES = 5
 
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
 #CONCURRENT_REQUESTS = 32
@@ -24,7 +24,7 @@ RETRY_TIMES = 5
 # See http://scrapy.readthedocs.org/en/latest/topics/settings.html#download-delay
 # See also autothrottle settings and docs
 #5秒的下载延时 / 每秒
-DOWNLOAD_DELAY = 0.8
+DOWNLOAD_DELAY = 1.0
 # The download delay setting will honor only one of:
 #CONCURRENT_REQUESTS_PER_DOMAIN = 16
 #CONCURRENT_REQUESTS_PER_IP = 16
