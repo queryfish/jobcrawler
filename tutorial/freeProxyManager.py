@@ -35,7 +35,7 @@ class FreeProxyManager(object):
         print(self.proxy_pool)
 
     def load_proxy_pool_from_file(self):
-        filepath = './iptable.txt'
+        filepath = './iptable3.txt'
         proxies = []
         with open(filepath) as fp:
             line = fp.readline()
