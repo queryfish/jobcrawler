@@ -57,7 +57,7 @@ class DoubanBookSpider(scrapy.Spider):
     }
 
     def getSomeUrls(self, count):
-        print('fetch from mongo')
+        logger.info('fetch from mongo')
         res = self.collection.find({"$and":[{"doubanUrl":{"$ne":None}},{"doubanCrawlDate":{"$exists":False}}]}).limit(count);
         urls = [];
         for post in res:
@@ -86,9 +86,9 @@ class DoubanBookSpider(scrapy.Spider):
         TITLE_SEL = '#wrapper > h1 > span';
         bookTitle = response.css(TITLE_SEL).css('::text').extract_first();
         if bookTitle is None :
-            print("wrong page ...");
-            print(response.request.url);
-            print(response);
+            logger.error("wrong page ...");
+            logger.error(response.request.url);
+            logger.error(response);
             return;
 
         DETAIL_BOOK_INFO_BLOCK_SEL = '#info';
@@ -135,9 +135,9 @@ class DoubanBookSpider(scrapy.Spider):
         # bookItem['doubanISBN']=
         yield bookItem
         self.counter = self.counter+1
-        print('NO.{} book crawled ..'.format(self.counter));
-        print(bookItem['doubanBookName'])
-        print(bookItem['doubanUrl'])
+        logger.info('NO.{} book crawled ..'.format(self.counter));
+        logger.info(bookItem['doubanBookName'])
+        logger.info(bookItem['doubanUrl'])
 
         # time.sleep(int(random.uniform(2, 5)))
 
