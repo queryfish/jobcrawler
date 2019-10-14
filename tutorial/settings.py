@@ -6,7 +6,7 @@ SPIDER_MODULES = ['tutorial.spiders']
 NEWSPIDER_MODULE = 'tutorial.spiders'
 
 # LOG_LEVEL = 'ERROR'
-LOG_LEVEL = 'INFO'
+LOG_LEVEL = 'DEBUG'
 # LOG_STDOUT = True
 LOG_FILE = './douban_book.log'
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
