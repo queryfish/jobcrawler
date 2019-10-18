@@ -75,27 +75,32 @@ class CustomRetryMiddleware(RetryMiddleware):
 
 
     # 代理中间件
-class RegularProxyMiddleware(object):
+class ProxyMiddleware(object):
 
         def process_request(self, request, spider):
-            global proxyManager
-            # proxy_url = 'http://%s:%s@%s' % (username, password, proxy)
-            print(proxyManager.proxy())
-            # logger.info("processing request retry times, max {}".format(request.meta['max_retry_times
+            # global proxyManager
+            # # proxy_url = 'http://%s:%s@%s' % (username, password, proxy)
+            # # print(proxyManager.proxy())
+            # # logger.info("processing request retry times, max {}".format(request.meta['max_retry_times']))
             # request.meta['proxy'] = "https://"+proxyManager.proxy()  # 设置代理
+            # logger.info("using proxy: {}".format(request.meta['proxy']))
+            # # 设置代理身份认证
+            # # Python3 写法
+            # # auth = "Basic %s" % (base64.b64encode(('%s:%s' % (username, password)).encode('utf-8'))).decode('utf-8')
+            # # Python2 写法
+            # # auth = "Basic " + base64.b64encode('%s:%s' % (username, password))
+            # # request.headers['Proxy-Authorization'] = auth
 
+            proxy_url = 'http://%s:%s@%s:%s' % (tid, password, tunnel_host, tunnel_port)
+            request.meta['proxy'] = proxy_url  # 设置代理
+            logger.debug("using proxy: {}".format(request.meta['proxy']))
             # 设置代理身份认证
             # Python3 写法
-            username = 'marrowsky'
-            password = '0krbqw3g'
-            proxy = proxyManager.proxy()
-            proxy_url = 'http://%s:%s@%s' % (username, password, proxy)
-            request.meta['proxy'] = proxy_url  # 设置代理
-            logger.info("using proxy: {}".format(request.meta['proxy']))
-            auth = "Basic %s" % (base64.b64encode(('%s:%s' % (username, password)).encode('utf-8'))).decode('utf-8')
+            auth = "Basic %s" % (base64.b64encode(('%s:%s' % (tid, password)).encode('utf-8'))).decode('utf-8')
             # Python2 写法
-            # auth = "Basic " + base64.b64encode('%s:%s' % (username, password))
+            # auth = "Basic " + base64.b64encode('%s:%s' % (tid, password))
             request.headers['Proxy-Authorization'] = auth
+
 
         def process_response(self, request, response, spider):
             """
@@ -112,7 +117,7 @@ class RegularProxyMiddleware(object):
                     # proxy = fetch_one_proxy()
                     # if(THRESHOLD < 5):
                     #     THRESHOLD += 1;
-                    # proxy = proxyManager.switch_proxy()
+                    proxy = proxyManager.switch_proxy()
                     # proxy = proxyManager.fetch_one_proxy_from_cloud();
                     fail_time = 0
             else:
@@ -129,23 +134,22 @@ class RegularProxyMiddleware(object):
             proxyManager.bad()
             # logger.warn("Request failed {}".format(fail_time));
             # if fail_time >= 1:
-            #暂时关闭切换proxy
-            # proxy = proxyManager.switch_proxy()
+            proxy = proxyManager.switch_proxy()
             # fail_time = 0
             return request
 
-# class TunnelProxyMiddleware(object):
-#
-#         def process_request(self, request, spider):
-#             proxy_url = 'http://%s:%s@%s:%s' % (tid, password, tunnel_host, tunnel_port)
-#             request.meta['proxy'] = proxy_url  # 设置代理
-#             logger.debug("using proxy: {}".format(request.meta['proxy']))
-#             # 设置代理身份认证
-#             # Python3 写法
-#             auth = "Basic %s" % (base64.b64encode(('%s:%s' % (tid, password)).encode('utf-8'))).decode('utf-8')
-#             # Python2 写法
-#             # auth = "Basic " + base64.b64encode('%s:%s' % (tid, password))
-            # request.headers['Proxy-Authorization'] = auth
+class TunnelProxyMiddleware(object):
+
+        def process_request(self, request, spider):
+            proxy_url = 'http://%s:%s@%s:%s' % (tid, password, tunnel_host, tunnel_port)
+            request.meta['proxy'] = proxy_url  # 设置代理
+            logger.debug("using proxy: {}".format(request.meta['proxy']))
+            # 设置代理身份认证
+            # Python3 写法
+            auth = "Basic %s" % (base64.b64encode(('%s:%s' % (tid, password)).encode('utf-8'))).decode('utf-8')
+            # Python2 写法
+            # auth = "Basic " + base64.b64encode('%s:%s' % (tid, password))
+            request.headers['Proxy-Authorization'] = auth
 
 
 class AgentMiddleware(UserAgentMiddleware):

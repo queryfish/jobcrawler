@@ -8,8 +8,8 @@ logger = logging.getLogger(__name__)
 
 
 class PaidProxyManager(object):
-    # orderid = '907089398818285'  # 订单号
-    orderid = '957092713770940'
+    orderid = '907089398818285'  # 订单号
+    # orderid = '957092713770940'
     # 提取代理链接，以私密代理为例
     api_url = "https://dps.kdlapi.com/api/getdps/?orderid={}&num=1&pt=1&format=json&sep=1"
     tunnel_url = "https://tps.kdlapi.com/api/gettpsip/?orderid={}&signature=s0hwg7zopaalk51at1i2zf9ltc80zwet"
@@ -36,7 +36,7 @@ class PaidProxyManager(object):
         '134.119.188.150:8080',
     ]
     def __init__(self):
-        self.cur_url = self.get_tunnel_proxy()
+        self.cur_url = self.get_proxy_from_cloude()
 
     def threshold(self):
         return 1;
@@ -72,7 +72,7 @@ class PaidProxyManager(object):
         # if(self.switches%2 == 0):
             # self.cur_url  = '202.183.32.185:80'
         # else :
-        self.cur_url = self.get_tunnel_proxy();
+        self.cur_url = self.get_proxy_from_cloude();
         # if(self.switches >= self.max_proxies):
         #     self.switches = 0;
         #     self.cur_url = self.get_proxy_from_cloude();
@@ -82,11 +82,7 @@ class PaidProxyManager(object):
         return self.cur_url;
 
     def get_proxy_from_cloude(self):
-        self.cloud_times += 1;
-        if(self.cloud_times > 10):
-            self.cur_url = '202.183.32.185:80'
-            return self.cur_url;
-        fetch_url = self.tunnel_url.format(self.orderid)
+        fetch_url = self.api_url.format(self.orderid)
         r = requests.get(fetch_url)
         if r.status_code != 200:
             logger.error("fail to fetch proxy")
@@ -98,14 +94,31 @@ class PaidProxyManager(object):
         # if(left >= self.reserved_proxy_count):
         return ips[0];
 
-    def get_tunnel_proxy(self):
+    def get_proxy_from_cloud_complex(self):
         self.cloud_times += 1;
-        fetch_url = self.tunnel_url.format(self.orderid)
+        if(self.cloud_times > 10):
+            self.cur_url = '202.183.32.185:80'
+            return self.cur_url;
+        fetch_url = self.api_url.format(self.orderid)
         r = requests.get(fetch_url)
         if r.status_code != 200:
             logger.error("fail to fetch proxy")
             return False
         content = json.loads(r.content.decode('utf-8'))
         logger.info(content);
-        ip = content['data']['current_ip']
-        return ip;
+        ips = content['data']['proxy_list']
+        left = content['data']['order_left_count']
+        # if(left >= self.reserved_proxy_count):
+        return ips[0];
+
+    # def get_tunnel_proxy(self):
+    #     self.cloud_times += 1;
+    #     fetch_url = self.tunnel_url.format(self.orderid)
+    #     r = requests.get(fetch_url)
+    #     if r.status_code != 200:
+    #         logger.error("fail to fetch proxy")
+    #         return False
+    #     content = json.loads(r.content.decode('utf-8'))
+    #     logger.info(content);
+    #     ip = content['data']['current_ip']
+    #     return ip;

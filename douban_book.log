@@ -1,0 +1,84 @@
+2019-10-17 22:10:24 [scrapy.utils.log] INFO: Scrapy 1.5.1 started (bot: tutorial)
+2019-10-17 22:10:24 [scrapy.utils.log] INFO: Versions: lxml 4.2.5.0, libxml2 2.9.8, cssselect 1.0.3, parsel 1.5.0, w3lib 1.19.0, Twisted 18.7.0, Python 2.7.10 (default, Oct  6 2017, 22:29:07) - [GCC 4.2.1 Compatible Apple LLVM 9.0.0 (clang-900.0.31)], pyOpenSSL 18.0.0 (OpenSSL 1.1.0i  14 Aug 2018), cryptography 2.3.1, Platform Darwin-17.7.0-x86_64-i386-64bit
+2019-10-17 22:10:24 [scrapy.crawler] INFO: Overridden settings: {'NEWSPIDER_MODULE': 'tutorial.spiders', 'LOG_FILE': './douban_book.log', 'RETRY_ENABLED': False, 'SPIDER_MODULES': ['tutorial.spiders'], 'BOT_NAME': 'tutorial', 'USER_AGENT': 'Mozilla/5.0 (iPhone; CPU iPhone OS 11_0 like Mac OS X) AppleWebKit/604.1.38 (KHTML, like Gecko) Version/11.0 Mobile/15A372 Safari/604.1', 'FEED_EXPORT_ENCODING': 'utf-8', 'DOWNLOAD_DELAY': 0.8}
+2019-10-17 22:10:24 [scrapy.middleware] INFO: Enabled extensions:
+['scrapy.extensions.memusage.MemoryUsage',
+ 'scrapy.extensions.logstats.LogStats',
+ 'scrapy.extensions.telnet.TelnetConsole',
+ 'scrapy.extensions.corestats.CoreStats']
+2019-10-17 22:10:24 [tutorial.spiders.douban_book] INFO: fetch from mongo
+2019-10-17 22:10:25 [urllib3.connectionpool] DEBUG: Starting new HTTPS connection (1): tps.kdlapi.com:443
+2019-10-17 22:10:25 [urllib3.connectionpool] DEBUG: https://tps.kdlapi.com:443 "GET /api/gettpsip/?orderid=907089398818285&signature=s0hwg7zopaalk51at1i2zf9ltc80zwet HTTP/1.1" 200 None
+2019-10-17 22:10:25 [tutorial.paidProxyManager] INFO: {u'msg': u'signature error: s0hwg7zopaalk51at1i2zf9ltc80zwet', u'code': -104, u'data': u''}
+2019-10-17 22:10:25 [twisted] CRITICAL: Unhandled error in Deferred:
+2019-10-17 22:10:25 [twisted] CRITICAL: 
+Traceback (most recent call last):
+  File "/Users/deeplycurious/Library/Python/2.7/lib/python/site-packages/twisted/internet/defer.py", line 1418, in _inlineCallbacks
+    result = g.send(result)
+  File "/Users/deeplycurious/Library/Python/2.7/lib/python/site-packages/scrapy/crawler.py", line 98, in crawl
+    six.reraise(*exc_info)
+  File "/Users/deeplycurious/Library/Python/2.7/lib/python/site-packages/scrapy/crawler.py", line 80, in crawl
+    self.engine = self._create_engine()
+  File "/Users/deeplycurious/Library/Python/2.7/lib/python/site-packages/scrapy/crawler.py", line 105, in _create_engine
+    return ExecutionEngine(self, lambda _: self.stop())
+  File "/Users/deeplycurious/Library/Python/2.7/lib/python/site-packages/scrapy/core/engine.py", line 69, in __init__
+    self.downloader = downloader_cls(crawler)
+  File "/Users/deeplycurious/Library/Python/2.7/lib/python/site-packages/scrapy/core/downloader/__init__.py", line 88, in __init__
+    self.middleware = DownloaderMiddlewareManager.from_crawler(crawler)
+  File "/Users/deeplycurious/Library/Python/2.7/lib/python/site-packages/scrapy/middleware.py", line 58, in from_crawler
+    return cls.from_settings(crawler.settings, crawler)
+  File "/Users/deeplycurious/Library/Python/2.7/lib/python/site-packages/scrapy/middleware.py", line 34, in from_settings
+    mwcls = load_object(clspath)
+  File "/Users/deeplycurious/Library/Python/2.7/lib/python/site-packages/scrapy/utils/misc.py", line 44, in load_object
+    mod = import_module(module)
+  File "/System/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/importlib/__init__.py", line 37, in import_module
+    __import__(name)
+  File "/Users/deeplycurious/Projects/Crawler/onelinespider_boss_crawler/douban_book_scrapy/tutorial/middlewares_proxy.py", line 18, in <module>
+    proxyManager = PaidProxyManager();
+  File "/Users/deeplycurious/Projects/Crawler/onelinespider_boss_crawler/douban_book_scrapy/tutorial/paidProxyManager.py", line 39, in __init__
+    self.cur_url = self.get_tunnel_proxy()
+  File "/Users/deeplycurious/Projects/Crawler/onelinespider_boss_crawler/douban_book_scrapy/tutorial/paidProxyManager.py", line 110, in get_tunnel_proxy
+    ip = content['data']['current_ip']
+TypeError: string indices must be integers
+2019-10-17 22:10:50 [scrapy.utils.log] INFO: Scrapy 1.5.1 started (bot: tutorial)
+2019-10-17 22:10:50 [scrapy.utils.log] INFO: Versions: lxml 4.2.5.0, libxml2 2.9.8, cssselect 1.0.3, parsel 1.5.0, w3lib 1.19.0, Twisted 18.7.0, Python 2.7.10 (default, Oct  6 2017, 22:29:07) - [GCC 4.2.1 Compatible Apple LLVM 9.0.0 (clang-900.0.31)], pyOpenSSL 18.0.0 (OpenSSL 1.1.0i  14 Aug 2018), cryptography 2.3.1, Platform Darwin-17.7.0-x86_64-i386-64bit
+2019-10-17 22:10:50 [scrapy.crawler] INFO: Overridden settings: {'NEWSPIDER_MODULE': 'tutorial.spiders', 'LOG_FILE': './douban_book.log', 'RETRY_ENABLED': False, 'SPIDER_MODULES': ['tutorial.spiders'], 'BOT_NAME': 'tutorial', 'LOG_STDOUT': True, 'USER_AGENT': 'Mozilla/5.0 (iPhone; CPU iPhone OS 11_0 like Mac OS X) AppleWebKit/604.1.38 (KHTML, like Gecko) Version/11.0 Mobile/15A372 Safari/604.1', 'FEED_EXPORT_ENCODING': 'utf-8', 'DOWNLOAD_DELAY': 0.8}
+2019-10-17 22:10:50 [scrapy.middleware] INFO: Enabled extensions:
+['scrapy.extensions.memusage.MemoryUsage',
+ 'scrapy.extensions.logstats.LogStats',
+ 'scrapy.extensions.telnet.TelnetConsole',
+ 'scrapy.extensions.corestats.CoreStats']
+2019-10-17 22:10:50 [tutorial.spiders.douban_book] INFO: fetch from mongo
+2019-10-17 22:10:50 [urllib3.connectionpool] DEBUG: Starting new HTTPS connection (1): tps.kdlapi.com:443
+2019-10-17 22:10:50 [urllib3.connectionpool] DEBUG: https://tps.kdlapi.com:443 "GET /api/gettpsip/?orderid=907089398818285&signature=s0hwg7zopaalk51at1i2zf9ltc80zwet HTTP/1.1" 200 None
+2019-10-17 22:10:50 [tutorial.paidProxyManager] INFO: {u'msg': u'signature error: s0hwg7zopaalk51at1i2zf9ltc80zwet', u'code': -104, u'data': u''}
+2019-10-17 22:10:50 [twisted] CRITICAL: Unhandled error in Deferred:
+2019-10-17 22:10:50 [twisted] CRITICAL: 
+Traceback (most recent call last):
+  File "/Users/deeplycurious/Library/Python/2.7/lib/python/site-packages/twisted/internet/defer.py", line 1418, in _inlineCallbacks
+    result = g.send(result)
+  File "/Users/deeplycurious/Library/Python/2.7/lib/python/site-packages/scrapy/crawler.py", line 98, in crawl
+    six.reraise(*exc_info)
+  File "/Users/deeplycurious/Library/Python/2.7/lib/python/site-packages/scrapy/crawler.py", line 80, in crawl
+    self.engine = self._create_engine()
+  File "/Users/deeplycurious/Library/Python/2.7/lib/python/site-packages/scrapy/crawler.py", line 105, in _create_engine
+    return ExecutionEngine(self, lambda _: self.stop())
+  File "/Users/deeplycurious/Library/Python/2.7/lib/python/site-packages/scrapy/core/engine.py", line 69, in __init__
+    self.downloader = downloader_cls(crawler)
+  File "/Users/deeplycurious/Library/Python/2.7/lib/python/site-packages/scrapy/core/downloader/__init__.py", line 88, in __init__
+    self.middleware = DownloaderMiddlewareManager.from_crawler(crawler)
+  File "/Users/deeplycurious/Library/Python/2.7/lib/python/site-packages/scrapy/middleware.py", line 58, in from_crawler
+    return cls.from_settings(crawler.settings, crawler)
+  File "/Users/deeplycurious/Library/Python/2.7/lib/python/site-packages/scrapy/middleware.py", line 34, in from_settings
+    mwcls = load_object(clspath)
+  File "/Users/deeplycurious/Library/Python/2.7/lib/python/site-packages/scrapy/utils/misc.py", line 44, in load_object
+    mod = import_module(module)
+  File "/System/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/importlib/__init__.py", line 37, in import_module
+    __import__(name)
+  File "/Users/deeplycurious/Projects/Crawler/onelinespider_boss_crawler/douban_book_scrapy/tutorial/middlewares_proxy.py", line 18, in <module>
+    proxyManager = PaidProxyManager();
+  File "/Users/deeplycurious/Projects/Crawler/onelinespider_boss_crawler/douban_book_scrapy/tutorial/paidProxyManager.py", line 39, in __init__
+    self.cur_url = self.get_tunnel_proxy()
+  File "/Users/deeplycurious/Projects/Crawler/onelinespider_boss_crawler/douban_book_scrapy/tutorial/paidProxyManager.py", line 110, in get_tunnel_proxy
+    ip = content['data']['current_ip']
+TypeError: string indices must be integers
