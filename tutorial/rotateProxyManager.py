@@ -60,7 +60,9 @@ class RotateProxyManager(object):
         ips = content['data']['proxy_list']
         left = content['data']['order_left_count']
         for proxy in ips:
-            self.POOL.append(proxy.encode('ascii'))
+            ascproxy = proxy.encode('ascii')
+            if ascproxy not in self.POOL
+                self.POOL.append(ascproxy)
         return ips;
 
     def check_proxy_from_cloud(self, proxy):
