@@ -61,7 +61,7 @@ class RotateProxyManager(object):
         left = content['data']['order_left_count']
         for proxy in ips:
             ascproxy = proxy.encode('ascii')
-            if ascproxy not in self.POOL
+            if ascproxy not in self.POOL:
                 self.POOL.append(ascproxy)
         return ips;
 
