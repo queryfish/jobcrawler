@@ -82,8 +82,8 @@ class RotateProxyManager(object):
 
     def invalidProxy(self, proxy):
         #1\ if proxy is in the pool, find the index
+        logger.info(self.POOL)
         ipport = proxy.replace("http://","")
-        print(self.POOL)
         logger.warn("gonna check it in the pool {}".format(ipport))
         if ipport in self.POOL:
             logger.warn("gonna revalid it {}".format(ipport))
@@ -92,6 +92,7 @@ class RotateProxyManager(object):
                 logger.warn("gonna remove it {}".format(ipport))
                 self.POOL.remove(ipport)
                 self.get_proxy_from_cloud(1)
+
         #2\ validate the proxy from the cloud
         #3\ remove it from the pool if invalid
         #4\ get a new proxy from the api and append it to the pool
