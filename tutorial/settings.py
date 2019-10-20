@@ -15,7 +15,9 @@ USER_AGENT = 'Mozilla/5.0 (iPhone; CPU iPhone OS 11_0 like Mac OS X) AppleWebKit
 # Obey robots.txt rules
 #ROBOTSTXT_OBEY = True
 RETRY_ENABLED = False
-# RETRY_TIMES = 5
+# RETRY_TIMES = 1
+
+DOWNLOAD_TIMEOUT = 30
 
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
 CONCURRENT_REQUESTS = 3
