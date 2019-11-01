@@ -2,7 +2,7 @@
 
 import base64
 import logging
-# from scrapy.downloadermiddlewares.retry import RetryMiddleware
+from scrapy.downloadermiddlewares.retry import RetryMiddleware
 from scrapy.downloadermiddlewares.useragent import UserAgentMiddleware
 # from .paidProxyManager import PaidProxyManager
 from .rotateProxyManager import RotateProxyManager
