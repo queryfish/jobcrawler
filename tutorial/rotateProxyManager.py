@@ -84,6 +84,9 @@ class RotateProxyManager(object):
         #1\ if proxy is in the pool, find the index
         logger.info(self.POOL)
         ipport = proxy.replace("http://","")
+        qsize = self.crawler.engine.slot.scheduler.__len__();
+        running = len(self.crawler.engine.slot.inprogress);
+        logger.info('PENDING_QUEUE_SIZE: {}, RUNNING QUEUE SIZE: {}'.format(qsize, running));
         logger.warn("gonna check it in the pool {}".format(ipport))
         if ipport in self.POOL:
             logger.warn("gonna revalid it {}".format(ipport))
