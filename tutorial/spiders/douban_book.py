@@ -155,6 +155,7 @@ class DoubanBookSpider(scrapy.Spider):
 
         for url in newUrls:
             # if(len(url) > 0):
+            logger.info('add to queue {}'.format(url));
             yield Request(url ,callback=self.parse)
 
         # for item in items:
