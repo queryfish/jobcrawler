@@ -72,7 +72,7 @@ class DoubanBookSpider(scrapy.Spider):
 
     def __init__(self, *a, **kw):
         super(DoubanBookSpider, self).__init__(*a, **kw)
-        urls = self.getSomeUrls(self.step)
+        urls = self.getSomeUrls(5)
         for url in urls:
             self.start_urls.append(url)
             # print(url);
@@ -152,15 +152,15 @@ class DoubanBookSpider(scrapy.Spider):
         running = len(self.crawler.engine.slot.inprogress);
         logger.info('PENDING_QUEUE_SIZE: {}, RUNNING QUEUE SIZE: {}'.format(qsize, running));
 
-        newUrls = self.getSomeUrls(10);
-        for url in newUrls:
-            # if(len(url) > 0):
-            logger.info('add to queue {}'.format(url));
-            yield Request(url ,callback=self.parse)
+        # newUrls = self.getSomeUrls(10);
+        # for url in newUrls:
+        #     # if(len(url) > 0):
+        #     logger.info('add to queue {}'.format(url));
+        #     yield Request(url ,callback=self.parse)
 
-        # for item in items:
-        #     # print(item.css('a::text').extract()[0]);
-        #     href = (item.css('a::attr(href)').extract()[0]);
-        #     # print(href)
-        #     logger.info('add to queue {}'.format(href));
-        #     yield Request(href ,callback=self.parse)
+        for item in items:
+            # print(item.css('a::text').extract()[0]);
+            href = (item.css('a::attr(href)').extract()[0]);
+            # print(href)
+            logger.info('add to queue {}'.format(href));
+            yield Request(href ,callback=self.parse)
