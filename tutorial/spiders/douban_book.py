@@ -59,11 +59,11 @@ class DoubanBookSpider(scrapy.Spider):
 
     def getSomeUrls(self, count):
         res = self.collection.find({"$and":[{"doubanUrl":{"$ne":None}},{"doubanCrawlDate":{"$exists":False}}]}).limit(count);
-        logger.info('fetch {} new url from mongo'.format(len(res)));
         urls = [];
         for post in res:
             # print(post)
             urls.append(post['doubanUrl']);
+        logger.info('fetch {} new url from mongo'.format(len(urls)));
         return urls
 
     def addSomeUrls(self, urls):
