@@ -42,8 +42,8 @@ class DoubanBookSpider(scrapy.Spider):
             'scrapy.downloadermiddlewares.httpproxy.HttpProxyMiddleware': 110,
             # 'tutorial.middlewares_proxy.TunnelProxyMiddleware': 100,
             'tutorial.middlewares_rotate_proxy.RegularProxyMiddleware': 100,
-            # 'scrapy.downloadermiddlewares.retry.RetryMiddleware': None,
-            # 'tutorial.middlewares_proxy.CustomRetryMiddleware': 500,
+            'scrapy.downloadermiddlewares.retry.RetryMiddleware': None,
+            'tutorial.middlewares_rotate_proxy.CustomRetryMiddleware': 500,
             # 'scrapy.downloadermiddlewares.useragent.UserAgentMiddleware':2 ,
             # 'tutorial.middlewares_proxy.AgentMiddleware': 1,
         },
@@ -152,15 +152,17 @@ class DoubanBookSpider(scrapy.Spider):
         running = len(self.crawler.engine.slot.inprogress);
         logger.info('PENDING_QUEUE_SIZE: {}, RUNNING QUEUE SIZE: {}'.format(qsize, running));
 
-        # newUrls = self.getSomeUrls(10);
-        # for url in newUrls:
-        #     # if(len(url) > 0):
-        #     logger.info('add to queue {}'.format(url));
-        #     yield Request(url ,callback=self.parse)
         if (qsize+running < 20):
-            for item in items:
-                # print(item.css('a::text').extract()[0]);
-                href = (item.css('a::attr(href)').extract()[0]);
-                # print(href)
-                # logger.info('add to queue {}'.format(href));
-                yield Request(href ,callback=self.parse)
+            newUrls = self.getSomeUrls(50);
+            for url in newUrls:
+                # if(len(url) > 0):
+                # logger.info('add to queue {}'.format(url));
+                yield Request(url ,callback=self.parse)
+
+        # if (qsize+running < 20):
+        #     for item in items:
+        #         # print(item.css('a::text').extract()[0]);
+        #         href = (item.css('a::attr(href)').extract()[0]);
+        #         # print(href)
+        #         # logger.info('add to queue {}'.format(href));
+        #         yield Request(href ,callback=self.parse)
