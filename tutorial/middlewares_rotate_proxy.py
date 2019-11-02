@@ -85,6 +85,10 @@ class RegularProxyMiddleware(object):
             req_proxy = request.meta.get('proxy', '')
             logger.warn("Get exception with proxy: {}".format(req_proxy))
             logger.warn(exception)
+            qsize = spider.crawler.engine.slot.scheduler.__len__();
+            running = len(spider.crawler.engine.slot.inprogress);
+            logger.info('PENDING_QUEUE_SIZE: {}, RUNNING QUEUE SIZE: {}'.format(qsize, running));
+
             proxyManager.invalidProxy(req_proxy)
             return request
 
