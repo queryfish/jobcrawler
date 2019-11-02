@@ -157,10 +157,10 @@ class DoubanBookSpider(scrapy.Spider):
         #     # if(len(url) > 0):
         #     logger.info('add to queue {}'.format(url));
         #     yield Request(url ,callback=self.parse)
-
-        for item in items:
-            # print(item.css('a::text').extract()[0]);
-            href = (item.css('a::attr(href)').extract()[0]);
-            # print(href)
-            # logger.info('add to queue {}'.format(href));
-            yield Request(href ,callback=self.parse)
+        if (qsize+running < 100):
+            for item in items:
+                # print(item.css('a::text').extract()[0]);
+                href = (item.css('a::attr(href)').extract()[0]);
+                # print(href)
+                # logger.info('add to queue {}'.format(href));
+                yield Request(href ,callback=self.parse)
