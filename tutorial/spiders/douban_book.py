@@ -151,15 +151,16 @@ class DoubanBookSpider(scrapy.Spider):
             # urlOnly['doubanUrl'] = href;
             self.addSomeUrls([href])
 
-        newUrls = self.getSomeUrls(self.step)
+        newUrls = self.getSomeUrls(1);
         # print('get new url')
         # print(newUrls)
 
-        # for url in newUrls:
+        for url in newUrls:
             # if(len(url) > 0):
-            # yield Request(url ,callback=self.parse)
-        for item in items:
-            # print(item.css('a::text').extract()[0]);
-            href = (item.css('a::attr(href)').extract()[0]);
-            # print(href)
-            yield Request(href ,callback=self.parse)
+            yield Request(url ,callback=self.parse)
+
+        # for item in items:
+        #     # print(item.css('a::text').extract()[0]);
+        #     href = (item.css('a::attr(href)').extract()[0]);
+        #     # print(href)
+        #     yield Request(href ,callback=self.parse)
