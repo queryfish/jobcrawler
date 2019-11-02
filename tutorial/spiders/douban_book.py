@@ -72,7 +72,7 @@ class DoubanBookSpider(scrapy.Spider):
 
     def __init__(self, *a, **kw):
         super(DoubanBookSpider, self).__init__(*a, **kw)
-        urls = self.getSomeUrls(5)
+        urls = self.getSomeUrls(10)
         for url in urls:
             self.start_urls.append(url)
             # print(url);
