@@ -36,7 +36,7 @@ class RotateProxyManager(object):
     #     '134.119.188.150:8080',
     # ]
     def __init__(self):
-        self.get_proxy_from_cloud(5)
+        self.get_proxy_from_cloud(1)
         self.cur_url = self.nextProxy()
         # self.check_proxy_from_cloud(self.cur_url)
 
