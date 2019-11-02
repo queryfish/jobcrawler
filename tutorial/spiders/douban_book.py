@@ -162,5 +162,5 @@ class DoubanBookSpider(scrapy.Spider):
             # print(item.css('a::text').extract()[0]);
             href = (item.css('a::attr(href)').extract()[0]);
             # print(href)
-            logger.info('add to queue {}'.format(href));
+            # logger.info('add to queue {}'.format(href));
             yield Request(href ,callback=self.parse)
