@@ -133,13 +133,9 @@ class DoubanBookSpider(scrapy.Spider):
         bookItem['doubanAuthorBrief'] = authorInfo;
         bookItem['doubanCrawlDate'] = datetime.datetime.utcnow();
         # bookItem['doubanISBN']=
-        yield bookItem
-        self.counter = self.counter+1
-        logger.info('NO.{} book crawled ..'.format(self.counter));
-        logger.info(bookItem['doubanBookName'])
-        logger.info(bookItem['doubanUrl'])
-
-        # time.sleep(int(random.uniform(2, 5)))
+        yield bookItem;
+        self.counter += 1;
+        logger.info('NO.{} {}@{}'.format(self.counter, bookItem['doubanBookName'],bookItem['doubanUrl']));
 
         items = response.css(REC_SECTION_SEL);
 
@@ -151,9 +147,10 @@ class DoubanBookSpider(scrapy.Spider):
             # urlOnly['doubanUrl'] = href;
             self.addSomeUrls([href])
 
+        qsize = self.crawler.engine.slot.scheduler.__len__();
+        running = len(self.crawler.engine.slot.inprogress);
+        logger.info('PENDING_QUEUE_SIZE: {}, RUNNING QUEUE SIZE: {}'.format(qsize, running));
         newUrls = self.getSomeUrls(1);
-        # print('get new url')
-        # print(newUrls)
 
         for url in newUrls:
             # if(len(url) > 0):
