@@ -58,8 +58,8 @@ class DoubanBookSpider(scrapy.Spider):
     }
 
     def getSomeUrls(self, count):
-        logger.info('fetch from mongo')
         res = self.collection.find({"$and":[{"doubanUrl":{"$ne":None}},{"doubanCrawlDate":{"$exists":False}}]}).limit(count);
+        logger.info('fetch {} new url from mongo'.format(len(res)));
         urls = [];
         for post in res:
             # print(post)
@@ -69,7 +69,6 @@ class DoubanBookSpider(scrapy.Spider):
     def addSomeUrls(self, urls):
         for url in urls:
             res = self.collection.update({'doubanUrl':url}, {'$set':{'doubanUrl':url}}, upsert=True)
-
 
     def __init__(self, *a, **kw):
         super(DoubanBookSpider, self).__init__(*a, **kw)
