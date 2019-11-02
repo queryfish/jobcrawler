@@ -135,7 +135,8 @@ class DoubanBookSpider(scrapy.Spider):
         # bookItem['doubanISBN']=
         yield bookItem;
         self.counter += 1;
-        logger.info('NO.{} {}@{}'.format(self.counter, bookItem['doubanBookName'],bookItem['doubanUrl']));
+        logger.info('NO.{} book'.format(self.counter));
+        logger.info(bookItem['doubanBookName']);
 
         items = response.css(REC_SECTION_SEL);
 
