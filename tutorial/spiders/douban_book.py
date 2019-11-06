@@ -20,7 +20,7 @@ logger = logging.getLogger(__name__)
 
 #zhipin 爬虫
 class DoubanBookSpider(scrapy.Spider):
-    handle_httpstatus_list = [404]
+    handle_httpstatus_list = [404, 403]
     name = "doubanbook"
     allowed_domains = ["douban.com"]
     client = pymongo.MongoClient(host="127.0.0.1", port=27017)
@@ -91,13 +91,17 @@ class DoubanBookSpider(scrapy.Spider):
         res = self.collection.update({'doubanUrl':url}, {'$set':{'errorCode':errcode}}, upsert=True)
 
     def parse(self, response):
-        if response.status == 404:
+        if response.status == 404 or response.status == 403:
             url = response.request.url
             errcode = response.status
             # bookItem = doubanBookItem()
             # bookItem['doubanUrl'] = response.request.url
             # bookItem['errorCode'] = response.status_code
             res = self.collection.update({'doubanUrl':url}, {'$set':{'errorCode':errcode}}, upsert=True)
+            newUrls = self.getSomeUrls(5);
+            for url in newUrls:
+                logger.info('gonna queue request {}'.format(url));
+                yield Request(url ,callback=self.parse);
             return;
 
         TITLE_SEL = '#wrapper > h1 > span';
@@ -170,7 +174,7 @@ class DoubanBookSpider(scrapy.Spider):
         logger.info('PENDING_QUEUE_SIZE: {}, RUNNING QUEUE SIZE: {}'.format(qsize, running));
 
         if (qsize+running < 20):
-            newUrls = self.getSomeUrls(100);
+            newUrls = self.getSomeUrls(20);
             for url in newUrls:
                 # if(len(url) > 0):
                 # logger.info('add to queue {}'.format(url));
