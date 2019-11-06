@@ -20,7 +20,7 @@ logger = logging.getLogger(__name__)
 
 #zhipin 爬虫
 class DoubanBookSpider(scrapy.Spider):
-
+    handle_httpstatus_list = [404] 
     name = "doubanbook"
     allowed_domains = ["douban.com"]
     client = pymongo.MongoClient(host="127.0.0.1", port=27017)
