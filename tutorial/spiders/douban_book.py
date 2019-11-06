@@ -92,7 +92,7 @@ class DoubanBookSpider(scrapy.Spider):
 
     def parse(self, response):
         if response.status_code == 404:
-            return self.handle_captcha(response):
+            return self.handle_captcha(response);
 
         TITLE_SEL = '#wrapper > h1 > span';
         bookTitle = response.css(TITLE_SEL).css('::text').extract_first();
