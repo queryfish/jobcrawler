@@ -153,11 +153,12 @@ class DoubanBookSpider(scrapy.Spider):
         logger.info('PENDING_QUEUE_SIZE: {}, RUNNING QUEUE SIZE: {}'.format(qsize, running));
 
         if (qsize+running < 20):
-            newUrls = self.getSomeUrls(50);
+            newUrls = self.getSomeUrls(10);
             for url in newUrls:
                 # if(len(url) > 0):
                 # logger.info('add to queue {}'.format(url));
-                yield Request(url ,callback=self.parse)
+                logger.info('gonna queue request {}'.format(url));
+                yield Request(url ,callback=self.parse);
 
         # if (qsize+running < 20):
         #     for item in items:
