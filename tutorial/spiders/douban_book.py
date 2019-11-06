@@ -20,7 +20,7 @@ logger = logging.getLogger(__name__)
 
 #zhipin 爬虫
 class DoubanBookSpider(scrapy.Spider):
-    # handle_httpstatus_list = [404]
+    handle_httpstatus_list = [404]
     name = "doubanbook"
     allowed_domains = ["douban.com"]
     client = pymongo.MongoClient(host="127.0.0.1", port=27017)
@@ -91,9 +91,9 @@ class DoubanBookSpider(scrapy.Spider):
         res = self.collection.update({'doubanUrl':url}, {'$set':{'errorCode':errcode}}, upsert=True)
 
     def parse(self, response):
-        if response.status_code == 404:
+        if response.status == 404:
             url = response.request.url
-            errcode = response.status_code
+            errcode = response.status
             # bookItem = doubanBookItem()
             # bookItem['doubanUrl'] = response.request.url
             # bookItem['errorCode'] = response.status_code
