@@ -173,7 +173,7 @@ class DoubanBookSpider(scrapy.Spider):
         running = len(self.crawler.engine.slot.inprogress);
         logger.info('PENDING_QUEUE_SIZE: {}, RUNNING QUEUE SIZE: {}'.format(qsize, running));
 
-        if (qsize+running < 20):
+        if (qsize+running < 5):
             newUrls = self.getSomeUrls(20);
             for url in newUrls:
                 # if(len(url) > 0):
