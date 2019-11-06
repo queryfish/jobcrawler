@@ -92,7 +92,13 @@ class DoubanBookSpider(scrapy.Spider):
 
     def parse(self, response):
         if response.status_code == 404:
-            return self.handle_captcha(response);
+            url = response.request.url
+            errcode = response.status_code
+            # bookItem = doubanBookItem()
+            # bookItem['doubanUrl'] = response.request.url
+            # bookItem['errorCode'] = response.status_code
+            res = self.collection.update({'doubanUrl':url}, {'$set':{'errorCode':errcode}}, upsert=True)
+            return;
 
         TITLE_SEL = '#wrapper > h1 > span';
         bookTitle = response.css(TITLE_SEL).css('::text').extract_first();
