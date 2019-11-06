@@ -21,6 +21,9 @@ proxyManager = RotateProxyManager();
 class CustomRetryMiddleware(RetryMiddleware):
         def _retry(self, request, reason, spider):
             global proxyManager
+            logger.info('retry reason{}'.format(reason))
+            req_proxy = request.meta.get('proxy', '')
+            proxyManager.invalidProxy(req_proxy)
             proxy  = proxyManager.nextProxy()
             retryreq = request.copy()
             username = 'marrowsky'
@@ -28,7 +31,7 @@ class CustomRetryMiddleware(RetryMiddleware):
             # proxy = proxyManager.proxy()
             proxy_url = 'http://%s:%s@%s' % (username, password, proxy)
             retryreq.meta['proxy'] = proxy_url  # 设置代理
-            logger.info("RETRY using proxy: {}".format(retryreq.meta['proxy']))
+            logger.info("RETRY {}@proxy: {}".format(request.url, retryreq.meta['proxy']))
             # 设置代理身份认证
             # Python3 写法
             auth = "Basic %s" % (base64.b64encode(('%s:%s' % (username, password)).encode('utf-8'))).decode('utf-8')
