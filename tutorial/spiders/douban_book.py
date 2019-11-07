@@ -173,18 +173,18 @@ class DoubanBookSpider(scrapy.Spider):
         running = len(self.crawler.engine.slot.inprogress);
         logger.info('PENDING_QUEUE_SIZE: {}, RUNNING QUEUE SIZE: {}'.format(qsize, running));
 
-        if (qsize+running < 5):
-            newUrls = self.getSomeUrls(100);
-            for url in newUrls:
-                # if(len(url) > 0):
-                # logger.info('add to queue {}'.format(url));
-                logger.info('gonna queue request {}'.format(url));
-                yield Request(url ,callback=self.parse);
+        # if (qsize+running < 5):
+        #     newUrls = self.getSomeUrls(100);
+        #     for url in newUrls:
+        #         # if(len(url) > 0):
+        #         # logger.info('add to queue {}'.format(url));
+        #         logger.info('gonna queue request {}'.format(url));
+        #         yield Request(url ,callback=self.parse);
 
-        # if (qsize+running < 20):
-        #     for item in items:
-        #         # print(item.css('a::text').extract()[0]);
-        #         href = (item.css('a::attr(href)').extract()[0]);
-        #         # print(href)
-        #         # logger.info('add to queue {}'.format(href));
-        #         yield Request(href ,callback=self.parse)
+        if (qsize+running < 500):
+            for item in items:
+                # print(item.css('a::text').extract()[0]);
+                href = (item.css('a::attr(href)').extract()[0]);
+                # print(href)
+                # logger.info('add to queue {}'.format(href));
+                yield Request(href ,callback=self.parse)
