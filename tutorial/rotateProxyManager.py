@@ -8,7 +8,7 @@ logger = logging.getLogger(__name__)
 
 
 class RotateProxyManager(object):
-    orderid = '907089398818285'  # 订单号
+    orderid = '977309259542981'  # 订单号
     get_proxy_url = "https://dps.kdlapi.com/api/getdps/?orderid={}&num={}&pt=1&format=json&sep=1"
     check_proxy_url = "https://dps.kdlapi.com/api/checkdpsvalid/?orderid={}&proxy={}&signature={}"
     # reserved_proxy_count = 900;
@@ -66,7 +66,7 @@ class RotateProxyManager(object):
         return ips;
 
     def check_proxy_from_cloud(self, proxy):
-        signature = '7xwlkipjspls4gaqm00b0bpyrojc13u3'
+        signature = 'exw3mf50r22o5v79w6a04b1kmey0r40f'
         fetch_url = self.check_proxy_url.format(self.orderid, proxy,signature)
         r = requests.get(fetch_url)
         if r.status_code != 200:

@@ -49,7 +49,7 @@ class RegularProxyMiddleware(object):
             proxy  = proxyManager.nextProxy()
 
             username = 'marrowsky'
-            password = '0krbqw3g'
+            password = 'fuckingkuaidaili'
             # proxy = proxyManager.proxy()
             proxy_url = 'http://%s:%s@%s' % (username, password, proxy)
             request.meta['proxy'] = proxy_url  # 设置代理
