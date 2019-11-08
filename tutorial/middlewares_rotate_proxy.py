@@ -16,8 +16,8 @@ retry_time = 0  # 此ip异常次数
 
 logger = logging.getLogger(__name__)
 
-proxyManager = freeRotateProxyManager();
-# proxyManager = RotateProxyManager();
+# proxyManager = freeRotateProxyManager();
+proxyManager = RotateProxyManager();
 
 class CustomRetryMiddleware(RetryMiddleware):
         def _retry(self, request, reason, spider):

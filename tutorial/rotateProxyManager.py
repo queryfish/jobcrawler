@@ -66,32 +66,32 @@ class RotateProxyManager(object):
         return ips;
 
     def check_proxy_from_cloud(self, proxy):
-        # signature = 'exw3mf50r22o5v79w6a04b1kmey0r40f'
-        # fetch_url = self.check_proxy_url.format(self.orderid, proxy,signature)
-        # r = requests.get(fetch_url)
-        # if r.status_code != 200:
-        #     logger.error("fail to fetch proxy")
-        #     return False
-        # content = json.loads(r.content.decode('utf-8'))
-        # logger.info(content);
-        # statusDict = content['data']
-        # valid = statusDict[proxy]
-        # ips = content['data']['proxy_list']
-        # left = content['data']['order_left_count']
+        signature = 'exw3mf50r22o5v79w6a04b1kmey0r40f'
+        fetch_url = self.check_proxy_url.format(self.orderid, proxy,signature)
+        r = requests.get(fetch_url)
+        if r.status_code != 200:
+            logger.error("fail to fetch proxy")
+            return False
+        content = json.loads(r.content.decode('utf-8'))
+        logger.info(content);
+        statusDict = content['data']
+        valid = statusDict[proxy]
+        ips = content['data']['proxy_list']
+        left = content['data']['order_left_count']
         return valid
 
     def invalidProxy(self, proxy):
         #1\ if proxy is in the pool, find the index
         logger.info(self.POOL)
-        # ipport = proxy.replace("http://","")
+        ipport = proxy.replace("http://","")
         logger.warn("gonna check it in the pool {}".format(ipport))
         if ipport in self.POOL:
             # logger.warn("gonna revalid it {}".format(ipport))
-            # valid = self.check_proxy_from_cloud(ipport)
-            # if valid == False:
-            logger.warn("gonna remove it {}".format(ipport))
-            self.POOL.remove(ipport)
-            # self.get_proxy_from_cloud(1)
+            valid = self.check_proxy_from_cloud(ipport)
+            if valid == False:
+                logger.warn("gonna remove it {}".format(ipport))
+                self.POOL.remove(ipport)
+                self.get_proxy_from_cloud(1)
 
         #2\ validate the proxy from the cloud
         #3\ remove it from the pool if invalid
