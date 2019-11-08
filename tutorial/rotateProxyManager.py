@@ -76,8 +76,6 @@ class RotateProxyManager(object):
         logger.info(content);
         statusDict = content['data']
         valid = statusDict[proxy]
-        ips = content['data']['proxy_list']
-        left = content['data']['order_left_count']
         return valid
 
     def invalidProxy(self, proxy):
