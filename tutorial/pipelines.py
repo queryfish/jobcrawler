@@ -114,6 +114,7 @@ class DoubanBookPipeline(object):
         ## assert(doubanUrl is not empty);
         # print(item['doubanUrl']);
         self.collection.replace_one({'doubanUrl':item['doubanUrl']}, dict(item), True);
+        # res = self.collection.update({'doubanUrl':url}, {'$set':{'doubanUrl':url}}, upsert=True)
         # collection.insert(dict(item))
         # line = json.dumps(dict(item)) + "\n"
         # self.file.write(line)
