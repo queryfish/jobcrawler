@@ -21,7 +21,7 @@ logger = logging.getLogger(__name__)
 #zhipin 爬虫
 class DoubanBookSpider(scrapy.Spider):
     handle_httpstatus_list = [404, 403]
-    name = "doubanbook"
+    name = "doubanbook2"
     allowed_domains = ["douban.com"]
     client = pymongo.MongoClient(host="127.0.0.1", port=27017)
     db = client['sobooks']
@@ -31,7 +31,7 @@ class DoubanBookSpider(scrapy.Spider):
     # handle_httpstatus_list = [301, 302];
 
     # start_urls = ['https://book.douban.com/subject/26389895/']
-    start_urls = []
+    start_urls = ['https://www.kuaidaili.com/free/inha/']
     custom_settings = {
         "ITEM_PIPELINES":{
             'tutorial.pipelines.DoubanBookPipeline': 300,
@@ -41,7 +41,7 @@ class DoubanBookSpider(scrapy.Spider):
             # 'tutorial.middlewares.RandomProxy':301,
             'scrapy.downloadermiddlewares.httpproxy.HttpProxyMiddleware': 110,
             # 'tutorial.middlewares_proxy.TunnelProxyMiddleware': 100,
-            'tutorial.middlewares_rotate_proxy.freeRotateProxyMiddleware': 100,
+            # 'tutorial.middlewares_rotate_proxy.RegularProxyMiddleware': 100,
             # 'scrapy.downloadermiddlewares.retry.RetryMiddleware': None,
             # 'tutorial.middlewares_rotate_proxy.CustomRetryMiddleware': 500,
             # 'scrapy.downloadermiddlewares.useragent.UserAgentMiddleware':2 ,
@@ -72,9 +72,9 @@ class DoubanBookSpider(scrapy.Spider):
 
     def __init__(self, *a, **kw):
         super(DoubanBookSpider, self).__init__(*a, **kw)
-        urls = self.getSomeUrls(5)
-        for url in urls:
-            self.start_urls.append(url)
+        # urls = self.getSomeUrls(0)
+        # for url in urls:
+        #     self.start_urls.append(url)
             # print(url);
 
     def errback_httpbin(self, failure):
@@ -91,11 +91,29 @@ class DoubanBookSpider(scrapy.Spider):
         res = self.collection.update({'doubanUrl':url}, {'$set':{'errorCode':errcode}}, upsert=True)
 
     def parse(self, response):
+        logger.info(response)
+        IP_SELECTOR = '#list > table > tbody > tr';
+        # logger.warn(response.css(IP_SELECTOR));
+        items = response.css(IP_SELECTOR)
+        proxies = []
+        for item in items:
+            c = item.css('td::text').extract();
+            d = {}
+            d['ip'] = c[0]
+            d['port'] = c[1]
+            d['prot'] = c[3]
+            proxies.append(d)
+            # for subitem in c:
+            logger.warn(d)
+
+
+    def parse2(self, response):
         if response.status == 404 or response.status == 403:
             url = response.request.url
             errcode = response.status
-            logger.warn("BAD STATUS {} @ {}".format(errcode, url))
             # bookItem = doubanBookItem()
+            # bookItem['doubanUrl'] = response.request.url
+            # bookItem['errorCode'] = response.status_code
             res = self.collection.update({'doubanUrl':url}, {'$set':{'errorCode':errcode}}, upsert=True)
             newUrls = self.getSomeUrls(5);
             for url in newUrls:
