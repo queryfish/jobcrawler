@@ -11,7 +11,7 @@ logger = logging.getLogger(__name__)
 
 class freeRotateProxyManager(object):
     # get_proxy_url = "https://www.kuaidaili.com/free/inha"
-    get_proxy_url = "https://www.kuaidaili.com/free/intr/2/"
+    get_proxy_url = "https://www.kuaidaili.com/free/intr"
     cur_url = '';
     POOL = [];
     cursor = 0

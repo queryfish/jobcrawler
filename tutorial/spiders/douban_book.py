@@ -41,7 +41,7 @@ class DoubanBookSpider(scrapy.Spider):
             # 'tutorial.middlewares.RandomProxy':301,
             'scrapy.downloadermiddlewares.httpproxy.HttpProxyMiddleware': 110,
             # 'tutorial.middlewares_proxy.TunnelProxyMiddleware': 100,
-            'tutorial.middlewares_rotate_proxy.freeRotateProxyMiddleware': 100,
+            'tutorial.middlewares_rotate_proxy.RegularProxyMiddleware': 100,
             # 'scrapy.downloadermiddlewares.retry.RetryMiddleware': None,
             # 'tutorial.middlewares_rotate_proxy.CustomRetryMiddleware': 500,
             # 'scrapy.downloadermiddlewares.useragent.UserAgentMiddleware':2 ,
