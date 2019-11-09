@@ -16,9 +16,6 @@ retry_time = 0  # 此ip异常次数
 
 logger = logging.getLogger(__name__)
 
-# proxyManager = freeRotateProxyManager();
-proxyManager = RotateProxyManager();
-
 class CustomRetryMiddleware(RetryMiddleware):
         def _retry(self, request, reason, spider):
             global proxyManager
@@ -44,13 +41,11 @@ class CustomRetryMiddleware(RetryMiddleware):
 
     # 代理中间件
 class RegularProxyMiddleware(object):
-
+        proxyManager = RotateProxyManager();
         def process_request(self, request, spider):
-            global proxyManager
-            proxy  = proxyManager.nextProxy()
-
+            proxy  = self.proxyManager.nextProxy()
             username = 'marrowsky'
-            password = 'fuckingkuaidaili'
+            password = 'kuaidaili143'
             # proxy = proxyManager.proxy()
             proxy_url = 'http://%s:%s@%s' % (username, password, proxy)
             request.meta['proxy'] = proxy_url  # 设置代理
@@ -85,23 +80,53 @@ class RegularProxyMiddleware(object):
         #     return response
 
         def process_exception(self, request, exception, spider):
-            global proxyManager
             req_proxy = request.meta.get('proxy', '')
             logger.warn("Get exception with proxy: {}".format(req_proxy))
             logger.warn(exception)
-            qsize = spider.crawler.engine.slot.scheduler.__len__();
-            running = len(spider.crawler.engine.slot.inprogress);
-            logger.info('PENDING_QUEUE_SIZE: {}, RUNNING QUEUE SIZE: {}'.format(qsize, running));
-
-            proxyManager.invalidProxy(req_proxy)
+            # qsize = spider.crawler.engine.slot.scheduler.__len__();
+            # running = len(spider.crawler.engine.slot.inprogress);
+            # logger.info('PENDING_QUEUE_SIZE: {}, RUNNING QUEUE SIZE: {}'.format(qsize, running));
+            self.proxyManager.invalidProxy(req_proxy)
             return request
 
-class freeRotateProxyMiddleware(object):
+class fixedProxyMiddleware(object):
+        exception_count = 0;
+        proxyManager = freeRotateProxyManager();
 
         def process_request(self, request, spider):
-            global proxyManager
-            proxy  = proxyManager.nextProxy()
+            proxy  = self.proxyManager.proxy()
+            request.meta['proxy'] = proxy  # 设置代理
+            logger.info("using proxy: {}".format(request.meta['proxy']))
 
+        def process_response(self, request, response, spider):
+            if not(200 <= response.status < 300):
+                url = request.url
+                errcode = response.status
+                logger.warn("BAD STATUS {} @ {}".format(errcode, url))
+                req_proxy = request.meta.get('proxy', '')
+                # if response.status == 404 or response.status == 403:
+                #     proxyManager.banProxy(req_proxy)
+                # else:
+                #     proxyManager.invalidProxy(req_proxy)
+            return response
+
+        def process_exception(self, request, exception, spider):
+            req_proxy = request.meta.get('proxy', '')
+            logger.warn("Get exception with proxy: {}".format(req_proxy))
+            logger.warn(exception)
+            # proxyManager.invalidProxy(req_proxy)
+            self.exception_count +=1;
+            if(self.exception_count > 10):
+                self.exception_count = 0;
+                self.proxyManager.nextProxy();
+            return request
+
+
+class freeRotateProxyMiddleware(object):
+        proxyManager = freeRotateProxyManager();
+
+        def process_request(self, request, spider):
+            proxy  = self.proxyManager.nextProxy()
             # username = 'marrowsky'
             # password = 'fuckingkuaidaili'
             # # proxy = proxyManager.proxy()
@@ -116,27 +141,25 @@ class freeRotateProxyMiddleware(object):
             # request.headers['Proxy-Authorization'] = auth
 
         def process_response(self, request, response, spider):
-            global proxyManager
             if not(200 <= response.status < 300):
                 url = request.url
                 errcode = response.status
                 logger.warn("BAD STATUS {} @ {}".format(errcode, url))
                 req_proxy = request.meta.get('proxy', '')
                 if response.status == 404 or response.status == 403:
-                    proxyManager.banProxy(req_proxy)
+                    self.proxyManager.banProxy(req_proxy)
                 else:
-                    proxyManager.invalidProxy(req_proxy)
+                    self.proxyManager.invalidProxy(req_proxy)
             return response
 
         def process_exception(self, request, exception, spider):
-            global proxyManager
             req_proxy = request.meta.get('proxy', '')
             logger.warn("Get exception with proxy: {}".format(req_proxy))
             logger.warn(exception)
             # qsize = spider.crawler.engine.slot.scheduler.__len__();
             # running = len(spider.crawler.engine.slot.inprogress);
             # logger.info('PENDING_QUEUE_SIZE: {}, RUNNING QUEUE SIZE: {}'.format(qsize, running));
-            proxyManager.invalidProxy(req_proxy)
+            self.proxyManager.invalidProxy(req_proxy)
             return request
 
 

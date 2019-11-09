@@ -3,14 +3,16 @@ import logging
 import requests
 import json
 import random
-
+import kdl
 logger = logging.getLogger(__name__)
 
 
 class RotateProxyManager(object):
     orderid = '977309259542981'  # 订单号
     get_proxy_url = "https://dps.kdlapi.com/api/getdps/?orderid={}&num={}&pt=1&format=json&sep=1"
-    check_proxy_url = "https://dps.kdlapi.com/api/checkdpsvalid/?orderid={}&proxy={}&signature={}"
+    signature = 'exw3mf50r22o5v79w6a04b1kmey0r40f'
+    # fetch_url = self.check_proxy_url.format(self.orderid, proxy,signature)
+
     # reserved_proxy_count = 900;
     # max_proxies = 10;
     # switches = 0;
@@ -20,23 +22,11 @@ class RotateProxyManager(object):
     cur_url = '';
     POOL = [];
     cursor = 0
-    # [
-    #     '202.183.32.185:80',
-    #     '93.190.137.63:8080',
-    #     '93.190.137.58:8080',
-    #     '202.183.32.181:80',
-    #     '79.114.6.86:8080',
-    #     '134.119.188.153:8080',
-    #     '134.119.188.154:8080',
-    #     '134.119.188.152:8080',
-    #     '134.119.188.151:8080',
-    #     '134.119.188.147:8080',
-    #     '134.119.188.158:8080',
-    #     '134.119.188.148:8080',
-    #     '134.119.188.150:8080',
-    # ]
+    auth = kdl.Auth("977309259542981", "exw3mf50r22o5v79w6a04b1kmey0r40f")
+    client = kdl.Client(auth)
+
     def __init__(self):
-        self.get_proxy_from_cloud(5)
+        self.get_proxy_from_cloud(1)
         self.cur_url = self.nextProxy()
         # self.check_proxy_from_cloud(self.cur_url)
 
@@ -50,32 +40,37 @@ class RotateProxyManager(object):
         return self.POOL[self.cursor];
 
     def get_proxy_from_cloud(self, count):
-        fetch_url = self.get_proxy_url.format(self.orderid, count)
-        r = requests.get(fetch_url)
-        if r.status_code != 200:
-            logger.error("fail to fetch proxy")
-            return False
-        content = json.loads(r.content.decode('utf-8'))
-        logger.info(content);
-        ips = content['data']['proxy_list']
-        left = content['data']['order_left_count']
+        # fetch_url = self.get_proxy_url.format(self.orderid, count)
+        # r = requests.get(fetch_url)
+        r = self.client.get_dps(count, sign_type='hmacsha1', format='json')
+        # print("dps proxy: ", r)
+        # if r.status_code != 200:
+        #     logger.error("fail to fetch proxy")
+        #     return False
+        # content = json.loads(r.content.decode('utf-8'))
+        # logger.info(content);
+        # ips = content['data']['proxy_list']
+        # left = content['data']['order_left_count']
+        ips = r;
         for proxy in ips:
             ascproxy = proxy.encode('ascii')
             if ascproxy not in self.POOL:
                 self.POOL.append(ascproxy)
-        return ips;
+        # return ips;
 
     def check_proxy_from_cloud(self, proxy):
-        signature = 'exw3mf50r22o5v79w6a04b1kmey0r40f'
-        fetch_url = self.check_proxy_url.format(self.orderid, proxy,signature)
-        r = requests.get(fetch_url)
-        if r.status_code != 200:
-            logger.error("fail to fetch proxy")
-            return False
-        content = json.loads(r.content.decode('utf-8'))
-        logger.info(content);
-        statusDict = content['data']
-        valid = statusDict[proxy]
+        # check_proxy_url = "https://dps.kdlapi.com/api/checkdpsvalid/?orderid={}&proxy={}&signature
+        r = self.client.check_dps_valid(proxy)
+        # logger.info('check from result {}'.format(r))
+        # r = requests.get(fetch_url)
+        # if r.status_code != 200:
+        #     logger.error("fail to fetch proxy")
+        #     return False
+        # content = json.loads(r.content.decode('utf-8'))
+        # logger.info(content);
+        # statusDict = content['data']
+        # valid = statusDict[proxy]
+        valid  = r;
         return valid
 
     def invalidProxy(self, proxy):

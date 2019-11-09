@@ -28,11 +28,38 @@ class DoubanBookSpider(scrapy.Spider):
     collection =  db['books']
     step = 10;
     counter = 0;
+    banned = 0;
     # handle_httpstatus_list = [301, 302];
 
     # start_urls = ['https://book.douban.com/subject/26389895/']
     start_urls = []
     custom_settings = {
+        "LOG_LEVEL": 'INFO',
+        # "LOG_STDOUT" : True,
+        "LOG_FILE": './douban_logfile.log',
+        "HTTPERROR_ALLOWED_CODES":[403,404],
+        # Obey robots.txt rules
+        #ROBOTSTXT_OBEY = True
+        "RETRY_ENABLED": False,
+        #RETRY_TIMES = 1
+        "DOWNLOAD_TIMEOUT" : 7.5,
+        "DUPEFILTER_DEBUG": True,
+        "LOGSTATS_INTERVAL" : 300.0,
+        # Configure maximum concurrent requests performed by Scrapy (default: 16)
+        "CONCURRENT_REQUESTS": 1,
+        "DOWNLOAD_DELAY":1,
+
+        "AUTOTHROTTLE_ENABLED": True,
+        # The initial download delay
+        "AUTOTHROTTLE_START_DELAY": 0.1,
+        # The maximum download delay to be set in case of high latencies
+        "AUTOTHROTTLE_MAX_DELAY": 5,
+        # The average number of requests Scrapy should be sending in parallel to
+        # each remote server
+        "AUTOTHROTTLE_TARGET_CONCURRENCY": 5.0,
+        # Enable showing throttling stats for every response received:
+        "AUTOTHROTTLE_DEBUG": True,
+
         "ITEM_PIPELINES":{
             'tutorial.pipelines.DoubanBookPipeline': 300,
         },
@@ -42,6 +69,7 @@ class DoubanBookSpider(scrapy.Spider):
             'scrapy.downloadermiddlewares.httpproxy.HttpProxyMiddleware': 110,
             # 'tutorial.middlewares_proxy.TunnelProxyMiddleware': 100,
             'tutorial.middlewares_rotate_proxy.RegularProxyMiddleware': 100,
+            # 'tutorial.middlewares_rotate_proxy.freeRotateProxyMiddleware': 100,
             # 'scrapy.downloadermiddlewares.retry.RetryMiddleware': None,
             # 'tutorial.middlewares_rotate_proxy.CustomRetryMiddleware': 500,
             # 'scrapy.downloadermiddlewares.useragent.UserAgentMiddleware':2 ,
@@ -106,9 +134,12 @@ class DoubanBookSpider(scrapy.Spider):
         TITLE_SEL = '#wrapper > h1 > span';
         bookTitle = response.css(TITLE_SEL).css('::text').extract_first();
         if bookTitle is None :
+            #probably being banned
             logger.error("wrong page ...");
             logger.error(response.request.url);
-            logger.error(response);
+            self.banned+=1;
+            if(self.banned > 10):
+                raise CloseSpider('being banned')
             return;
 
         DETAIL_BOOK_INFO_BLOCK_SEL = '#info';
@@ -170,7 +201,7 @@ class DoubanBookSpider(scrapy.Spider):
 
         qsize = self.crawler.engine.slot.scheduler.__len__();
         running = len(self.crawler.engine.slot.inprogress);
-        logger.info('PENDING_QUEUE_SIZE: {}, RUNNING QUEUE SIZE: {}'.format(qsize, running));
+        # logger.info('PENDING_QUEUE_SIZE: {}, RUNNING QUEUE SIZE: {}'.format(qsize, running));
 
         # if (qsize+running < 5):
         #     newUrls = self.getSomeUrls(100);
@@ -180,7 +211,7 @@ class DoubanBookSpider(scrapy.Spider):
         #         logger.info('gonna queue request {}'.format(url));
         #         yield Request(url ,callback=self.parse);
 
-        if (qsize+running < 500):
+        if (qsize+running < 100):
             for item in items:
                 # print(item.css('a::text').extract()[0]);
                 href = (item.css('a::attr(href)').extract()[0]);

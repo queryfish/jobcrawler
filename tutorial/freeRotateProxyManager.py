@@ -3,6 +3,7 @@ import logging
 import requests
 import json
 import random
+import kdl
 from scrapy.http import HtmlResponse
 from scrapy.utils.project import get_project_settings
 
@@ -16,6 +17,8 @@ class freeRotateProxyManager(object):
     POOL = [];
     cursor = 0
     concur = 0;
+    auth = kdl.Auth("yourorderid", "yourorderapikey")
+    client = kdl.Client(auth)
 
     def __init__(self):
         self.get_proxy_from_cloud(1)
@@ -24,9 +27,15 @@ class freeRotateProxyManager(object):
         self.cur_url = self.nextProxy()
         # self.check_proxy_from_cloud(self.cur_url)
 
+    def proxy(self):
+        # mo = min(self.concur, len(self.POOL))
+        # self.cursor = self.cursor % mo
+        return self.POOL[self.cursor];
+
     def nextProxy(self):
         self.cursor += 1
-        mo = min(self.concur, len(self.POOL))
+        # mo = min(self.concur, len(self.POOL))
+        mo = len(self.POOL);
         self.cursor = self.cursor % mo
         # self.cursor = self.cursor % len(self.POOL)
         return self.POOL[self.cursor];

@@ -12,7 +12,7 @@ import  json
 import  time
 import datetime
 import  random
-import redis
+# import redis
 from scrapy.conf import settings
 
 logger = logging.getLogger(__name__)
@@ -21,18 +21,45 @@ logger = logging.getLogger(__name__)
 #zhipin 爬虫
 class DoubanBookSpider(scrapy.Spider):
     handle_httpstatus_list = [404, 403]
-    name = "doubanbook2"
+    name = "dbbproxy"
     allowed_domains = ["douban.com"]
     client = pymongo.MongoClient(host="127.0.0.1", port=27017)
     db = client['sobooks']
     collection =  db['books']
     step = 10;
     counter = 0;
+    banned = 0;
     # handle_httpstatus_list = [301, 302];
 
     # start_urls = ['https://book.douban.com/subject/26389895/']
-    start_urls = ['https://www.kuaidaili.com/free/inha/']
+    start_urls = []
     custom_settings = {
+        "LOG_LEVEL": 'INFO',
+        # LOG_STDOUT = True
+        "LOG_FILE": './{}_logfile.log'.format(name),
+        "HTTPERROR_ALLOWED_CODES":[403,404],
+        # Obey robots.txt rules
+        #ROBOTSTXT_OBEY = True
+        "RETRY_ENABLED": False,
+        #RETRY_TIMES = 1
+        "DOWNLOAD_TIMEOUT" : 7.5,
+        "DUPEFILTER_DEBUG": True,
+        "LOGSTATS_INTERVAL" : 300.0,
+        # Configure maximum concurrent requests performed by Scrapy (default: 16)
+        "CONCURRENT_REQUESTS": 2,
+        "DOWNLOAD_DELAY":.1,
+
+        "AUTOTHROTTLE_ENABLED": True,
+        # The initial download delay
+        "AUTOTHROTTLE_START_DELAY": 0.1,
+        # The maximum download delay to be set in case of high latencies
+        "AUTOTHROTTLE_MAX_DELAY": 5,
+        # The average number of requests Scrapy should be sending in parallel to
+        # each remote server
+        "AUTOTHROTTLE_TARGET_CONCURRENCY": 5.0,
+        # Enable showing throttling stats for every response received:
+        "AUTOTHROTTLE_DEBUG": True,
+
         "ITEM_PIPELINES":{
             'tutorial.pipelines.DoubanBookPipeline': 300,
         },
@@ -42,6 +69,7 @@ class DoubanBookSpider(scrapy.Spider):
             'scrapy.downloadermiddlewares.httpproxy.HttpProxyMiddleware': 110,
             # 'tutorial.middlewares_proxy.TunnelProxyMiddleware': 100,
             # 'tutorial.middlewares_rotate_proxy.RegularProxyMiddleware': 100,
+            'tutorial.middlewares_rotate_proxy.fixedProxyMiddleware': 100,
             # 'scrapy.downloadermiddlewares.retry.RetryMiddleware': None,
             # 'tutorial.middlewares_rotate_proxy.CustomRetryMiddleware': 500,
             # 'scrapy.downloadermiddlewares.useragent.UserAgentMiddleware':2 ,
@@ -63,6 +91,8 @@ class DoubanBookSpider(scrapy.Spider):
         for post in res:
             # print(post)
             urls.append(post['doubanUrl']);
+        if len(urls) ==  0:
+            return ['https://book.douban.com/subject/1089243/'];
         logger.info('fetch {} new url from mongo'.format(len(urls)));
         return urls
 
@@ -72,15 +102,10 @@ class DoubanBookSpider(scrapy.Spider):
 
     def __init__(self, *a, **kw):
         super(DoubanBookSpider, self).__init__(*a, **kw)
-        # urls = self.getSomeUrls(0)
-        # for url in urls:
-        #     self.start_urls.append(url)
+        urls = self.getSomeUrls(5)
+        for url in urls:
+            self.start_urls.append(url)
             # print(url);
-
-    def errback_httpbin(self, failure):
-        # log all failures
-        logger.error("errback get something")
-        logger.error(repr(failure))
 
     def handle_captcha(self, response):
         url = response.request.url
@@ -91,29 +116,11 @@ class DoubanBookSpider(scrapy.Spider):
         res = self.collection.update({'doubanUrl':url}, {'$set':{'errorCode':errcode}}, upsert=True)
 
     def parse(self, response):
-        logger.info(response)
-        IP_SELECTOR = '#list > table > tbody > tr';
-        # logger.warn(response.css(IP_SELECTOR));
-        items = response.css(IP_SELECTOR)
-        proxies = []
-        for item in items:
-            c = item.css('td::text').extract();
-            d = {}
-            d['ip'] = c[0]
-            d['port'] = c[1]
-            d['prot'] = c[3]
-            proxies.append(d)
-            # for subitem in c:
-            logger.warn(d)
-
-
-    def parse2(self, response):
         if response.status == 404 or response.status == 403:
             url = response.request.url
             errcode = response.status
+            logger.warn("BAD STATUS {} @ {}".format(errcode, url))
             # bookItem = doubanBookItem()
-            # bookItem['doubanUrl'] = response.request.url
-            # bookItem['errorCode'] = response.status_code
             res = self.collection.update({'doubanUrl':url}, {'$set':{'errorCode':errcode}}, upsert=True)
             newUrls = self.getSomeUrls(5);
             for url in newUrls:
@@ -124,9 +131,12 @@ class DoubanBookSpider(scrapy.Spider):
         TITLE_SEL = '#wrapper > h1 > span';
         bookTitle = response.css(TITLE_SEL).css('::text').extract_first();
         if bookTitle is None :
+            #probably being banned
             logger.error("wrong page ...");
             logger.error(response.request.url);
-            logger.error(response);
+            self.banned+=1;
+            if(self.banned > 10):
+                raise CloseSpider('being banned')
             return;
 
         DETAIL_BOOK_INFO_BLOCK_SEL = '#info';
@@ -173,8 +183,9 @@ class DoubanBookSpider(scrapy.Spider):
         # bookItem['doubanISBN']=
         yield bookItem;
         self.counter += 1;
-        logger.info('NO.{} book'.format(self.counter));
-        logger.info(bookItem['doubanBookName']);
+        logger.info(u'NO.{} book {}'.format(self.counter, bookItem['doubanBookName']));
+        # logger.info(bookItem['doubanBookName']);
+        logger.info('proxy {}'.format(response.request.meta['proxy']));
 
         items = response.css(REC_SECTION_SEL);
 
@@ -188,7 +199,7 @@ class DoubanBookSpider(scrapy.Spider):
 
         qsize = self.crawler.engine.slot.scheduler.__len__();
         running = len(self.crawler.engine.slot.inprogress);
-        logger.info('PENDING_QUEUE_SIZE: {}, RUNNING QUEUE SIZE: {}'.format(qsize, running));
+        # logger.info('PENDING_QUEUE_SIZE: {}, RUNNING QUEUE SIZE: {}'.format(qsize, running));
 
         # if (qsize+running < 5):
         #     newUrls = self.getSomeUrls(100);
@@ -198,7 +209,7 @@ class DoubanBookSpider(scrapy.Spider):
         #         logger.info('gonna queue request {}'.format(url));
         #         yield Request(url ,callback=self.parse);
 
-        if (qsize+running < 500):
+        if (qsize+running < 100):
             for item in items:
                 # print(item.css('a::text').extract()[0]);
                 href = (item.css('a::attr(href)').extract()[0]);

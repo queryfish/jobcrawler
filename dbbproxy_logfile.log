@@ -1,0 +1,362 @@
+2019-11-09 12:10:32 [scrapy.middleware] INFO: Enabled extensions:
+['scrapy.extensions.memusage.MemoryUsage',
+ 'scrapy.extensions.logstats.LogStats',
+ 'scrapy.extensions.telnet.TelnetConsole',
+ 'scrapy.extensions.corestats.CoreStats',
+ 'scrapy.extensions.throttle.AutoThrottle']
+2019-11-09 12:10:32 [tutorial.spiders.douban_book_proxy] INFO: fetch 5 new url from mongo
+2019-11-09 12:10:33 [tutorial.freeRotateProxyManager] WARNING: http://60.5.254.169:8081
+2019-11-09 12:10:33 [tutorial.freeRotateProxyManager] WARNING: http://58.247.127.145:53281
+2019-11-09 12:10:33 [tutorial.freeRotateProxyManager] WARNING: http://221.178.176.25:3128
+2019-11-09 12:10:33 [tutorial.freeRotateProxyManager] WARNING: http://112.12.37.196:53281
+2019-11-09 12:10:33 [tutorial.freeRotateProxyManager] WARNING: http://124.205.155.158:9090
+2019-11-09 12:10:33 [tutorial.freeRotateProxyManager] WARNING: http://122.136.212.132:53281
+2019-11-09 12:10:33 [tutorial.freeRotateProxyManager] WARNING: http://117.141.155.244:53281
+2019-11-09 12:10:33 [tutorial.freeRotateProxyManager] WARNING: http://47.98.143.163:3128
+2019-11-09 12:10:33 [tutorial.freeRotateProxyManager] WARNING: http://218.22.7.62:53281
+2019-11-09 12:10:33 [tutorial.freeRotateProxyManager] WARNING: http://124.205.155.150:9090
+2019-11-09 12:10:33 [tutorial.freeRotateProxyManager] WARNING: http://14.20.235.74:9797
+2019-11-09 12:10:33 [tutorial.freeRotateProxyManager] WARNING: http://117.141.155.241:53281
+2019-11-09 12:10:33 [tutorial.freeRotateProxyManager] WARNING: http://14.20.235.74:9797
+2019-11-09 12:10:33 [tutorial.freeRotateProxyManager] WARNING: http://119.57.108.65:53281
+2019-11-09 12:10:33 [tutorial.freeRotateProxyManager] WARNING: http://183.196.170.247:9000
+2019-11-09 12:10:34 [tutorial.rotateProxyManager] INFO: {u'msg': u'', u'code': 0, u'data': {u'count': 5, u'proxy_list': [u'58.252.200.34:15798', u'113.100.89.19:18058', u'115.221.113.3:16000', u'115.216.114.52:18514', u'106.122.168.232:20794'], u'order_left_count': 79, u'dedup_count': 5}}
+2019-11-09 12:10:34 [scrapy.middleware] INFO: Enabled downloader middlewares:
+['tutorial.middlewares.RandomUserAgent',
+ 'tutorial.middlewares_rotate_proxy.fixedProxyMiddleware',
+ 'scrapy.downloadermiddlewares.httpproxy.HttpProxyMiddleware',
+ 'scrapy.downloadermiddlewares.httpauth.HttpAuthMiddleware',
+ 'scrapy.downloadermiddlewares.downloadtimeout.DownloadTimeoutMiddleware',
+ 'scrapy.downloadermiddlewares.defaultheaders.DefaultHeadersMiddleware',
+ 'scrapy.downloadermiddlewares.useragent.UserAgentMiddleware',
+ 'scrapy.downloadermiddlewares.redirect.MetaRefreshMiddleware',
+ 'scrapy.downloadermiddlewares.httpcompression.HttpCompressionMiddleware',
+ 'scrapy.downloadermiddlewares.redirect.RedirectMiddleware',
+ 'scrapy.downloadermiddlewares.stats.DownloaderStats']
+2019-11-09 12:10:34 [scrapy.middleware] INFO: Enabled spider middlewares:
+['scrapy.spidermiddlewares.httperror.HttpErrorMiddleware',
+ 'scrapy.spidermiddlewares.offsite.OffsiteMiddleware',
+ 'scrapy.spidermiddlewares.referer.RefererMiddleware',
+ 'scrapy.spidermiddlewares.urllength.UrlLengthMiddleware',
+ 'scrapy.spidermiddlewares.depth.DepthMiddleware']
+2019-11-09 12:10:34 [scrapy.middleware] INFO: Enabled item pipelines:
+['tutorial.pipelines.DoubanBookPipeline']
+2019-11-09 12:10:34 [scrapy.core.engine] INFO: Spider opened
+2019-11-09 12:10:34 [scrapy.extensions.logstats] INFO: Crawled 0 pages (at 0 pages/min), scraped 0 items (at 0 items/min)
+2019-11-09 12:10:34 [tutorial.middlewares_rotate_proxy] INFO: using proxy: http://58.247.127.145:53281
+2019-11-09 12:10:34 [tutorial.middlewares_rotate_proxy] INFO: using proxy: http://58.247.127.145:53281
+2019-11-09 12:10:38 [scrapy.extensions.throttle] INFO: slot: book.douban.com | conc: 2 | delay:  675 ms (+575) | latency: 3376 ms | size: 23125 bytes
+2019-11-09 12:10:38 [tutorial.middlewares_rotate_proxy] INFO: using proxy: http://58.247.127.145:53281
+2019-11-09 12:10:38 [tutorial.spiders.douban_book_proxy] INFO: NO.1 book 学术与制度
+2019-11-09 12:10:38 [tutorial.spiders.douban_book_proxy] INFO: proxy http://58.247.127.145:53281
+2019-11-09 12:10:38 [scrapy.extensions.throttle] INFO: slot: book.douban.com | conc: 2 | delay:  409 ms (-265) | latency:  723 ms | size: 18491 bytes
+2019-11-09 12:10:38 [tutorial.middlewares_rotate_proxy] INFO: using proxy: http://58.247.127.145:53281
+2019-11-09 12:10:39 [tutorial.spiders.douban_book_proxy] INFO: NO.2 book 從拓跋到北魏
+2019-11-09 12:10:39 [tutorial.spiders.douban_book_proxy] INFO: proxy http://58.247.127.145:53281
+2019-11-09 12:10:40 [scrapy.extensions.throttle] INFO: slot: book.douban.com | conc: 2 | delay:  391 ms (-18) | latency: 1864 ms | size: 25494 bytes
+2019-11-09 12:10:40 [tutorial.middlewares_rotate_proxy] INFO: using proxy: http://58.247.127.145:53281
+2019-11-09 12:10:41 [tutorial.spiders.douban_book_proxy] INFO: NO.3 book 转向自我
+2019-11-09 12:10:41 [tutorial.spiders.douban_book_proxy] INFO: proxy http://58.247.127.145:53281
+2019-11-09 12:10:42 [tutorial.middlewares_rotate_proxy] WARNING: Get exception with proxy: http://58.247.127.145:53281
+2019-11-09 12:10:42 [tutorial.middlewares_rotate_proxy] WARNING: User timeout caused connection failure: Getting https://book.douban.com/subject/3233097/ took longer than 7.5 seconds..
+2019-11-09 12:10:42 [tutorial.middlewares_rotate_proxy] INFO: using proxy: http://58.247.127.145:53281
+2019-11-09 12:10:42 [scrapy.extensions.throttle] INFO: slot: book.douban.com | conc: 2 | delay:  317 ms (-73) | latency: 1218 ms | size: 24315 bytes
+2019-11-09 12:10:42 [tutorial.middlewares_rotate_proxy] INFO: using proxy: http://58.247.127.145:53281
+2019-11-09 12:10:42 [tutorial.spiders.douban_book_proxy] INFO: NO.4 book 碑铭所见前秦至隋初的关中部族
+2019-11-09 12:10:42 [tutorial.spiders.douban_book_proxy] INFO: proxy http://58.247.127.145:53281
+2019-11-09 12:10:44 [scrapy.extensions.throttle] INFO: slot: book.douban.com | conc: 2 | delay:  351 ms (+34) | latency: 1759 ms | size: 25377 bytes
+2019-11-09 12:10:44 [tutorial.middlewares_rotate_proxy] INFO: using proxy: http://58.247.127.145:53281
+2019-11-09 12:10:44 [tutorial.spiders.douban_book_proxy] INFO: NO.5 book 惟适之安
+2019-11-09 12:10:44 [tutorial.spiders.douban_book_proxy] INFO: proxy http://58.247.127.145:53281
+2019-11-09 12:10:45 [scrapy.extensions.throttle] INFO: slot: book.douban.com | conc: 2 | delay:  333 ms (-18) | latency: 1575 ms | size: 21582 bytes
+2019-11-09 12:10:45 [tutorial.middlewares_rotate_proxy] INFO: using proxy: http://58.247.127.145:53281
+2019-11-09 12:10:46 [tutorial.spiders.douban_book_proxy] INFO: NO.6 book 突厥汗国与隋唐关系史研究
+2019-11-09 12:10:46 [tutorial.spiders.douban_book_proxy] INFO: proxy http://58.247.127.145:53281
+2019-11-09 12:10:46 [scrapy.extensions.throttle] INFO: slot: book.douban.com | conc: 2 | delay:  883 ms (+550) | latency: 4418 ms | size:  4690 bytes
+2019-11-09 12:10:46 [tutorial.middlewares_rotate_proxy] INFO: using proxy: http://58.247.127.145:53281
+2019-11-09 12:10:46 [tutorial.spiders.douban_book_proxy] ERROR: wrong page ...
+2019-11-09 12:10:46 [tutorial.spiders.douban_book_proxy] ERROR: https://book.douban.com/subject/3233097/
+2019-11-09 12:10:47 [scrapy.extensions.throttle] INFO: slot: book.douban.com | conc: 2 | delay:  536 ms (-347) | latency:  947 ms | size: 23700 bytes
+2019-11-09 12:10:47 [tutorial.middlewares_rotate_proxy] INFO: using proxy: http://58.247.127.145:53281
+2019-11-09 12:10:47 [tutorial.spiders.douban_book_proxy] INFO: NO.7 book 从理学到伦理学
+2019-11-09 12:10:47 [tutorial.spiders.douban_book_proxy] INFO: proxy http://58.247.127.145:53281
+2019-11-09 12:10:48 [scrapy.extensions.throttle] INFO: slot: book.douban.com | conc: 2 | delay:  417 ms (-118) | latency: 1494 ms | size: 29420 bytes
+2019-11-09 12:10:48 [tutorial.middlewares_rotate_proxy] INFO: using proxy: http://58.247.127.145:53281
+2019-11-09 12:10:48 [tutorial.spiders.douban_book_proxy] INFO: NO.8 book 中古中国与外来文明
+2019-11-09 12:10:48 [tutorial.spiders.douban_book_proxy] INFO: proxy http://58.247.127.145:53281
+2019-11-09 12:10:49 [scrapy.extensions.throttle] INFO: slot: book.douban.com | conc: 2 | delay:  289 ms (-127) | latency:  810 ms | size: 22445 bytes
+2019-11-09 12:10:49 [tutorial.middlewares_rotate_proxy] INFO: using proxy: http://58.247.127.145:53281
+2019-11-09 12:10:49 [tutorial.spiders.douban_book_proxy] INFO: NO.9 book 于阗史丛考
+2019-11-09 12:10:49 [tutorial.spiders.douban_book_proxy] INFO: proxy http://58.247.127.145:53281
+2019-11-09 12:10:50 [scrapy.extensions.throttle] INFO: slot: book.douban.com | conc: 2 | delay:  278 ms (-11) | latency: 1331 ms | size: 27982 bytes
+2019-11-09 12:10:50 [tutorial.middlewares_rotate_proxy] INFO: using proxy: http://58.247.127.145:53281
+2019-11-09 12:10:50 [tutorial.spiders.douban_book_proxy] INFO: NO.10 book 中国史学上之正统论
+2019-11-09 12:10:50 [tutorial.spiders.douban_book_proxy] INFO: proxy http://58.247.127.145:53281
+2019-11-09 12:10:50 [scrapy.extensions.throttle] INFO: slot: book.douban.com | conc: 2 | delay:  265 ms (-12) | latency: 1264 ms | size: 25989 bytes
+2019-11-09 12:10:50 [tutorial.middlewares_rotate_proxy] INFO: using proxy: http://58.247.127.145:53281
+2019-11-09 12:10:50 [tutorial.spiders.douban_book_proxy] INFO: NO.11 book 安禄山服散考
+2019-11-09 12:10:50 [tutorial.spiders.douban_book_proxy] INFO: proxy http://58.247.127.145:53281
+2019-11-09 12:10:51 [scrapy.extensions.throttle] INFO: slot: book.douban.com | conc: 2 | delay:  375 ms (+110) | latency: 1877 ms | size: 19428 bytes
+2019-11-09 12:10:51 [tutorial.middlewares_rotate_proxy] INFO: using proxy: http://58.247.127.145:53281
+2019-11-09 12:10:52 [tutorial.spiders.douban_book_proxy] INFO: NO.12 book 西域和卓家族研究
+2019-11-09 12:10:52 [tutorial.spiders.douban_book_proxy] INFO: proxy http://58.247.127.145:53281
+2019-11-09 12:10:53 [scrapy.extensions.throttle] INFO: slot: book.douban.com | conc: 2 | delay:  325 ms (-50) | latency: 1377 ms | size: 32840 bytes
+2019-11-09 12:10:53 [tutorial.middlewares_rotate_proxy] INFO: using proxy: http://58.247.127.145:53281
+2019-11-09 12:10:53 [scrapy.extensions.throttle] INFO: slot: book.douban.com | conc: 2 | delay:  575 ms (+249) | latency: 2877 ms | size: 31426 bytes
+2019-11-09 12:10:53 [tutorial.middlewares_rotate_proxy] INFO: using proxy: http://58.247.127.145:53281
+2019-11-09 12:10:53 [tutorial.spiders.douban_book_proxy] INFO: NO.13 book 中国中世纪的鬼节
+2019-11-09 12:10:53 [tutorial.spiders.douban_book_proxy] INFO: proxy http://58.247.127.145:53281
+2019-11-09 12:10:53 [tutorial.spiders.douban_book_proxy] INFO: NO.14 book 内藤湖南
+2019-11-09 12:10:53 [tutorial.spiders.douban_book_proxy] INFO: proxy http://58.247.127.145:53281
+2019-11-09 12:10:55 [scrapy.extensions.throttle] INFO: slot: book.douban.com | conc: 2 | delay:  406 ms (-169) | latency: 1186 ms | size: 26010 bytes
+2019-11-09 12:10:55 [tutorial.middlewares_rotate_proxy] INFO: using proxy: http://58.247.127.145:53281
+2019-11-09 12:10:55 [tutorial.spiders.douban_book_proxy] INFO: NO.15 book 蒙古及蒙古人
+2019-11-09 12:10:55 [tutorial.spiders.douban_book_proxy] INFO: proxy http://58.247.127.145:53281
+2019-11-09 12:10:55 [scrapy.extensions.throttle] INFO: slot: book.douban.com | conc: 2 | delay:  386 ms (-19) | latency: 1835 ms | size: 20184 bytes
+2019-11-09 12:10:55 [tutorial.middlewares_rotate_proxy] INFO: using proxy: http://58.247.127.145:53281
+2019-11-09 12:10:56 [tutorial.spiders.douban_book_proxy] INFO: NO.16 book 新疆穆斯林研究
+2019-11-09 12:10:56 [tutorial.spiders.douban_book_proxy] INFO: proxy http://58.247.127.145:53281
+2019-11-09 12:10:56 [scrapy.extensions.throttle] INFO: slot: book.douban.com | conc: 2 | delay:  316 ms (-69) | latency: 1235 ms | size: 22294 bytes
+2019-11-09 12:10:56 [tutorial.middlewares_rotate_proxy] INFO: using proxy: http://58.247.127.145:53281
+2019-11-09 12:10:56 [tutorial.spiders.douban_book_proxy] INFO: NO.17 book 黄金圈住地
+2019-11-09 12:10:56 [tutorial.spiders.douban_book_proxy] INFO: proxy http://58.247.127.145:53281
+2019-11-09 12:10:57 [scrapy.extensions.throttle] INFO: slot: book.douban.com | conc: 2 | delay:  280 ms (-36) | latency: 1217 ms | size: 22895 bytes
+2019-11-09 12:10:57 [tutorial.middlewares_rotate_proxy] INFO: using proxy: http://58.247.127.145:53281
+2019-11-09 12:10:57 [tutorial.spiders.douban_book_proxy] INFO: NO.18 book 宋代政治结构研究
+2019-11-09 12:10:57 [tutorial.spiders.douban_book_proxy] INFO: proxy http://58.247.127.145:53281
+2019-11-09 12:10:58 [scrapy.extensions.throttle] INFO: slot: book.douban.com | conc: 2 | delay:  273 ms (-6) | latency: 1337 ms | size: 19789 bytes
+2019-11-09 12:10:58 [tutorial.middlewares_rotate_proxy] INFO: using proxy: http://58.247.127.145:53281
+2019-11-09 12:10:58 [tutorial.spiders.douban_book_proxy] INFO: NO.19 book The Islamic Enlightenment
+2019-11-09 12:10:58 [tutorial.spiders.douban_book_proxy] INFO: proxy http://58.247.127.145:53281
+2019-11-09 12:10:58 [scrapy.extensions.throttle] INFO: slot: book.douban.com | conc: 2 | delay:  210 ms (-63) | latency:  733 ms | size: 21884 bytes
+2019-11-09 12:10:58 [tutorial.middlewares_rotate_proxy] INFO: using proxy: http://58.247.127.145:53281
+2019-11-09 12:10:58 [tutorial.spiders.douban_book_proxy] INFO: NO.20 book 南西伯利亚古代史
+2019-11-09 12:10:58 [tutorial.spiders.douban_book_proxy] INFO: proxy http://58.247.127.145:53281
+2019-11-09 12:10:59 [scrapy.extensions.throttle] INFO: slot: book.douban.com | conc: 2 | delay:  289 ms (+78) | latency: 1446 ms | size: 26353 bytes
+2019-11-09 12:10:59 [tutorial.middlewares_rotate_proxy] INFO: using proxy: http://58.247.127.145:53281
+2019-11-09 12:10:59 [tutorial.spiders.douban_book_proxy] INFO: NO.21 book 新疆五十年
+2019-11-09 12:10:59 [tutorial.spiders.douban_book_proxy] INFO: proxy http://58.247.127.145:53281
+2019-11-09 12:11:01 [scrapy.extensions.throttle] INFO: slot: book.douban.com | conc: 2 | delay:  417 ms (+128) | latency: 2087 ms | size: 27833 bytes
+2019-11-09 12:11:01 [tutorial.middlewares_rotate_proxy] INFO: using proxy: http://58.247.127.145:53281
+2019-11-09 12:11:01 [tutorial.spiders.douban_book_proxy] INFO: NO.22 book 圣战与文明
+2019-11-09 12:11:01 [tutorial.spiders.douban_book_proxy] INFO: proxy http://58.247.127.145:53281
+2019-11-09 12:11:01 [scrapy.extensions.throttle] INFO: slot: book.douban.com | conc: 2 | delay:  377 ms (-40) | latency: 1687 ms | size: 30672 bytes
+2019-11-09 12:11:01 [tutorial.middlewares_rotate_proxy] INFO: using proxy: http://58.247.127.145:53281
+2019-11-09 12:11:01 [tutorial.spiders.douban_book_proxy] INFO: NO.23 book 民族主义思想与殖民地世界
+2019-11-09 12:11:01 [tutorial.spiders.douban_book_proxy] INFO: proxy http://58.247.127.145:53281
+2019-11-09 12:11:02 [scrapy.extensions.throttle] INFO: slot: book.douban.com | conc: 2 | delay:  320 ms (-56) | latency: 1318 ms | size: 22669 bytes
+2019-11-09 12:11:02 [tutorial.middlewares_rotate_proxy] INFO: using proxy: http://58.247.127.145:53281
+2019-11-09 12:11:02 [tutorial.spiders.douban_book_proxy] INFO: NO.24 book 马继业在喀什噶尔
+2019-11-09 12:11:02 [tutorial.spiders.douban_book_proxy] INFO: proxy http://58.247.127.145:53281
+2019-11-09 12:11:03 [scrapy.extensions.throttle] INFO: slot: book.douban.com | conc: 2 | delay:  339 ms (+18) | latency: 1695 ms | size: 24747 bytes
+2019-11-09 12:11:03 [tutorial.middlewares_rotate_proxy] INFO: using proxy: http://58.247.127.145:53281
+2019-11-09 12:11:03 [tutorial.spiders.douban_book_proxy] INFO: NO.25 book 伊斯兰世界概念的形成
+2019-11-09 12:11:03 [tutorial.spiders.douban_book_proxy] INFO: proxy http://58.247.127.145:53281
+2019-11-09 12:11:04 [scrapy.extensions.throttle] INFO: slot: book.douban.com | conc: 2 | delay:  331 ms (-7) | latency: 1617 ms | size: 29802 bytes
+2019-11-09 12:11:04 [tutorial.middlewares_rotate_proxy] INFO: using proxy: http://58.247.127.145:53281
+2019-11-09 12:11:04 [tutorial.spiders.douban_book_proxy] INFO: NO.26 book 从民族国家拯救历史
+2019-11-09 12:11:04 [tutorial.spiders.douban_book_proxy] INFO: proxy http://58.247.127.145:53281
+2019-11-09 12:11:05 [scrapy.extensions.throttle] INFO: slot: book.douban.com | conc: 2 | delay:  324 ms (-7) | latency: 1586 ms | size: 33862 bytes
+2019-11-09 12:11:05 [tutorial.middlewares_rotate_proxy] INFO: using proxy: http://58.247.127.145:53281
+2019-11-09 12:11:05 [tutorial.spiders.douban_book_proxy] INFO: NO.27 book 民族与民族主义
+2019-11-09 12:11:05 [tutorial.spiders.douban_book_proxy] INFO: proxy http://58.247.127.145:53281
+2019-11-09 12:11:05 [scrapy.extensions.throttle] INFO: slot: book.douban.com | conc: 2 | delay:  289 ms (-35) | latency: 1269 ms | size: 34905 bytes
+2019-11-09 12:11:05 [tutorial.middlewares_rotate_proxy] INFO: using proxy: http://58.247.127.145:53281
+2019-11-09 12:11:06 [tutorial.spiders.douban_book_proxy] INFO: NO.28 book 民族与民族主义
+2019-11-09 12:11:06 [tutorial.spiders.douban_book_proxy] INFO: proxy http://58.247.127.145:53281
+2019-11-09 12:11:07 [scrapy.extensions.throttle] INFO: slot: book.douban.com | conc: 2 | delay:  257 ms (-31) | latency: 1130 ms | size: 22050 bytes
+2019-11-09 12:11:07 [tutorial.middlewares_rotate_proxy] INFO: using proxy: http://58.247.127.145:53281
+2019-11-09 12:11:07 [tutorial.spiders.douban_book_proxy] INFO: NO.29 book 全球化时代的民族与民族主义
+2019-11-09 12:11:07 [tutorial.spiders.douban_book_proxy] INFO: proxy http://58.247.127.145:53281
+2019-11-09 12:11:08 [scrapy.extensions.throttle] INFO: slot: book.douban.com | conc: 2 | delay:  434 ms (+176) | latency: 2172 ms | size: 30101 bytes
+2019-11-09 12:11:08 [tutorial.middlewares_rotate_proxy] INFO: using proxy: http://58.247.127.145:53281
+2019-11-09 12:11:08 [tutorial.spiders.douban_book_proxy] INFO: NO.30 book 民族主义
+2019-11-09 12:11:08 [tutorial.spiders.douban_book_proxy] INFO: proxy http://58.247.127.145:53281
+2019-11-09 12:11:08 [scrapy.extensions.throttle] INFO: slot: book.douban.com | conc: 2 | delay:  319 ms (-114) | latency: 1023 ms | size: 24230 bytes
+2019-11-09 12:11:08 [tutorial.middlewares_rotate_proxy] INFO: using proxy: http://58.247.127.145:53281
+2019-11-09 12:11:08 [tutorial.spiders.douban_book_proxy] INFO: NO.31 book 臺灣的想像地理
+2019-11-09 12:11:08 [tutorial.spiders.douban_book_proxy] INFO: proxy http://58.247.127.145:53281
+2019-11-09 12:11:10 [scrapy.extensions.throttle] INFO: slot: book.douban.com | conc: 2 | delay:  371 ms (+51) | latency: 1855 ms | size: 32074 bytes
+2019-11-09 12:11:10 [tutorial.middlewares_rotate_proxy] INFO: using proxy: http://58.247.127.145:53281
+2019-11-09 12:11:10 [tutorial.spiders.douban_book_proxy] INFO: NO.32 book 全球现代性的危机
+2019-11-09 12:11:10 [tutorial.spiders.douban_book_proxy] INFO: proxy http://58.247.127.145:53281
+2019-11-09 12:11:10 [scrapy.extensions.throttle] INFO: slot: book.douban.com | conc: 2 | delay:  333 ms (-37) | latency: 1484 ms | size: 31642 bytes
+2019-11-09 12:11:10 [tutorial.middlewares_rotate_proxy] INFO: using proxy: http://58.247.127.145:53281
+2019-11-09 12:11:10 [tutorial.spiders.douban_book_proxy] INFO: NO.33 book 被治理者的政治
+2019-11-09 12:11:10 [tutorial.spiders.douban_book_proxy] INFO: proxy http://58.247.127.145:53281
+2019-11-09 12:11:11 [scrapy.extensions.throttle] INFO: slot: book.douban.com | conc: 2 | delay:  237 ms (-96) | latency:  708 ms | size: 23110 bytes
+2019-11-09 12:11:11 [tutorial.middlewares_rotate_proxy] INFO: using proxy: http://58.247.127.145:53281
+2019-11-09 12:11:11 [scrapy.extensions.throttle] INFO: slot: book.douban.com | conc: 2 | delay:  248 ms (+11) | latency: 1244 ms | size: 26012 bytes
+2019-11-09 12:11:11 [tutorial.middlewares_rotate_proxy] INFO: using proxy: http://58.247.127.145:53281
+2019-11-09 12:11:11 [tutorial.spiders.douban_book_proxy] INFO: NO.34 book 總力戰與臺灣
+2019-11-09 12:11:11 [tutorial.spiders.douban_book_proxy] INFO: proxy http://58.247.127.145:53281
+2019-11-09 12:11:11 [tutorial.spiders.douban_book_proxy] INFO: NO.35 book 當帝國回到家
+2019-11-09 12:11:11 [tutorial.spiders.douban_book_proxy] INFO: proxy http://58.247.127.145:53281
+2019-11-09 12:11:12 [scrapy.extensions.throttle] INFO: slot: book.douban.com | conc: 2 | delay:  259 ms (+10) | latency: 1296 ms | size: 22121 bytes
+2019-11-09 12:11:12 [tutorial.middlewares_rotate_proxy] INFO: using proxy: http://58.247.127.145:53281
+2019-11-09 12:11:12 [scrapy.extensions.throttle] INFO: slot: book.douban.com | conc: 2 | delay:  209 ms (-49) | latency:  803 ms | size: 25757 bytes
+2019-11-09 12:11:12 [tutorial.middlewares_rotate_proxy] INFO: using proxy: http://58.247.127.145:53281
+2019-11-09 12:11:13 [tutorial.spiders.douban_book_proxy] INFO: NO.36 book 邊緣地帶的革命
+2019-11-09 12:11:13 [tutorial.spiders.douban_book_proxy] INFO: proxy http://58.247.127.145:53281
+2019-11-09 12:11:13 [tutorial.spiders.douban_book_proxy] INFO: NO.37 book 從海洋看歷史
+2019-11-09 12:11:13 [tutorial.spiders.douban_book_proxy] INFO: proxy http://58.247.127.145:53281
+2019-11-09 12:11:14 [scrapy.extensions.throttle] INFO: slot: book.douban.com | conc: 2 | delay:  204 ms (-5) | latency:  997 ms | size: 26572 bytes
+2019-11-09 12:11:14 [tutorial.middlewares_rotate_proxy] INFO: using proxy: http://58.247.127.145:53281
+2019-11-09 12:11:14 [tutorial.spiders.douban_book_proxy] INFO: NO.38 book 戰後臺灣政治史：中華民國臺灣化的歷程
+2019-11-09 12:11:14 [tutorial.spiders.douban_book_proxy] INFO: proxy http://58.247.127.145:53281
+2019-11-09 12:11:14 [scrapy.extensions.throttle] INFO: slot: book.douban.com | conc: 2 | delay:  211 ms (+6) | latency: 1058 ms | size: 29329 bytes
+2019-11-09 12:11:14 [tutorial.middlewares_rotate_proxy] INFO: using proxy: http://58.247.127.145:53281
+2019-11-09 12:11:14 [tutorial.spiders.douban_book_proxy] INFO: NO.39 book 大清帝國與中華的混迷
+2019-11-09 12:11:14 [tutorial.spiders.douban_book_proxy] INFO: proxy http://58.247.127.145:53281
+2019-11-09 12:11:14 [scrapy.extensions.throttle] INFO: slot: book.douban.com | conc: 2 | delay:  169 ms (-41) | latency:  638 ms | size: 21067 bytes
+2019-11-09 12:11:14 [tutorial.middlewares_rotate_proxy] INFO: using proxy: http://58.247.127.145:53281
+2019-11-09 12:11:15 [tutorial.spiders.douban_book_proxy] INFO: NO.40 book 臺灣邊疆的治理與政治經濟（1600-1800）
+2019-11-09 12:11:15 [tutorial.spiders.douban_book_proxy] INFO: proxy http://58.247.127.145:53281
+2019-11-09 12:11:15 [scrapy.extensions.throttle] INFO: slot: book.douban.com | conc: 2 | delay:  143 ms (-26) | latency:  584 ms | size: 19959 bytes
+2019-11-09 12:11:15 [tutorial.middlewares_rotate_proxy] INFO: using proxy: http://58.247.127.145:53281
+2019-11-09 12:11:15 [tutorial.spiders.douban_book_proxy] INFO: NO.41 book 「蕃地」統治與「山地」行政
+2019-11-09 12:11:15 [tutorial.spiders.douban_book_proxy] INFO: proxy http://58.247.127.145:53281
+2019-11-09 12:11:16 [scrapy.extensions.throttle] INFO: slot: book.douban.com | conc: 2 | delay:  179 ms (+36) | latency:  898 ms | size: 24010 bytes
+2019-11-09 12:11:16 [tutorial.middlewares_rotate_proxy] INFO: using proxy: http://58.247.127.145:53281
+2019-11-09 12:11:16 [tutorial.spiders.douban_book_proxy] INFO: NO.42 book 日本发现欧洲，1720-1830
+2019-11-09 12:11:16 [tutorial.spiders.douban_book_proxy] INFO: proxy http://58.247.127.145:53281
+2019-11-09 12:11:16 [scrapy.extensions.throttle] INFO: slot: book.douban.com | conc: 2 | delay:  173 ms (-5) | latency:  839 ms | size: 25727 bytes
+2019-11-09 12:11:16 [tutorial.middlewares_rotate_proxy] INFO: using proxy: http://58.247.127.145:53281
+2019-11-09 12:11:16 [tutorial.spiders.douban_book_proxy] INFO: NO.43 book 重塑中華
+2019-11-09 12:11:16 [tutorial.spiders.douban_book_proxy] INFO: proxy http://58.247.127.145:53281
+2019-11-09 12:11:17 [scrapy.extensions.throttle] INFO: slot: book.douban.com | conc: 2 | delay:  187 ms (+13) | latency:  935 ms | size: 23392 bytes
+2019-11-09 12:11:17 [tutorial.middlewares_rotate_proxy] INFO: using proxy: http://58.247.127.145:53281
+2019-11-09 12:11:17 [tutorial.spiders.douban_book_proxy] INFO: NO.44 book 殖民地帝國日本的文化統合
+2019-11-09 12:11:17 [tutorial.spiders.douban_book_proxy] INFO: proxy http://58.247.127.145:53281
+2019-11-09 12:11:17 [scrapy.extensions.throttle] INFO: slot: book.douban.com | conc: 2 | delay:  248 ms (+61) | latency: 1243 ms | size: 21487 bytes
+2019-11-09 12:11:17 [tutorial.middlewares_rotate_proxy] INFO: using proxy: http://58.247.127.145:53281
+2019-11-09 12:11:17 [tutorial.spiders.douban_book_proxy] INFO: NO.45 book 中华帝国晚期的权力与政治
+2019-11-09 12:11:17 [tutorial.spiders.douban_book_proxy] INFO: proxy http://58.247.127.145:53281
+2019-11-09 12:11:18 [scrapy.extensions.throttle] INFO: slot: book.douban.com | conc: 2 | delay:  215 ms (-33) | latency:  907 ms | size: 21564 bytes
+2019-11-09 12:11:18 [tutorial.middlewares_rotate_proxy] INFO: using proxy: http://58.247.127.145:53281
+2019-11-09 12:11:18 [tutorial.spiders.douban_book_proxy] INFO: NO.46 book 茶、糖、樟腦業與臺灣之社會經濟變遷
+2019-11-09 12:11:18 [tutorial.spiders.douban_book_proxy] INFO: proxy http://58.247.127.145:53281
+2019-11-09 12:11:18 [scrapy.extensions.throttle] INFO: slot: book.douban.com | conc: 2 | delay:  169 ms (-45) | latency:  620 ms | size: 21054 bytes
+2019-11-09 12:11:18 [tutorial.middlewares_rotate_proxy] INFO: using proxy: http://58.247.127.145:53281
+2019-11-09 12:11:19 [tutorial.spiders.douban_book_proxy] INFO: NO.47 book 海洋帝国
+2019-11-09 12:11:19 [tutorial.spiders.douban_book_proxy] INFO: proxy http://58.247.127.145:53281
+2019-11-09 12:11:19 [scrapy.extensions.throttle] INFO: slot: book.douban.com | conc: 2 | delay:  228 ms (+58) | latency: 1142 ms | size: 21626 bytes
+2019-11-09 12:11:19 [tutorial.middlewares_rotate_proxy] INFO: using proxy: http://58.247.127.145:53281
+2019-11-09 12:11:19 [tutorial.spiders.douban_book_proxy] INFO: NO.48 book 日本帝国主义下之台湾
+2019-11-09 12:11:19 [tutorial.spiders.douban_book_proxy] INFO: proxy http://58.247.127.145:53281
+2019-11-09 12:11:20 [scrapy.extensions.throttle] INFO: slot: book.douban.com | conc: 2 | delay:  227 ms (+0) | latency: 1135 ms | size: 23371 bytes
+2019-11-09 12:11:20 [tutorial.middlewares_rotate_proxy] INFO: using proxy: http://58.247.127.145:53281
+2019-11-09 12:11:20 [tutorial.spiders.douban_book_proxy] INFO: NO.49 book 当法律遇上经济
+2019-11-09 12:11:20 [tutorial.spiders.douban_book_proxy] INFO: proxy http://58.247.127.145:53281
+2019-11-09 12:11:20 [scrapy.extensions.throttle] INFO: slot: book.douban.com | conc: 2 | delay:  246 ms (+19) | latency: 1234 ms | size: 23495 bytes
+2019-11-09 12:11:20 [tutorial.middlewares_rotate_proxy] INFO: using proxy: http://58.247.127.145:53281
+2019-11-09 12:11:20 [tutorial.spiders.douban_book_proxy] INFO: NO.50 book 移民的秩序
+2019-11-09 12:11:20 [tutorial.spiders.douban_book_proxy] INFO: proxy http://58.247.127.145:53281
+2019-11-09 12:11:21 [scrapy.extensions.throttle] INFO: slot: book.douban.com | conc: 2 | delay:  215 ms (-31) | latency:  916 ms | size: 20840 bytes
+2019-11-09 12:11:21 [tutorial.middlewares_rotate_proxy] INFO: using proxy: http://58.247.127.145:53281
+2019-11-09 12:11:21 [tutorial.spiders.douban_book_proxy] INFO: NO.51 book 回歸現實
+2019-11-09 12:11:21 [tutorial.spiders.douban_book_proxy] INFO: proxy http://58.247.127.145:53281
+2019-11-09 12:11:21 [scrapy.extensions.throttle] INFO: slot: book.douban.com | conc: 2 | delay:  211 ms (-3) | latency: 1039 ms | size: 26117 bytes
+2019-11-09 12:11:21 [tutorial.middlewares_rotate_proxy] INFO: using proxy: http://58.247.127.145:53281
+2019-11-09 12:11:21 [tutorial.spiders.douban_book_proxy] INFO: NO.52 book 海洋史上的近代中国
+2019-11-09 12:11:21 [tutorial.spiders.douban_book_proxy] INFO: proxy http://58.247.127.145:53281
+2019-11-09 12:11:22 [scrapy.extensions.throttle] INFO: slot: book.douban.com | conc: 2 | delay:  194 ms (-17) | latency:  885 ms | size: 24063 bytes
+2019-11-09 12:11:22 [tutorial.middlewares_rotate_proxy] INFO: using proxy: http://58.247.127.145:53281
+2019-11-09 12:11:22 [tutorial.spiders.douban_book_proxy] INFO: NO.53 book 福爾摩沙如何變成臺灣府?
+2019-11-09 12:11:22 [tutorial.spiders.douban_book_proxy] INFO: proxy http://58.247.127.145:53281
+2019-11-09 12:11:22 [scrapy.extensions.throttle] INFO: slot: book.douban.com | conc: 2 | delay:  170 ms (-23) | latency:  733 ms | size: 21337 bytes
+2019-11-09 12:11:22 [tutorial.middlewares_rotate_proxy] INFO: using proxy: http://58.247.127.145:53281
+2019-11-09 12:11:22 [tutorial.spiders.douban_book_proxy] INFO: NO.54 book 米糖相剋
+2019-11-09 12:11:22 [tutorial.spiders.douban_book_proxy] INFO: proxy http://58.247.127.145:53281
+2019-11-09 12:11:22 [scrapy.extensions.throttle] INFO: slot: book.douban.com | conc: 2 | delay:  171 ms (+1) | latency:  859 ms | size: 24182 bytes
+2019-11-09 12:11:22 [tutorial.middlewares_rotate_proxy] INFO: using proxy: http://58.247.127.145:53281
+2019-11-09 12:11:23 [tutorial.spiders.douban_book_proxy] INFO: NO.55 book 林圯埔
+2019-11-09 12:11:23 [tutorial.spiders.douban_book_proxy] INFO: proxy http://58.247.127.145:53281
+2019-11-09 12:11:23 [scrapy.extensions.throttle] INFO: slot: book.douban.com | conc: 2 | delay:  201 ms (+29) | latency: 1006 ms | size: 29120 bytes
+2019-11-09 12:11:23 [tutorial.middlewares_rotate_proxy] INFO: using proxy: http://58.247.127.145:53281
+2019-11-09 12:11:23 [tutorial.spiders.douban_book_proxy] INFO: NO.56 book 台海‧冷戰‧蔣介石
+2019-11-09 12:11:23 [tutorial.spiders.douban_book_proxy] INFO: proxy http://58.247.127.145:53281
+2019-11-09 12:11:23 [scrapy.extensions.throttle] INFO: slot: book.douban.com | conc: 2 | delay:  192 ms (-9) | latency:  915 ms | size: 23734 bytes
+2019-11-09 12:11:23 [tutorial.middlewares_rotate_proxy] INFO: using proxy: http://58.247.127.145:53281
+2019-11-09 12:11:24 [tutorial.spiders.douban_book_proxy] INFO: NO.57 book 泰王的新衣
+2019-11-09 12:11:24 [tutorial.spiders.douban_book_proxy] INFO: proxy http://58.247.127.145:53281
+2019-11-09 12:11:24 [scrapy.extensions.throttle] INFO: slot: book.douban.com | conc: 2 | delay:  195 ms (+2) | latency:  975 ms | size: 21666 bytes
+2019-11-09 12:11:24 [tutorial.middlewares_rotate_proxy] INFO: using proxy: http://58.247.127.145:53281
+2019-11-09 12:11:24 [tutorial.spiders.douban_book_proxy] INFO: NO.58 book 變臉的緬甸
+2019-11-09 12:11:24 [tutorial.spiders.douban_book_proxy] INFO: proxy http://58.247.127.145:53281
+2019-11-09 12:11:25 [scrapy.extensions.throttle] INFO: slot: book.douban.com | conc: 2 | delay:  227 ms (+32) | latency: 1136 ms | size: 32055 bytes
+2019-11-09 12:11:25 [tutorial.middlewares_rotate_proxy] INFO: using proxy: http://58.247.127.145:53281
+2019-11-09 12:11:25 [tutorial.spiders.douban_book_proxy] INFO: NO.59 book 被扭曲的櫻花
+2019-11-09 12:11:25 [tutorial.spiders.douban_book_proxy] INFO: proxy http://58.247.127.145:53281
+2019-11-09 12:11:26 [scrapy.extensions.throttle] INFO: slot: book.douban.com | conc: 2 | delay:  222 ms (-4) | latency: 1087 ms | size: 24020 bytes
+2019-11-09 12:11:26 [tutorial.middlewares_rotate_proxy] INFO: using proxy: http://58.247.127.145:53281
+2019-11-09 12:11:26 [tutorial.spiders.douban_book_proxy] INFO: NO.60 book 成為「日本人」
+2019-11-09 12:11:26 [tutorial.spiders.douban_book_proxy] INFO: proxy http://58.247.127.145:53281
+2019-11-09 12:11:27 [scrapy.extensions.throttle] INFO: slot: book.douban.com | conc: 2 | delay:  246 ms (+24) | latency: 1233 ms | size: 34421 bytes
+2019-11-09 12:11:27 [tutorial.middlewares_rotate_proxy] INFO: using proxy: http://58.247.127.145:53281
+2019-11-09 12:11:27 [tutorial.spiders.douban_book_proxy] INFO: NO.61 book 1661，决战热兰遮
+2019-11-09 12:11:27 [tutorial.spiders.douban_book_proxy] INFO: proxy http://58.247.127.145:53281
+2019-11-09 12:11:27 [scrapy.extensions.throttle] INFO: slot: book.douban.com | conc: 2 | delay:  226 ms (-20) | latency: 1029 ms | size: 20037 bytes
+2019-11-09 12:11:27 [tutorial.middlewares_rotate_proxy] INFO: using proxy: http://58.247.127.145:53281
+2019-11-09 12:11:27 [tutorial.spiders.douban_book_proxy] INFO: NO.62 book 「日本人」的國境界（上卷）
+2019-11-09 12:11:27 [tutorial.spiders.douban_book_proxy] INFO: proxy http://58.247.127.145:53281
+2019-11-09 12:11:28 [scrapy.extensions.throttle] INFO: slot: book.douban.com | conc: 2 | delay:  208 ms (-17) | latency:  955 ms | size: 22010 bytes
+2019-11-09 12:11:28 [tutorial.middlewares_rotate_proxy] INFO: using proxy: http://58.247.127.145:53281
+2019-11-09 12:11:28 [tutorial.spiders.douban_book_proxy] INFO: NO.63 book 當神話開始思考：網路社會的文化論
+2019-11-09 12:11:28 [tutorial.spiders.douban_book_proxy] INFO: proxy http://58.247.127.145:53281
+2019-11-09 12:11:29 [scrapy.extensions.throttle] INFO: slot: book.douban.com | conc: 2 | delay:  224 ms (+16) | latency: 1124 ms | size: 32525 bytes
+2019-11-09 12:11:29 [tutorial.middlewares_rotate_proxy] INFO: using proxy: http://58.247.127.145:53281
+2019-11-09 12:11:29 [tutorial.spiders.douban_book_proxy] INFO: NO.64 book 滿洲國的實相與幻象
+2019-11-09 12:11:29 [tutorial.spiders.douban_book_proxy] INFO: proxy http://58.247.127.145:53281
+2019-11-09 12:11:30 [scrapy.extensions.throttle] INFO: slot: book.douban.com | conc: 2 | delay:  310 ms (+85) | latency: 1553 ms | size: 25591 bytes
+2019-11-09 12:11:30 [tutorial.middlewares_rotate_proxy] INFO: using proxy: http://58.247.127.145:53281
+2019-11-09 12:11:30 [tutorial.spiders.douban_book_proxy] INFO: NO.65 book 帝國的結構
+2019-11-09 12:11:30 [tutorial.spiders.douban_book_proxy] INFO: proxy http://58.247.127.145:53281
+2019-11-09 12:11:31 [scrapy.extensions.throttle] INFO: slot: book.douban.com | conc: 2 | delay:  478 ms (+168) | latency: 2394 ms | size: 29487 bytes
+2019-11-09 12:11:31 [tutorial.middlewares_rotate_proxy] INFO: using proxy: http://58.247.127.145:53281
+2019-11-09 12:11:31 [tutorial.spiders.douban_book_proxy] INFO: NO.66 book 巴黎地鐵上的人類學家
+2019-11-09 12:11:31 [tutorial.spiders.douban_book_proxy] INFO: proxy http://58.247.127.145:53281
+2019-11-09 12:11:32 [scrapy.extensions.throttle] INFO: slot: book.douban.com | conc: 2 | delay:  333 ms (-145) | latency:  942 ms | size: 25454 bytes
+2019-11-09 12:11:32 [tutorial.middlewares_rotate_proxy] INFO: using proxy: http://58.247.127.145:53281
+2019-11-09 12:11:32 [scrapy.extensions.throttle] INFO: slot: book.douban.com | conc: 2 | delay:  326 ms (-7) | latency: 1594 ms | size: 26595 bytes
+2019-11-09 12:11:32 [tutorial.middlewares_rotate_proxy] INFO: using proxy: http://58.247.127.145:53281
+2019-11-09 12:11:32 [tutorial.spiders.douban_book_proxy] INFO: NO.67 book 全球史的再思考
+2019-11-09 12:11:32 [tutorial.spiders.douban_book_proxy] INFO: proxy http://58.247.127.145:53281
+2019-11-09 12:11:33 [tutorial.spiders.douban_book_proxy] INFO: NO.68 book 作为自我的稻米
+2019-11-09 12:11:33 [tutorial.spiders.douban_book_proxy] INFO: proxy http://58.247.127.145:53281
+2019-11-09 12:11:35 [scrapy.extensions.throttle] INFO: slot: book.douban.com | conc: 2 | delay:  319 ms (-7) | latency: 1559 ms | size: 23201 bytes
+2019-11-09 12:11:35 [tutorial.middlewares_rotate_proxy] INFO: using proxy: http://58.247.127.145:53281
+2019-11-09 12:11:35 [tutorial.spiders.douban_book_proxy] INFO: NO.69 book 漢人的社會邏輯
+2019-11-09 12:11:35 [tutorial.spiders.douban_book_proxy] INFO: proxy http://58.247.127.145:53281
+2019-11-09 12:11:35 [scrapy.extensions.throttle] INFO: slot: book.douban.com | conc: 2 | delay:  318 ms (+0) | latency: 1588 ms | size: 42481 bytes
+2019-11-09 12:11:35 [tutorial.middlewares_rotate_proxy] INFO: using proxy: http://58.247.127.145:53281
+2019-11-09 12:11:35 [tutorial.spiders.douban_book_proxy] INFO: NO.70 book 论著与生活
+2019-11-09 12:11:35 [tutorial.spiders.douban_book_proxy] INFO: proxy http://58.247.127.145:53281
+2019-11-09 12:11:37 [scrapy.extensions.throttle] INFO: slot: book.douban.com | conc: 2 | delay:  304 ms (-13) | latency: 1457 ms | size: 26604 bytes
+2019-11-09 12:11:37 [tutorial.middlewares_rotate_proxy] INFO: using proxy: http://58.247.127.145:53281
+2019-11-09 12:11:37 [tutorial.spiders.douban_book_proxy] INFO: NO.71 book 傷心人類學
+2019-11-09 12:11:37 [tutorial.spiders.douban_book_proxy] INFO: proxy http://58.247.127.145:53281
+2019-11-09 12:11:37 [scrapy.extensions.throttle] INFO: slot: book.douban.com | conc: 2 | delay:  370 ms (+65) | latency: 1854 ms | size: 31535 bytes
+2019-11-09 12:11:37 [tutorial.middlewares_rotate_proxy] INFO: using proxy: http://58.247.127.145:53281
+2019-11-09 12:11:37 [tutorial.spiders.douban_book_proxy] INFO: NO.72 book 远逝的天堂
+2019-11-09 12:11:37 [tutorial.spiders.douban_book_proxy] INFO: proxy http://58.247.127.145:53281
+2019-11-09 12:11:38 [scrapy.extensions.throttle] INFO: slot: book.douban.com | conc: 2 | delay:  287 ms (-83) | latency: 1022 ms | size: 23367 bytes
+2019-11-09 12:11:38 [tutorial.middlewares_rotate_proxy] INFO: using proxy: http://58.247.127.145:53281
+2019-11-09 12:11:38 [tutorial.spiders.douban_book_proxy] INFO: NO.73 book 階序人I：卡斯特體系及其衍生現象
+2019-11-09 12:11:38 [tutorial.spiders.douban_book_proxy] INFO: proxy http://58.247.127.145:53281
+2019-11-09 12:11:38 [scrapy.extensions.throttle] INFO: slot: book.douban.com | conc: 2 | delay:  261 ms (-25) | latency: 1180 ms | size: 28454 bytes
+2019-11-09 12:11:38 [tutorial.middlewares_rotate_proxy] INFO: using proxy: http://58.247.127.145:53281
+2019-11-09 12:11:39 [tutorial.spiders.douban_book_proxy] INFO: NO.74 book 我們都是食人族
+2019-11-09 12:11:39 [tutorial.spiders.douban_book_proxy] INFO: proxy http://58.247.127.145:53281
+2019-11-09 12:11:39 [scrapy.extensions.throttle] INFO: slot: book.douban.com | conc: 2 | delay:  219 ms (-42) | latency:  881 ms | size: 22037 bytes
+2019-11-09 12:11:39 [tutorial.middlewares_rotate_proxy] INFO: using proxy: http://58.247.127.145:53281
+2019-11-09 12:11:39 [tutorial.spiders.douban_book_proxy] INFO: NO.75 book Educating the Chinese Individual
+2019-11-09 12:11:39 [tutorial.spiders.douban_book_proxy] INFO: proxy http://58.247.127.145:53281
+2019-11-09 12:11:40 [scrapy.extensions.throttle] INFO: slot: book.douban.com | conc: 2 | delay:  255 ms (+36) | latency: 1277 ms | size: 32956 bytes
+2019-11-09 12:11:40 [tutorial.middlewares_rotate_proxy] INFO: using proxy: http://58.247.127.145:53281
+2019-11-09 12:11:40 [tutorial.spiders.douban_book_proxy] INFO: NO.76 book 过渡礼仪
+2019-11-09 12:11:40 [tutorial.spiders.douban_book_proxy] INFO: proxy http://58.247.127.145:53281
+2019-11-09 12:11:40 [scrapy.extensions.throttle] INFO: slot: book.douban.com | conc: 2 | delay:  258 ms (+3) | latency: 1294 ms | size: 34476 bytes
+2019-11-09 12:11:40 [tutorial.middlewares_rotate_proxy] INFO: using proxy: http://58.247.127.145:53281
+2019-11-09 12:11:41 [tutorial.spiders.douban_book_proxy] INFO: NO.77 book 追寻事实
+2019-11-09 12:11:41 [tutorial.spiders.douban_book_proxy] INFO: proxy http://58.247.127.145:53281
