@@ -6,6 +6,7 @@ import random
 import kdl
 from scrapy.http import HtmlResponse
 from scrapy.utils.project import get_project_settings
+from scrapy.exceptions import CloseSpider
 
 
 logger = logging.getLogger(__name__)
@@ -42,10 +43,12 @@ class freeRotateProxyManager(object):
         return self.POOL[self.cursor];
 
     def get_proxy_from_cloud(self, count):
-        self.page = (self.page+1)%2
+        self.page = (self.page)%2
         r = requests.get(self.get_proxy_url.format(self.page))
+        self.page += 1
         if r.status_code != 200:
             logger.error("fail to fetch proxy")
+            raise CloseSpider('no free proxies')
             return False
 
         IP_SELECTOR = '#list > table > tbody > tr';
