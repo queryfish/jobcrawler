@@ -6,23 +6,24 @@ import scrapy
 import pymongo
 from tutorial.items import doubanBookItem
 from scrapy.http import Request
-from scrapy.spiders import CrawlSpider
 from scrapy.selector import Selector
+from scrapy.spiders import CrawlSpider, Rule
+from scrapy.linkextractors import LinkExtractor
 from scrapy.exceptions import CloseSpider
 import  json
 import  time
 import datetime
 import  random
-# import redis
+import redis
 from scrapy.conf import settings
 
 logger = logging.getLogger(__name__)
 
 
 #zhipin 爬虫
-class DoubanBookSpider(scrapy.Spider):
+class DoubanBookCrawlSpider(CrawlSpider):
     handle_httpstatus_list = [404, 403]
-    name = "dbbproxy"
+    name = "dbbCrawler"
     allowed_domains = ["douban.com"]
     client = pymongo.MongoClient(host="127.0.0.1", port=27017)
     db = client['sobooks']
@@ -32,12 +33,15 @@ class DoubanBookSpider(scrapy.Spider):
     banned = 0;
     # handle_httpstatus_list = [301, 302];
 
-    # start_urls = ['https://book.douban.com/subject/26389895/']
+    # start_urls = ['https://book.douban.com/subject/1089243/']
     start_urls = []
+    rules = (
+        Rule(LinkExtractor(allow=(r'^https://book.douban.com/subject/\d+/$')), callback="parse_book", follow=True),
+    )
     custom_settings = {
         "LOG_LEVEL": 'INFO',
-        # LOG_STDOUT = True
-        "LOG_FILE": './{}_logfile.log'.format(name),
+        "LOG_STDOUT" : True,
+        # "LOG_FILE": './douban_logfile.log',
         "HTTPERROR_ALLOWED_CODES":[403,404],
         # Obey robots.txt rules
         #ROBOTSTXT_OBEY = True
@@ -47,8 +51,8 @@ class DoubanBookSpider(scrapy.Spider):
         "DUPEFILTER_DEBUG": True,
         "LOGSTATS_INTERVAL" : 300.0,
         # Configure maximum concurrent requests performed by Scrapy (default: 16)
-        "CONCURRENT_REQUESTS": 2,
-        "DOWNLOAD_DELAY":.1,
+        "CONCURRENT_REQUESTS": 1,
+        "DOWNLOAD_DELAY":1,
 
         "AUTOTHROTTLE_ENABLED": True,
         # The initial download delay
@@ -59,7 +63,7 @@ class DoubanBookSpider(scrapy.Spider):
         # each remote server
         "AUTOTHROTTLE_TARGET_CONCURRENCY": 5.0,
         # Enable showing throttling stats for every response received:
-        "AUTOTHROTTLE_DEBUG": True,
+        "AUTOTHROTTLE_DEBUG": False,
 
         "ITEM_PIPELINES":{
             'tutorial.pipelines.DoubanBookPipeline': 300,
@@ -70,7 +74,7 @@ class DoubanBookSpider(scrapy.Spider):
             'scrapy.downloadermiddlewares.httpproxy.HttpProxyMiddleware': 110,
             # 'tutorial.middlewares_proxy.TunnelProxyMiddleware': 100,
             # 'tutorial.middlewares_rotate_proxy.RegularProxyMiddleware': 100,
-            'tutorial.middlewares_rotate_proxy.fixedProxyMiddleware': 100,
+            # 'tutorial.middlewares_rotate_proxy.freeRotateProxyMiddleware': 100,
             # 'scrapy.downloadermiddlewares.retry.RetryMiddleware': None,
             # 'tutorial.middlewares_rotate_proxy.CustomRetryMiddleware': 500,
             # 'scrapy.downloadermiddlewares.useragent.UserAgentMiddleware':2 ,
@@ -92,8 +96,6 @@ class DoubanBookSpider(scrapy.Spider):
         for post in res:
             # print(post)
             urls.append(post['doubanUrl']);
-        if len(urls) ==  0:
-            return ['https://book.douban.com/subject/1089243/'];
         logger.info('fetch {} new url from mongo'.format(len(urls)));
         return urls
 
@@ -102,21 +104,14 @@ class DoubanBookSpider(scrapy.Spider):
             res = self.collection.update({'doubanUrl':url}, {'$set':{'doubanUrl':url}}, upsert=True)
 
     def __init__(self, *a, **kw):
-        super(DoubanBookSpider, self).__init__(*a, **kw)
-        urls = self.getSomeUrls(5)
+        logger = logging.getLogger('scrapy.core.scraper')
+        logger.setLevel(logging.INFO)
+        super(DoubanBookCrawlSpider, self).__init__(*a, **kw)
+        urls = self.getSomeUrls(10)
         for url in urls:
             self.start_urls.append(url)
-            # print(url);
 
-    def handle_captcha(self, response):
-        url = response.request.url
-        errcode = response.status_code
-        # bookItem = doubanBookItem()
-        # bookItem['doubanUrl'] = response.request.url
-        # bookItem['errorCode'] = response.status_code
-        res = self.collection.update({'doubanUrl':url}, {'$set':{'errorCode':errcode}}, upsert=True)
-
-    def parse(self, response):
+    def parse_book(self, response):
         if response.status == 404 or response.status == 403:
             url = response.request.url
             errcode = response.status
@@ -182,11 +177,8 @@ class DoubanBookSpider(scrapy.Spider):
         bookItem['doubanAuthorBrief'] = authorInfo;
         bookItem['doubanCrawlDate'] = datetime.datetime.utcnow();
         # bookItem['doubanISBN']=
-        yield bookItem;
         self.counter += 1;
         logger.info(u'NO.{} book {}'.format(self.counter, bookItem['doubanBookName']));
-        # logger.info(bookItem['doubanBookName']);
-        logger.info('proxy {}'.format(response.request.meta['proxy']));
 
         items = response.css(REC_SECTION_SEL);
 
@@ -200,20 +192,5 @@ class DoubanBookSpider(scrapy.Spider):
 
         qsize = self.crawler.engine.slot.scheduler.__len__();
         running = len(self.crawler.engine.slot.inprogress);
-        # logger.info('PENDING_QUEUE_SIZE: {}, RUNNING QUEUE SIZE: {}'.format(qsize, running));
-
-        # if (qsize+running < 5):
-        #     newUrls = self.getSomeUrls(100);
-        #     for url in newUrls:
-        #         # if(len(url) > 0):
-        #         # logger.info('add to queue {}'.format(url));
-        #         logger.info('gonna queue request {}'.format(url));
-        #         yield Request(url ,callback=self.parse);
-
-        if (qsize+running < 100):
-            for item in items:
-                # print(item.css('a::text').extract()[0]);
-                href = (item.css('a::attr(href)').extract()[0]);
-                # print(href)
-                # logger.info('add to queue {}'.format(href));
-                yield Request(href ,callback=self.parse)
+        logger.info('PENDING_QUEUE_SIZE: {}, RUNNING QUEUE SIZE: {}'.format(qsize, running));
+        yield  bookItem;

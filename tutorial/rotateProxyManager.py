@@ -70,7 +70,7 @@ class RotateProxyManager(object):
         # logger.info(content);
         # statusDict = content['data']
         # valid = statusDict[proxy]
-        valid  = r;
+        valid  = r[proxy]
         return valid
 
     def invalidProxy(self, proxy):

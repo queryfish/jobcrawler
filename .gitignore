@@ -8,3 +8,5 @@ log.txt
 tutorial/.DS_Store
 douban_book.log
 log/
+.scrapy/
+douban_logfile.log
