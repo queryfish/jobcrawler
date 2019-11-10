@@ -42,7 +42,7 @@ class freeRotateProxyManager(object):
         return self.POOL[self.cursor];
 
     def get_proxy_from_cloud(self, count):
-        self.page = (self.page+1)%5
+        self.page = (self.page+1)%2
         r = requests.get(self.get_proxy_url.format(self.page))
         if r.status_code != 200:
             logger.error("fail to fetch proxy")
@@ -73,15 +73,16 @@ class freeRotateProxyManager(object):
         return ips;
 
     def check_proxy_from_cloud(self, proxy):
-        try:
-            r = requests.get('https://www.baidu.com', timeout = 10, proxies = {"http":proxy})
-            logger.info("Proxy status code {}".format(r.status_code))
-            if r.status_code != 200:
-                return False;
-            return True;
-        except requests.exceptions.RequestException as e:
-            logger.error(e);
-            return False
+        return False
+        # try:
+        #     r = requests.get('https://www.baidu.com', timeout = 10, proxies = {"http":proxy})
+        #     logger.info("Proxy status code {}".format(r.status_code))
+        #     if r.status_code != 200:
+        #         return False;
+        #     return True;
+        # except requests.exceptions.RequestException as e:
+        #     logger.error(e);
+        #     return False
 
     def invalidProxy(self, proxy):
         # self.cursor += 1
