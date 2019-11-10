@@ -3,7 +3,7 @@ import logging
 import requests
 import json
 import random
-import kdl
+# import kdl
 from scrapy.http import HtmlResponse
 from scrapy.utils.project import get_project_settings
 from scrapy.exceptions import CloseSpider
@@ -19,8 +19,9 @@ class freeRotateProxyManager(object):
     cursor = 0
     concur = 0;
     page = 1;
-    auth = kdl.Auth("yourorderid", "yourorderapikey")
-    client = kdl.Client(auth)
+    score = {};
+    # auth = kdl.Auth("yourorderid", "yourorderapikey")
+    # client = kdl.Client(auth)
 
     def __init__(self):
         self.get_proxy_from_cloud(1)
@@ -43,14 +44,13 @@ class freeRotateProxyManager(object):
         return self.POOL[self.cursor];
 
     def get_proxy_from_cloud(self, count):
-        self.page = (self.page)%2
+        # self.page = (self.page)%2
         r = requests.get(self.get_proxy_url.format(self.page))
-        self.page += 1
+        # self.page += 1
         if r.status_code != 200:
             logger.error("fail to fetch proxy")
             raise CloseSpider('no free proxies')
             return False
-
         IP_SELECTOR = '#list > table > tbody > tr';
         response = HtmlResponse(url='',body=r.text, encoding=r.encoding)
         items = response.css(IP_SELECTOR)
@@ -72,6 +72,7 @@ class freeRotateProxyManager(object):
         for proxy in ips:
             ascproxy = proxy.encode('ascii')
             if ascproxy not in self.POOL:
+                score[ascproxy] = 0;
                 self.POOL.append(ascproxy)
         return ips;
 
@@ -121,6 +122,28 @@ class freeRotateProxyManager(object):
 
         if proxy in self.POOL:
             self.POOL.remove(proxy);
+        else:
+            logger.warn("Already removed {}".format(proxy))
+        if len(self.POOL) == 0:
+            self.get_proxy_from_cloud(1)
+
+        return
+
+    def badProxy(self, proxy):
+        # self.cursor += 1
+
+        #1\ if proxy is in the pool, find the index
+        #2\ validate the proxy from the cloud
+        #3\ remove it from the pool if invalid
+        #4\ get a new proxy from the api and append it to the
+        d = self.score
+        if d.has_key(proxy) :
+            proxy_score = d[proxy];
+            d[prxoy] = proxy_score +1;
+            if d[proxy] > 10 :
+                del d[proxy]
+                if proxy in self.POOL:
+                    self.POOL.remove(proxy);
         else:
             logger.warn("Already removed {}".format(proxy))
         if len(self.POOL) == 0:

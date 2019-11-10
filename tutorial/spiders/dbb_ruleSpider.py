@@ -117,11 +117,11 @@ class DoubanBookCrawlSpider(CrawlSpider):
             errcode = response.status
             logger.warn("BAD STATUS {} @ {}".format(errcode, url))
             # bookItem = doubanBookItem()
-            res = self.collection.update({'doubanUrl':url}, {'$set':{'errorCode':errcode}}, upsert=True)
-            newUrls = self.getSomeUrls(5);
-            for url in newUrls:
-                logger.info('gonna queue request {}'.format(url));
-                yield Request(url ,callback=self.parse);
+            # res = self.collection.update({'doubanUrl':url}, {'$set':{'errorCode':errcode}}, upsert=True)
+            # newUrls = self.getSomeUrls(5);
+            # for url in newUrls:
+            #     logger.info('gonna queue request {}'.format(url));
+            #     yield Request(url ,callback=self.parse);
             return;
 
         TITLE_SEL = '#wrapper > h1 > span';
