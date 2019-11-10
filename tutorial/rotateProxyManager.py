@@ -52,6 +52,12 @@ class RotateProxyManager(object):
         # ips = content['data']['proxy_list']
         # left = content['data']['order_left_count']
         ips = r;
+        if len(ips) == 0:
+            logger.info("should stop the spider")
+            logger.info(ips)
+            from scrapy.exceptions import CloseSpider
+            raise CloseSpider('no more proxies')
+
         for proxy in ips:
             ascproxy = proxy.encode('ascii')
             if ascproxy not in self.POOL:
@@ -85,7 +91,8 @@ class RotateProxyManager(object):
                 logger.warn("gonna remove it {}".format(ipport))
                 self.POOL.remove(ipport)
                 self.get_proxy_from_cloud(1)
-
+        if len(self.POOL) ==  0:
+            self.get_proxy_from_cloud(1)
         #2\ validate the proxy from the cloud
         #3\ remove it from the pool if invalid
         #4\ get a new proxy from the api and append it to the pool

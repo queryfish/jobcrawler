@@ -40,30 +40,30 @@ class DoubanBookCrawlSpider(CrawlSpider):
     )
     custom_settings = {
         "LOG_LEVEL": 'INFO',
-        "LOG_STDOUT" : True,
-        # "LOG_FILE": './douban_logfile.log',
+        # "LOG_STDOUT" : True,
+        "LOG_FILE": './ddb_logfile.log',
         "HTTPERROR_ALLOWED_CODES":[403,404],
         # Obey robots.txt rules
         #ROBOTSTXT_OBEY = True
         "RETRY_ENABLED": False,
         #RETRY_TIMES = 1
         "DOWNLOAD_TIMEOUT" : 7.5,
-        "DUPEFILTER_DEBUG": True,
+        # "DUPEFILTER_DEBUG": True,
         "LOGSTATS_INTERVAL" : 300.0,
         # Configure maximum concurrent requests performed by Scrapy (default: 16)
-        "CONCURRENT_REQUESTS": 1,
-        "DOWNLOAD_DELAY":1,
+        "CONCURRENT_REQUESTS": 2,
+        "DOWNLOAD_DELAY":0.1,
 
-        "AUTOTHROTTLE_ENABLED": True,
-        # The initial download delay
-        "AUTOTHROTTLE_START_DELAY": 0.1,
-        # The maximum download delay to be set in case of high latencies
-        "AUTOTHROTTLE_MAX_DELAY": 5,
-        # The average number of requests Scrapy should be sending in parallel to
-        # each remote server
-        "AUTOTHROTTLE_TARGET_CONCURRENCY": 5.0,
-        # Enable showing throttling stats for every response received:
-        "AUTOTHROTTLE_DEBUG": False,
+        # "AUTOTHROTTLE_ENABLED": True,
+        # # The initial download delay
+        # "AUTOTHROTTLE_START_DELAY": 0.1,
+        # # The maximum download delay to be set in case of high latencies
+        # "AUTOTHROTTLE_MAX_DELAY": 5,
+        # # The average number of requests Scrapy should be sending in parallel to
+        # # each remote server
+        # "AUTOTHROTTLE_TARGET_CONCURRENCY": 5.0,
+        # # Enable showing throttling stats for every response received:
+        # "AUTOTHROTTLE_DEBUG": False,
 
         "ITEM_PIPELINES":{
             'tutorial.pipelines.DoubanBookPipeline': 300,
@@ -74,7 +74,7 @@ class DoubanBookCrawlSpider(CrawlSpider):
             'scrapy.downloadermiddlewares.httpproxy.HttpProxyMiddleware': 110,
             # 'tutorial.middlewares_proxy.TunnelProxyMiddleware': 100,
             # 'tutorial.middlewares_rotate_proxy.RegularProxyMiddleware': 100,
-            # 'tutorial.middlewares_rotate_proxy.freeRotateProxyMiddleware': 100,
+            'tutorial.middlewares_free_proxy.fixedProxyMiddleware': 100,
             # 'scrapy.downloadermiddlewares.retry.RetryMiddleware': None,
             # 'tutorial.middlewares_rotate_proxy.CustomRetryMiddleware': 500,
             # 'scrapy.downloadermiddlewares.useragent.UserAgentMiddleware':2 ,

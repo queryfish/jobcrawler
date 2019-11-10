@@ -12,11 +12,12 @@ logger = logging.getLogger(__name__)
 
 class freeRotateProxyManager(object):
     # get_proxy_url = "https://www.kuaidaili.com/free/inha"
-    get_proxy_url = "https://www.kuaidaili.com/free/intr"
+    get_proxy_url = "https://www.kuaidaili.com/free/intr/{}/"
     cur_url = '';
     POOL = [];
     cursor = 0
     concur = 0;
+    page = 1;
     auth = kdl.Auth("yourorderid", "yourorderapikey")
     client = kdl.Client(auth)
 
@@ -41,7 +42,8 @@ class freeRotateProxyManager(object):
         return self.POOL[self.cursor];
 
     def get_proxy_from_cloud(self, count):
-        r = requests.get(self.get_proxy_url)
+        self.page = (self.page+1)%5
+        r = requests.get(self.get_proxy_url.format(self.page))
         if r.status_code != 200:
             logger.error("fail to fetch proxy")
             return False
@@ -57,7 +59,7 @@ class freeRotateProxyManager(object):
             d['prot'] = c[3]
             proxy = "{}://{}:{}".format(d['prot'],d['ip'],d['port'])
             ascproxy = proxy.encode('ascii').lower()
-            logger.warn(ascproxy)
+            logger.info(ascproxy)
             if ascproxy not in self.POOL:
                 self.POOL.append(ascproxy)
         return self.POOL
@@ -101,6 +103,8 @@ class freeRotateProxyManager(object):
                     return
         else:
             logger.warn("Already removed {}".format(proxy))
+        if len(self.POOL) == 0:
+            self.get_proxy_from_cloud(1)
         return
 
     def banProxy(self, proxy):
@@ -115,4 +119,7 @@ class freeRotateProxyManager(object):
             self.POOL.remove(proxy);
         else:
             logger.warn("Already removed {}".format(proxy))
+        if len(self.POOL) == 0:
+            self.get_proxy_from_cloud(1)
+
         return
