@@ -10,3 +10,4 @@ douban_book.log
 log/
 .scrapy/
 douban_logfile.log
+ddb_logfile.log

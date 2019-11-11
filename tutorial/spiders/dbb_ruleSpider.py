@@ -54,16 +54,16 @@ class DoubanBookCrawlSpider(CrawlSpider):
         "CONCURRENT_REQUESTS": 2,
         "DOWNLOAD_DELAY":0.1,
 
-        # "AUTOTHROTTLE_ENABLED": True,
-        # # The initial download delay
-        # "AUTOTHROTTLE_START_DELAY": 0.1,
-        # # The maximum download delay to be set in case of high latencies
-        # "AUTOTHROTTLE_MAX_DELAY": 5,
-        # # The average number of requests Scrapy should be sending in parallel to
-        # # each remote server
-        # "AUTOTHROTTLE_TARGET_CONCURRENCY": 5.0,
-        # # Enable showing throttling stats for every response received:
-        # "AUTOTHROTTLE_DEBUG": False,
+        "AUTOTHROTTLE_ENABLED": True,
+        # The initial download delay
+        "AUTOTHROTTLE_START_DELAY": 0.1,
+        # The maximum download delay to be set in case of high latencies
+        "AUTOTHROTTLE_MAX_DELAY": 5,
+        # The average number of requests Scrapy should be sending in parallel to
+        # each remote server
+        "AUTOTHROTTLE_TARGET_CONCURRENCY": 5.0,
+        # Enable showing throttling stats for every response received:
+        "AUTOTHROTTLE_DEBUG": True,
 
         "ITEM_PIPELINES":{
             'tutorial.pipelines.DoubanBookPipeline': 300,
