@@ -160,7 +160,7 @@ class freeRotateProxyManager(object):
 
         if proxy in self.POOL:
             if d[proxy] > self.tolerance :
-                logger.info('BOOKING GOOD.{} BAD.{} for [{}]'.format(self.badness[proxy], self.goodness[proxy], proxy))
+                logger.info('BOOKING GOOD.{} BAD.{} for [{}]'.format(self.goodness[proxy], self.badness[proxy], proxy))
                 if len(self.POOL) <= 1:
                     self.get_free_prox(1)
                 else:
