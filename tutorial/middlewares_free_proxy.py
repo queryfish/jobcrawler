@@ -21,7 +21,7 @@ class fixedProxyMiddleware(object):
         def process_request(self, request, spider):
             proxy  = self.proxyManager.proxy()
             request.meta['proxy'] = proxy  # 设置代理
-            logger.info("request using proxy: {}".format(request.meta['proxy']))
+            logger.info("REQ {} <- [{}]".format(request.url, request.meta['proxy']))
 
         def process_response(self, request, response, spider):
             proxy = request.meta.get('proxy', '')
@@ -30,11 +30,6 @@ class fixedProxyMiddleware(object):
                 errcode = response.status
                 logger.warn("BAD STATUS {} @ {}".format(errcode, url))
                 self.proxyManager.badProxy(proxy)
-                # MOVE THIS TO THE PROXY MANAGER
-                # self.exception_count +=1;
-                # if(self.exception_count > 3):
-                #     self.exception_count = 0;
-                #     self.proxyManager.invalidProxy(req_proxy);
             elif(response.status == 200):
                 self.proxyManager.goodProxy(proxy)
                 # self.exception_count = 0;
@@ -46,14 +41,8 @@ class fixedProxyMiddleware(object):
 
         def process_exception(self, request, exception, spider):
             proxy = request.meta.get('proxy', '')
-            logger.warn("Get exception with proxy: {}".format(proxy))
-            logger.warn(exception)
             self.proxyManager.badProxy(proxy)
-            # proxyManager.invalidProxy(req_proxy)
-            # self.exception_count +=1;
-            # if(self.exception_count > 3):
-            #     self.exception_count = 0;
-            #     self.proxyManager.invalidProxy(req_proxy);
+            logger.warn('EXP [{}] @ [{}]'.format(exception, request.url));
             return request
 
 # class freeRotateProxyMiddleware(object):

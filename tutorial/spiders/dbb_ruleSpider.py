@@ -52,33 +52,28 @@ class DoubanBookCrawlSpider(CrawlSpider):
         "LOGSTATS_INTERVAL" : 60.0,
         # Configure maximum concurrent requests performed by Scrapy (default: 16)
         # "CONCURRENT_REQUESTS": 2,
-        "DOWNLOAD_DELAY":1,
+        # "DOWNLOAD_DELAY":0.2,
 
-        "AUTOTHROTTLE_ENABLED": False,
+        "AUTOTHROTTLE_ENABLED": True,
         # The initial download delay
         "AUTOTHROTTLE_START_DELAY": 1,
         # The maximum download delay to be set in case of high latencies
-        "AUTOTHROTTLE_MAX_DELAY": 5,
+        "AUTOTHROTTLE_MAX_DELAY": 8,
         # The average number of requests Scrapy should be sending in parallel to
         # each remote server
         "AUTOTHROTTLE_TARGET_CONCURRENCY": 4.0,
         # Enable showing throttling stats for every response received:
-        "AUTOTHROTTLE_DEBUG": False,
+        "AUTOTHROTTLE_DEBUG": True,
 
         "ITEM_PIPELINES":{
             'tutorial.pipelines.DoubanBookPipeline': 300,
         },
         "DOWNLOADER_MIDDLEWARES":{
             'tutorial.middlewares.RandomUserAgent': 2,
-            # 'tutorial.middlewares.RandomProxy':301,
             'scrapy.downloadermiddlewares.httpproxy.HttpProxyMiddleware': 110,
-            # 'tutorial.middlewares_proxy.TunnelProxyMiddleware': 100,
-            # 'tutorial.middlewares_rotate_proxy.RegularProxyMiddleware': 100,
             'tutorial.middlewares_free_proxy.fixedProxyMiddleware': 100,
             # 'scrapy.downloadermiddlewares.retry.RetryMiddleware': None,
             # 'tutorial.middlewares_rotate_proxy.CustomRetryMiddleware': 500,
-            # 'scrapy.downloadermiddlewares.useragent.UserAgentMiddleware':2 ,
-            # 'tutorial.middlewares_proxy.AgentMiddleware': 1,
         },
         "DEFAULT_REQUEST_HEADERS":{
             'Accept': 'application/json',
@@ -130,6 +125,7 @@ class DoubanBookCrawlSpider(CrawlSpider):
             #probably being banned
             logger.error("wrong page ...");
             logger.error(response.request.url);
+            logger.error(repsonse.body);
             # self.banned+=1;
             # if(self.banned > 10):
             #     raise CloseSpider('being banned')
@@ -178,8 +174,8 @@ class DoubanBookCrawlSpider(CrawlSpider):
         bookItem['doubanCrawlDate'] = datetime.datetime.utcnow();
         # bookItem['doubanISBN']=
         self.counter += 1;
-        proxy = response.request.meta['proxy']
-        logger.info(u'NO.{} {} from {}'.format(self.counter, bookItem['doubanBookName'], proxy));
+        proxy = response.request.meta.get('proxy','Bare')
+        logger.info(u'NO.{} {} [from {}]'.format(self.counter, bookItem['doubanBookName'], proxy));
 
         items = response.css(REC_SECTION_SEL);
 
