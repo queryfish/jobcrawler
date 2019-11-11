@@ -32,7 +32,7 @@ class fixedProxyMiddleware(object):
                 self.exception_count +=1;
                 if(self.exception_count > 10):
                     self.exception_count = 0;
-                    self.proxyManager.invalidProxy();
+                    self.proxyManager.invalidProxy(req_proxy);
                 # if response.status == 404 or response.status == 403:
                 #     proxyManager.banProxy(req_proxy)
                 # else:
@@ -47,7 +47,7 @@ class fixedProxyMiddleware(object):
             self.exception_count +=1;
             if(self.exception_count > 10):
                 self.exception_count = 0;
-                self.proxyManager.invalidProxy();
+                self.proxyManager.invalidProxy(req_proxy);
             return request
 
 # class freeRotateProxyMiddleware(object):
