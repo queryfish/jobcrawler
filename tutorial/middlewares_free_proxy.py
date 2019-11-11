@@ -4,8 +4,6 @@ import base64
 import logging
 from scrapy.downloadermiddlewares.retry import RetryMiddleware
 from scrapy.downloadermiddlewares.useragent import UserAgentMiddleware
-# from .paidProxyManager import PaidProxyManager
-from .rotateProxyManager import RotateProxyManager
 from .freeRotateProxyManager import freeRotateProxyManager
 
 # proxy = fetch_one_proxy() # 获取一个代理
@@ -16,38 +14,37 @@ retry_time = 0  # 此ip异常次数
 
 logger = logging.getLogger(__name__)
 
-class fixedProxyMiddleware(object):
-        exception_count = 0;
-        proxyManager = freeRotateProxyManager();
-
-        def process_request(self, request, spider):
-            proxy  = self.proxyManager.proxy()
-            request.meta['proxy'] = proxy  # 设置代理
-            logger.info("using proxy: {}".format(request.meta['proxy']))
-
-        def process_response(self, request, response, spider):
-            if not(200 <= response.status < 300):
-                url = request.url
-                errcode = response.status
-                logger.warn("BAD STATUS {} @ {}".format(errcode, url))
-                req_proxy = request.meta.get('proxy', '')
-                # if response.status == 404 or response.status == 403:
-                #     proxyManager.banProxy(req_proxy)
-                # else:
-                #     proxyManager.invalidProxy(req_proxy)
-            return response
-
-        def process_exception(self, request, exception, spider):
-            req_proxy = request.meta.get('proxy', '')
-            logger.warn("Get exception with proxy: {}".format(req_proxy))
-            logger.warn(exception)
-            # proxyManager.invalidProxy(req_proxy)
-            self.exception_count +=1;
-            if(self.exception_count > 10):
-                self.exception_count = 0;
-                self.proxyManager.nextProxy();
-            return request
-
+# class fixedProxyMiddleware(object):
+#         exception_count = 0;
+#         proxyManager = freeRotateProxyManager();
+#
+#         def process_request(self, request, spider):
+#             proxy  = self.proxyManager.proxy()
+#             request.meta['proxy'] = proxy  # 设置代理
+#             logger.info("using proxy: {}".format(request.meta['proxy']))
+#
+#         def process_response(self, request, response, spider):
+#             if not(200 <= response.status < 300):
+#                 url = request.url
+#                 errcode = response.status
+#                 logger.warn("BAD STATUS {} @ {}".format(errcode, url))
+#                 req_proxy = request.meta.get('proxy', '')
+#                 # if response.status == 404 or response.status == 403:
+#                 #     proxyManager.banProxy(req_proxy)
+#                 # else:
+#                 #     proxyManager.invalidProxy(req_proxy)
+#             return response
+#
+#         def process_exception(self, request, exception, spider):
+#             req_proxy = request.meta.get('proxy', '')
+#             logger.warn("Get exception with proxy: {}".format(req_proxy))
+#             logger.warn(exception)
+#             # proxyManager.invalidProxy(req_proxy)
+#             self.exception_count +=1;
+#             if(self.exception_count > 10):
+#                 self.exception_count = 0;
+#                 self.proxyManager.nextProxy();
+#             return request
 
 class freeRotateProxyMiddleware(object):
         proxyManager = freeRotateProxyManager();

@@ -24,6 +24,7 @@ class freeRotateProxyManager(object):
     # client = kdl.Client(auth)
 
     def __init__(self):
+        logger.info('init free proxy fetcher')
         self.get_proxy_from_cloud(1)
         settings = get_project_settings();
         self.concur = settings.get('CONCURRENT_REQUESTS');
@@ -47,6 +48,8 @@ class freeRotateProxyManager(object):
         # self.page = (self.page)%2
         # r = requests.get(self.get_proxy_url.format(self.page))
         r = requests.get(self.get_proxy_url)
+        logger.error(r.status_code)
+        # logger.error(r.text)
         # self.page += 1
         if r.status_code != 200:
             # time.sleep(60);
@@ -72,14 +75,14 @@ class freeRotateProxyManager(object):
                 self.POOL.append(ascproxy)
         return self.POOL
 
-        ips = content['data']['proxy_list']
-        left = content['data']['order_left_count']
-        for proxy in ips:
-            ascproxy = proxy.encode('ascii')
-            if ascproxy not in self.POOL:
-                score[ascproxy] = 0;
-                self.POOL.append(ascproxy)
-        return ips;
+        # ips = content['data']['proxy_list']
+        # left = content['data']['order_left_count']
+        # for proxy in ips:
+        #     ascproxy = proxy.encode('ascii')
+        #     if ascproxy not in self.POOL:
+        #         score[ascproxy] = 0;
+        #         self.POOL.append(ascproxy)
+        # return ips;
 
     def check_proxy_from_cloud(self, proxy):
         return False

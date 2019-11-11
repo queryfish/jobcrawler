@@ -11,3 +11,4 @@ log/
 .scrapy/
 douban_logfile.log
 ddb_logfile.log
+dbb_logfile.log
