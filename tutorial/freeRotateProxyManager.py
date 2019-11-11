@@ -7,11 +7,18 @@ import random
 from scrapy.http import HtmlResponse
 from scrapy.utils.project import get_project_settings
 from scrapy.exceptions import CloseSpider
-
-
 logger = logging.getLogger(__name__)
 
+class Singleton(type):
+    _instances = {}
+
+    def __call__(cls, *args, **kwargs):
+        if cls not in cls._instances:
+            cls._instances[cls] = super(Singleton, cls).__call__(*args, **kwargs)
+        return cls._instances[cls]
+
 class freeRotateProxyManager(object):
+    __metaclass__ = Singleton
     # get_proxy_url = "https://www.kuaidaili.com/free/inha"
     get_proxy_url = "https://www.kuaidaili.com/free/intr/"
     cur_url = '';
