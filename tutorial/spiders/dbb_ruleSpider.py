@@ -74,7 +74,7 @@ class DoubanBookCrawlSpider(CrawlSpider):
             'scrapy.downloadermiddlewares.httpproxy.HttpProxyMiddleware': 110,
             # 'tutorial.middlewares_proxy.TunnelProxyMiddleware': 100,
             # 'tutorial.middlewares_rotate_proxy.RegularProxyMiddleware': 100,
-            'tutorial.middlewares_free_proxy.freeRotateProxyMiddleware': 100,
+            'tutorial.middlewares_free_proxy.fixedProxyMiddleware': 100,
             # 'scrapy.downloadermiddlewares.retry.RetryMiddleware': None,
             # 'tutorial.middlewares_rotate_proxy.CustomRetryMiddleware': 500,
             # 'scrapy.downloadermiddlewares.useragent.UserAgentMiddleware':2 ,
