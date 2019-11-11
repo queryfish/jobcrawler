@@ -40,23 +40,23 @@ class DoubanBookCrawlSpider(CrawlSpider):
     )
     custom_settings = {
         "LOG_LEVEL": 'INFO',
-        # "LOG_STDOUT" : True,
-        "LOG_FILE": './dbb_logfile.log',
+        "LOG_STDOUT" : True,
+        # "LOG_FILE": './dbb_logfile.log',
         "HTTPERROR_ALLOWED_CODES":[403,404],
         # Obey robots.txt rules
         #ROBOTSTXT_OBEY = True
         "RETRY_ENABLED": False,
         #RETRY_TIMES = 1
-        "DOWNLOAD_TIMEOUT" : 7.5,
+        "DOWNLOAD_TIMEOUT" : 10,
         # "DUPEFILTER_DEBUG": True,
         "LOGSTATS_INTERVAL" : 300.0,
         # Configure maximum concurrent requests performed by Scrapy (default: 16)
         "CONCURRENT_REQUESTS": 2,
-        "DOWNLOAD_DELAY":0.1,
+        "DOWNLOAD_DELAY":1,
 
         "AUTOTHROTTLE_ENABLED": True,
         # The initial download delay
-        "AUTOTHROTTLE_START_DELAY": 0.1,
+        "AUTOTHROTTLE_START_DELAY": 2,
         # The maximum download delay to be set in case of high latencies
         "AUTOTHROTTLE_MAX_DELAY": 5,
         # The average number of requests Scrapy should be sending in parallel to

@@ -30,9 +30,11 @@ class fixedProxyMiddleware(object):
                 logger.warn("BAD STATUS {} @ {}".format(errcode, url))
                 req_proxy = request.meta.get('proxy', '')
                 self.exception_count +=1;
-                if(self.exception_count > 10):
+                if(self.exception_count > 3):
                     self.exception_count = 0;
                     self.proxyManager.invalidProxy(req_proxy);
+            elif(response.status == 200):
+                self.exception_count = 0;
                 # if response.status == 404 or response.status == 403:
                 #     proxyManager.banProxy(req_proxy)
                 # else:
@@ -45,7 +47,7 @@ class fixedProxyMiddleware(object):
             logger.warn(exception)
             # proxyManager.invalidProxy(req_proxy)
             self.exception_count +=1;
-            if(self.exception_count > 10):
+            if(self.exception_count > 3):
                 self.exception_count = 0;
                 self.proxyManager.invalidProxy(req_proxy);
             return request

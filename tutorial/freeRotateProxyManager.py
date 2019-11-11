@@ -21,40 +21,38 @@ class freeRotateProxyManager(object):
     __metaclass__ = Singleton
     # get_proxy_url = "https://www.kuaidaili.com/free/inha"
     get_proxy_url = "https://www.kuaidaili.com/free/intr/"
-    cur_url = '';
+    free2 = 'http://www.xiladaili.com/'
     POOL = [];
     cursor = 0
     concur = 0;
     page = 1;
     score = {};
-    # auth = kdl.Auth("yourorderid", "yourorderapikey")
-    # client = kdl.Client(auth)
 
     def __init__(self):
-        logger.info('init free proxy fetcher')
-        self.get_proxy_from_cloud(1)
-        settings = get_project_settings();
-        self.concur = settings.get('CONCURRENT_REQUESTS');
-        self.cur_url = self.nextProxy()
-        # self.check_proxy_from_cloud(self.cur_url)
+        self.get_free_prox(1)
+        # settings = get_project_settings();
+        # self.concur = settings.get('CONCURRENT_REQUESTS');
+        # self.cur_url = self.nextProxy()
 
     def proxy(self):
         # mo = min(self.concur, len(self.POOL))
         # self.cursor = self.cursor % mo
-        return self.POOL[self.cursor];
+        return self.POOL[0];
 
-    def nextProxy(self):
-        self.cursor += 1
-        # mo = min(self.concur, len(self.POOL))
-        mo = len(self.POOL);
-        self.cursor = self.cursor % mo
-        # self.cursor = self.cursor % len(self.POOL)
-        return self.POOL[self.cursor];
+    # def nextProxy(self):
+    #     self.cursor += 1
+    #     # mo = min(self.concur, len(self.POOL))
+    #     mo = len(self.POOL);
+    #     self.cursor = self.cursor % mo
+    #     # self.cursor = self.cursor % len(self.POOL)
+    #     return self.POOL[self.cursor];
 
-    def get_proxy_from_cloud(self, count):
+    def get_free_prox(self, count):
         # self.page = (self.page)%2
         # r = requests.get(self.get_proxy_url.format(self.page))
-        r = requests.get(self.get_proxy_url)
+        get_proxy_url = "https://www.kuaidaili.com/free/intr/"
+        free2 = 'http://www.xiladaili.com/'
+        r = requests.get(free2)
         logger.error(r.status_code)
         # logger.error(r.text)
         # self.page += 1
@@ -66,9 +64,13 @@ class freeRotateProxyManager(object):
                 logger.error(r.text)
                 raise CloseSpider('no free proxies')
                 return False
-        IP_SELECTOR = '#list > table > tbody > tr';
         response = HtmlResponse(url='',body=r.text, encoding=r.encoding)
+        self.POOL = self.responseParser_xila(response)
+
+    def responseParser_kdl(self, response):
+        IP_SELECTOR = '#list > table > tbody > tr';
         items = response.css(IP_SELECTOR)
+        pool = []
         for item in items:
             c = item.css('td::text').extract();
             d = {}
@@ -78,18 +80,28 @@ class freeRotateProxyManager(object):
             proxy = "{}://{}:{}".format(d['prot'],d['ip'],d['port'])
             ascproxy = proxy.encode('ascii').lower()
             logger.info(ascproxy)
-            if ascproxy not in self.POOL:
-                self.POOL.append(ascproxy)
-        return self.POOL
+            pool.append(ascproxy)
+            # if ascproxy not in self.POOL:
+            #     self.POOL.append(ascproxy)
+        return pool
 
-        # ips = content['data']['proxy_list']
-        # left = content['data']['order_left_count']
-        # for proxy in ips:
-        #     ascproxy = proxy.encode('ascii')
-        #     if ascproxy not in self.POOL:
-        #         score[ascproxy] = 0;
-        #         self.POOL.append(ascproxy)
-        # return ips;
+    def responseParser_xila(self, response):
+        LIST_SELECTOR = '#scroll > table > tbody > tr';
+        items = response.css(LIST_SELECTOR)
+        logger.info('get some proxies {}'.format(len(items)))
+        pool = []
+        for item in items:
+            c = item.css('td::text').extract();
+            # logger.info('extracted ip {}'.format(c))
+            #1.免费ip代理,2.IP匿名度,3.IP类型,4.IP位置,5.响应速度,6.存活时间,7.最后验证时间,8.打分
+            d = {}
+            d['ipandport'] = c[0]
+            d['score'] = c[7]
+            d['speed'] = c[4]
+            logger.info(d)
+            p = d['ipandport'].encode('ascii').lower()
+            pool.append("http://{}".format(p))
+        return pool
 
     def check_proxy_from_cloud(self, proxy):
         return False
@@ -104,8 +116,6 @@ class freeRotateProxyManager(object):
         #     return False
 
     def invalidProxy(self, proxy):
-        # self.cursor += 1
-        self.nextProxy();
         #1\ if proxy is in the pool, find the index
         #2\ validate the proxy from the cloud
         #3\ remove it from the pool if invalid
@@ -116,16 +126,13 @@ class freeRotateProxyManager(object):
             # self.POOL.append(proxy);
             valid = self.check_proxy_from_cloud(proxy)
             if valid == False:
-                if proxy in self.POOL:
+                if len(self.POOL) <= 1:
+                    self.get_free_prox(1)
+                else:
                     logger.warn("gonna remove it {}".format(proxy))
                     self.POOL.remove(proxy)
-        #         self.get_proxy_from_cloud(1)
-                    return
         else:
             logger.warn("Already removed {}".format(proxy))
-        if len(self.POOL) == 0:
-            self.get_proxy_from_cloud(1)
-        return
 
     def banProxy(self, proxy):
         # self.cursor += 1
@@ -140,7 +147,7 @@ class freeRotateProxyManager(object):
         else:
             logger.warn("Already removed {}".format(proxy))
         if len(self.POOL) == 0:
-            self.get_proxy_from_cloud(1)
+            self.get_free_prox(1)
 
         return
 
@@ -162,6 +169,6 @@ class freeRotateProxyManager(object):
         else:
             logger.warn("Already removed {}".format(proxy))
         if len(self.POOL) == 0:
-            self.get_proxy_from_cloud(1)
+            self.get_free_prox(1)
 
         return
