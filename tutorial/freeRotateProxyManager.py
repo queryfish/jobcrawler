@@ -26,18 +26,24 @@ class freeRotateProxyManager(object):
     cursor = 0
     concur = 0;
     page = 1;
-    score = {};
+    scorePool = {};
+    alife = 3;
 
     def __init__(self):
         self.get_free_prox(1)
-        # settings = get_project_settings();
-        # self.concur = settings.get('CONCURRENT_REQUESTS');
-        # self.cur_url = self.nextProxy()
+        settings = get_project_settings();
+        self.concur = settings.get('CONCURRENT_REQUESTS');
 
     def proxy(self):
+        logger.info('PROXY CUROSOR ---> {}'.format(self.cursor))
+        if len(self.POOL) < self.concur:
+            self.get_free_prox(1);
+            self.cursor = 0;
+        else:
+            self.cursor += 1;
         # mo = min(self.concur, len(self.POOL))
-        # self.cursor = self.cursor % mo
-        return self.POOL[0];
+        self.cursor = self.cursor % (self.concur)
+        return self.POOL[self.cursor];
 
     # def nextProxy(self):
     #     self.cursor += 1
@@ -48,29 +54,25 @@ class freeRotateProxyManager(object):
     #     return self.POOL[self.cursor];
 
     def get_free_prox(self, count):
-        # self.page = (self.page)%2
         # r = requests.get(self.get_proxy_url.format(self.page))
         get_proxy_url = "https://www.kuaidaili.com/free/intr/"
         free2 = 'http://www.xiladaili.com/'
         r = requests.get(free2)
         logger.error(r.status_code)
         # logger.error(r.text)
-        # self.page += 1
         if r.status_code != 200:
-            # time.sleep(60);
-            # r = requests.get(self.get_proxy_url.format(self.page))
-            # if r.status_code != 200:
                 logger.error("fail to fetch proxy")
                 logger.error(r.text)
                 raise CloseSpider('no free proxies')
                 return False
         response = HtmlResponse(url='',body=r.text, encoding=r.encoding)
-        self.POOL = self.responseParser_xila(response)
+        self.scorePool = self.responseParser_xila(response)
+        self.POOL = self.scorePool.keys()
 
     def responseParser_kdl(self, response):
         IP_SELECTOR = '#list > table > tbody > tr';
         items = response.css(IP_SELECTOR)
-        pool = []
+        pool = {}
         for item in items:
             c = item.css('td::text').extract();
             d = {}
@@ -80,16 +82,14 @@ class freeRotateProxyManager(object):
             proxy = "{}://{}:{}".format(d['prot'],d['ip'],d['port'])
             ascproxy = proxy.encode('ascii').lower()
             logger.info(ascproxy)
-            pool.append(ascproxy)
-            # if ascproxy not in self.POOL:
-            #     self.POOL.append(ascproxy)
+            pool[ascproxy] = 0;
         return pool
 
     def responseParser_xila(self, response):
         LIST_SELECTOR = '#scroll > table > tbody > tr';
         items = response.css(LIST_SELECTOR)
         logger.info('get some proxies {}'.format(len(items)))
-        pool = []
+        pool = {}
         for item in items:
             c = item.css('td::text').extract();
             # logger.info('extracted ip {}'.format(c))
@@ -100,7 +100,7 @@ class freeRotateProxyManager(object):
             d['speed'] = c[4]
             logger.info(d)
             p = d['ipandport'].encode('ascii').lower()
-            pool.append("http://{}".format(p))
+            pool["http://{}".format(p)] = 0;
         return pool
 
     def check_proxy_from_cloud(self, proxy):
@@ -120,7 +120,6 @@ class freeRotateProxyManager(object):
         #2\ validate the proxy from the cloud
         #3\ remove it from the pool if invalid
         #4\ get a new proxy from the api and append it to the
-
         if proxy in self.POOL:
             # self.POOL.remove(proxy);
             # self.POOL.append(proxy);
@@ -134,41 +133,28 @@ class freeRotateProxyManager(object):
         else:
             logger.warn("Already removed {}".format(proxy))
 
-    def banProxy(self, proxy):
-        # self.cursor += 1
-        self.nextProxy();
-        #1\ if proxy is in the pool, find the index
-        #2\ validate the proxy from the cloud
-        #3\ remove it from the pool if invalid
-        #4\ get a new proxy from the api and append it to the
-
-        if proxy in self.POOL:
-            self.POOL.remove(proxy);
-        else:
-            logger.warn("Already removed {}".format(proxy))
-        if len(self.POOL) == 0:
-            self.get_free_prox(1)
-
-        return
-
     def badProxy(self, proxy):
         # self.cursor += 1
-
         #1\ if proxy is in the pool, find the index
         #2\ validate the proxy from the cloud
         #3\ remove it from the pool if invalid
         #4\ get a new proxy from the api and append it to the
-        d = self.score
-        if d.has_key(proxy) :
-            proxy_score = d[proxy];
-            d[prxoy] = proxy_score +1;
-            if d[proxy] > 10 :
-                del d[proxy]
-                if proxy in self.POOL:
-                    self.POOL.remove(proxy);
+        d = self.scorePool
+        # if d.has_key(proxy) :
+        if proxy in self.POOL:
+            d[proxy] += 1;
+            if d[proxy] > self.alife :
+                if len(self.POOL) <= 1:
+                    self.get_free_prox(1)
+                else:
+                    # del d[proxy]
+                    self.POOL.remove(proxy)
         else:
             logger.warn("Already removed {}".format(proxy))
-        if len(self.POOL) == 0:
-            self.get_free_prox(1)
 
         return
+
+    def goodProxy(self, proxy):
+        d = self.scorePool
+        if d.has_key(proxy) :
+            d[proxy] = 0;

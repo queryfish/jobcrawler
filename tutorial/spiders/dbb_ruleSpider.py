@@ -47,23 +47,23 @@ class DoubanBookCrawlSpider(CrawlSpider):
         #ROBOTSTXT_OBEY = True
         "RETRY_ENABLED": False,
         #RETRY_TIMES = 1
-        "DOWNLOAD_TIMEOUT" : 10,
+        "DOWNLOAD_TIMEOUT" : 7.5,
         # "DUPEFILTER_DEBUG": True,
-        "LOGSTATS_INTERVAL" : 300.0,
+        "LOGSTATS_INTERVAL" : 60.0,
         # Configure maximum concurrent requests performed by Scrapy (default: 16)
-        "CONCURRENT_REQUESTS": 2,
+        # "CONCURRENT_REQUESTS": 2,
         "DOWNLOAD_DELAY":1,
 
-        "AUTOTHROTTLE_ENABLED": True,
+        "AUTOTHROTTLE_ENABLED": False,
         # The initial download delay
-        "AUTOTHROTTLE_START_DELAY": 2,
+        "AUTOTHROTTLE_START_DELAY": 1,
         # The maximum download delay to be set in case of high latencies
         "AUTOTHROTTLE_MAX_DELAY": 5,
         # The average number of requests Scrapy should be sending in parallel to
         # each remote server
-        "AUTOTHROTTLE_TARGET_CONCURRENCY": 5.0,
+        "AUTOTHROTTLE_TARGET_CONCURRENCY": 4.0,
         # Enable showing throttling stats for every response received:
-        "AUTOTHROTTLE_DEBUG": True,
+        "AUTOTHROTTLE_DEBUG": False,
 
         "ITEM_PIPELINES":{
             'tutorial.pipelines.DoubanBookPipeline': 300,
@@ -130,9 +130,9 @@ class DoubanBookCrawlSpider(CrawlSpider):
             #probably being banned
             logger.error("wrong page ...");
             logger.error(response.request.url);
-            self.banned+=1;
-            if(self.banned > 10):
-                raise CloseSpider('being banned')
+            # self.banned+=1;
+            # if(self.banned > 10):
+            #     raise CloseSpider('being banned')
             return;
 
         DETAIL_BOOK_INFO_BLOCK_SEL = '#info';
@@ -178,7 +178,8 @@ class DoubanBookCrawlSpider(CrawlSpider):
         bookItem['doubanCrawlDate'] = datetime.datetime.utcnow();
         # bookItem['doubanISBN']=
         self.counter += 1;
-        logger.info(u'NO.{} book {}'.format(self.counter, bookItem['doubanBookName']));
+        proxy = response.request.meta['proxy']
+        logger.info(u'NO.{} {} from {}'.format(self.counter, bookItem['doubanBookName'], proxy));
 
         items = response.css(REC_SECTION_SEL);
 
@@ -190,7 +191,7 @@ class DoubanBookCrawlSpider(CrawlSpider):
             # urlOnly['doubanUrl'] = href;
             self.addSomeUrls([href])
 
-        qsize = self.crawler.engine.slot.scheduler.__len__();
-        running = len(self.crawler.engine.slot.inprogress);
-        logger.info('PENDING_QUEUE_SIZE: {}, RUNNING QUEUE SIZE: {}'.format(qsize, running));
+        # qsize = self.crawler.engine.slot.scheduler.__len__();
+        # running = len(self.crawler.engine.slot.inprogress);
+        # logger.info('PENDING_QUEUE_SIZE: {}, RUNNING QUEUE SIZE: {}'.format(qsize, running));
         yield  bookItem;
