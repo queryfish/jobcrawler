@@ -53,6 +53,7 @@ class freeRotateProxyManager(object):
             # r = requests.get(self.get_proxy_url.format(self.page))
             # if r.status_code != 200:
                 logger.error("fail to fetch proxy")
+                logger.error(r.text)
                 raise CloseSpider('no free proxies')
                 return False
         IP_SELECTOR = '#list > table > tbody > tr';
