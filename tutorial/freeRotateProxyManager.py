@@ -13,7 +13,7 @@ logger = logging.getLogger(__name__)
 
 class freeRotateProxyManager(object):
     # get_proxy_url = "https://www.kuaidaili.com/free/inha"
-    get_proxy_url = "https://www.kuaidaili.com/free/intr/{}/"
+    get_proxy_url = "https://www.kuaidaili.com/free/intr/"
     cur_url = '';
     POOL = [];
     cursor = 0
@@ -45,7 +45,8 @@ class freeRotateProxyManager(object):
 
     def get_proxy_from_cloud(self, count):
         # self.page = (self.page)%2
-        r = requests.get(self.get_proxy_url.format(self.page))
+        # r = requests.get(self.get_proxy_url.format(self.page))
+        r = requests.get(self.get_proxy_url)
         # self.page += 1
         if r.status_code != 200:
             # time.sleep(60);
