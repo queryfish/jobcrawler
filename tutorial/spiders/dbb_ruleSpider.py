@@ -41,7 +41,7 @@ class DoubanBookCrawlSpider(CrawlSpider):
     custom_settings = {
         "LOG_LEVEL": 'INFO',
         # "LOG_STDOUT" : True,
-        "LOG_FILE": './ddb_logfile.log',
+        "LOG_FILE": './dbb_logfile.log',
         "HTTPERROR_ALLOWED_CODES":[403,404],
         # Obey robots.txt rules
         #ROBOTSTXT_OBEY = True

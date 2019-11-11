@@ -48,9 +48,9 @@ class freeRotateProxyManager(object):
         r = requests.get(self.get_proxy_url.format(self.page))
         # self.page += 1
         if r.status_code != 200:
-            time.sleep(60);
-            r = requests.get(self.get_proxy_url.format(self.page))
-            if r.status_code != 200:
+            # time.sleep(60);
+            # r = requests.get(self.get_proxy_url.format(self.page))
+            # if r.status_code != 200:
                 logger.error("fail to fetch proxy")
                 raise CloseSpider('no free proxies')
                 return False
