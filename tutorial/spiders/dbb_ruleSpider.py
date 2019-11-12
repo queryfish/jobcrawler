@@ -125,7 +125,7 @@ class DoubanBookCrawlSpider(CrawlSpider):
             #probably being banned
             logger.error("wrong page ...");
             logger.error(response.request.url);
-            logger.error(repsonse.body);
+            logger.error(response.body);
             # self.banned+=1;
             # if(self.banned > 10):
             #     raise CloseSpider('being banned')
