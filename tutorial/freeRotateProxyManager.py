@@ -34,7 +34,8 @@ class freeRotateProxyManager(object):
     def __init__(self):
         self.get_free_prox(1)
         settings = get_project_settings();
-        self.concur = settings.get('CONCURRENT_REQUESTS');
+        # self.concur = settings.get('CONCURRENT_REQUESTS');
+        self.concur = 3
 
     def proxy(self):
         # return self.POOL[0];
@@ -160,7 +161,7 @@ class freeRotateProxyManager(object):
 
         if proxy in self.POOL:
             if d[proxy] > self.tolerance :
-                logger.info('BOOKING GOOD.{} BAD.{} for [{}]'.format(self.goodness[proxy], self.badness[proxy], proxy))
+                logger.info('BOOKING.{} GOOD.{} BAD.{} for [{}]'.format(len(self.POOL),self.goodness[proxy], self.badness[proxy], proxy))
                 if len(self.POOL) <= 1:
                     self.get_free_prox(1)
                 else:
