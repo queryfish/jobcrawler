@@ -52,7 +52,7 @@ class DoubanBookCrawlSpider(CrawlSpider):
         "LOGSTATS_INTERVAL" : 60.0,
         # Configure maximum concurrent requests performed by Scrapy (default: 16)
         # "CONCURRENT_REQUESTS": 2,
-        "DOWNLOAD_DELAY":0.3,
+        "DOWNLOAD_DELAY":0.9,
 
         "AUTOTHROTTLE_ENABLED": True,
         # The initial download delay
