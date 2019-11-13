@@ -34,7 +34,7 @@ class DoubanBookSpider(scrapy.Spider):
     # start_urls = ['https://book.douban.com/subject/26389895/']
     start_urls = []
     custom_settings = {
-        "LOG_LEVEL": 'INFO',
+        "LOG_LEVEL": 'DEBUG',
         # "LOG_STDOUT" : True,
         "LOG_FILE": './douban_logfile.log',
         "HTTPERROR_ALLOWED_CODES":[403,404],
@@ -44,10 +44,10 @@ class DoubanBookSpider(scrapy.Spider):
         #RETRY_TIMES = 1
         "DOWNLOAD_TIMEOUT" : 7.5,
         "DUPEFILTER_DEBUG": True,
-        "LOGSTATS_INTERVAL" : 300.0,
+        "LOGSTATS_INTERVAL" : 60.0,
         # Configure maximum concurrent requests performed by Scrapy (default: 16)
         "CONCURRENT_REQUESTS": 1,
-        "DOWNLOAD_DELAY":1,
+        "DOWNLOAD_DELAY":0.8,
 
         "AUTOTHROTTLE_ENABLED": True,
         # The initial download delay
@@ -68,8 +68,8 @@ class DoubanBookSpider(scrapy.Spider):
             # 'tutorial.middlewares.RandomProxy':301,
             'scrapy.downloadermiddlewares.httpproxy.HttpProxyMiddleware': 110,
             # 'tutorial.middlewares_proxy.TunnelProxyMiddleware': 100,
-            'tutorial.middlewares_rotate_proxy.RegularProxyMiddleware': 100,
-            # 'tutorial.middlewares_rotate_proxy.freeRotateProxyMiddleware': 100,
+            # 'tutorial.middlewares_rotate_proxy.RegularProxyMiddleware': 100,
+            'tutorial.middlewares_free_proxy.freeRotateProxyMiddleware': 100,
             # 'scrapy.downloadermiddlewares.retry.RetryMiddleware': None,
             # 'tutorial.middlewares_rotate_proxy.CustomRetryMiddleware': 500,
             # 'scrapy.downloadermiddlewares.useragent.UserAgentMiddleware':2 ,
@@ -100,7 +100,7 @@ class DoubanBookSpider(scrapy.Spider):
 
     def __init__(self, *a, **kw):
         super(DoubanBookSpider, self).__init__(*a, **kw)
-        urls = self.getSomeUrls(5)
+        urls = self.getSomeUrls(1000)
         for url in urls:
             self.start_urls.append(url)
             # print(url);
@@ -137,9 +137,6 @@ class DoubanBookSpider(scrapy.Spider):
             #probably being banned
             logger.error("wrong page ...");
             logger.error(response.request.url);
-            self.banned+=1;
-            if(self.banned > 10):
-                raise CloseSpider('being banned')
             return;
 
         DETAIL_BOOK_INFO_BLOCK_SEL = '#info';
@@ -201,20 +198,20 @@ class DoubanBookSpider(scrapy.Spider):
 
         qsize = self.crawler.engine.slot.scheduler.__len__();
         running = len(self.crawler.engine.slot.inprogress);
-        # logger.info('PENDING_QUEUE_SIZE: {}, RUNNING QUEUE SIZE: {}'.format(qsize, running));
-
-        # if (qsize+running < 5):
-        #     newUrls = self.getSomeUrls(100);
-        #     for url in newUrls:
-        #         # if(len(url) > 0):
-        #         # logger.info('add to queue {}'.format(url));
-        #         logger.info('gonna queue request {}'.format(url));
-        #         yield Request(url ,callback=self.parse);
+        logger.debug('PENDING_QUEUE_SIZE: {}, RUNNING QUEUE SIZE: {}'.format(qsize, running));
 
         if (qsize+running < 100):
-            for item in items:
-                # print(item.css('a::text').extract()[0]);
-                href = (item.css('a::attr(href)').extract()[0]);
-                # print(href)
-                # logger.info('add to queue {}'.format(href));
-                yield Request(href ,callback=self.parse)
+            newUrls = self.getSomeUrls(1000);
+            for url in newUrls:
+                # if(len(url) > 0):
+                # logger.info('add to queue {}'.format(url));
+                logger.info('gonna queue request {}'.format(url));
+                yield Request(url ,callback=self.parse);
+
+        # if (qsize+running < 100):
+        #     for item in items:
+        #         # print(item.css('a::text').extract()[0]);
+        #         href = (item.css('a::attr(href)').extract()[0]);
+        #         # print(href)
+        #         # logger.info('add to queue {}'.format(href));
+        #         yield Request(href ,callback=self.parse)
