@@ -46,8 +46,8 @@ class DoubanBookSpider(scrapy.Spider):
         "DUPEFILTER_DEBUG": True,
         "LOGSTATS_INTERVAL" : 60.0,
         # Configure maximum concurrent requests performed by Scrapy (default: 16)
-        "CONCURRENT_REQUESTS": 2,
-        "DOWNLOAD_DELAY":0.8,
+        "CONCURRENT_REQUESTS": 4,
+        "DOWNLOAD_DELAY":0.4,
 
         "AUTOTHROTTLE_ENABLED": True,
         # The initial download delay

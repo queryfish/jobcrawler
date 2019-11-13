@@ -34,8 +34,8 @@ class freeRotateProxyManager(object):
     def __init__(self):
         self.get_free_prox(1)
         settings = get_project_settings();
-        self.concur = settings.get('CONCURRENT_REQUESTS');
-        # self.concur = 3
+        # self.concur = settings.get('CONCURRENT_REQUESTS');
+        self.concur = 4
 
     def proxy(self):
         # return self.POOL[0];
