@@ -31,12 +31,18 @@ class fixedProxyMiddleware(object):
                 logger.warn("BAD STATUS {} @ {}".format(errcode, url))
                 self.proxyManager.badProxy(proxy)
             elif(response.status == 200):
-                self.proxyManager.goodProxy(proxy)
-                # self.exception_count = 0;
-                # if response.status == 404 or response.status == 403:
-                #     proxyManager.banProxy(req_proxy)
-                # else:
-                #     proxyManager.invalidProxy(req_proxy)
+                TITLE_SEL = '#wrapper > h1 > span';
+                bookTitle = response.css(TITLE_SEL).css('::text').extract_first();
+                banner = '<script>var d=[navigator.platform,navigator.userAgent,navigator.vendor].join'
+                if bookTitle is None and response.body.startswith(banner):
+                    logger.error("STR.");
+                    logger.error(request.url);
+                    logger.error(response.body);
+                #     #actually should be banned proxy
+                    self.proxyManager.badProxy(proxy)
+                else:
+                    self.proxyManager.goodProxy(proxy)
+
             return response
 
         def process_exception(self, request, exception, spider):
