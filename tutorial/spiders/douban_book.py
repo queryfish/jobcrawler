@@ -36,30 +36,6 @@ class DoubanBookSpider(scrapy.Spider):
     custom_settings = {
         "LOG_LEVEL": 'DEBUG',
         "LOG_STDOUT" : True,
-        # "LOG_FILE": './douban_logfile.log',
-        "HTTPERROR_ALLOWED_CODES":[403,404],
-        # Obey robots.txt rules
-        #ROBOTSTXT_OBEY = True
-        "RETRY_ENABLED": False,
-        #RETRY_TIMES = 1
-        "DOWNLOAD_TIMEOUT" : 7.5,
-        "DUPEFILTER_DEBUG": True,
-        "LOGSTATS_INTERVAL" : 60.0,
-        # Configure maximum concurrent requests performed by Scrapy (default: 16)
-        "CONCURRENT_REQUESTS": 4,
-        "DOWNLOAD_DELAY":0.4,
-
-        "AUTOTHROTTLE_ENABLED": True,
-        # The initial download delay
-        "AUTOTHROTTLE_START_DELAY": 0.1,
-        # The maximum download delay to be set in case of high latencies
-        "AUTOTHROTTLE_MAX_DELAY": 5,
-        # The average number of requests Scrapy should be sending in parallel to
-        # each remote server
-        "AUTOTHROTTLE_TARGET_CONCURRENCY": 2.0,
-        # Enable showing throttling stats for every response received:
-        "AUTOTHROTTLE_DEBUG": True,
-
         "ITEM_PIPELINES":{
             'tutorial.pipelines.DoubanBookPipeline': 300,
         },
