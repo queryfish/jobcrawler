@@ -35,8 +35,8 @@ class DoubanBookSpider(scrapy.Spider):
     start_urls = []
     custom_settings = {
         "LOG_LEVEL": 'DEBUG',
-        # "LOG_STDOUT" : True,
-        "LOG_FILE": './douban_logfile.log',
+        "LOG_STDOUT" : True,
+        # "LOG_FILE": './douban_logfile.log',
         "HTTPERROR_ALLOWED_CODES":[403,404],
         # Obey robots.txt rules
         #ROBOTSTXT_OBEY = True
