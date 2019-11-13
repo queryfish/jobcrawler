@@ -34,8 +34,8 @@ class freeRotateProxyManager(object):
     def __init__(self):
         self.get_free_prox(1)
         settings = get_project_settings();
-        # self.concur = settings.get('CONCURRENT_REQUESTS');
-        self.concur = 3
+        self.concur = settings.get('CONCURRENT_REQUESTS');
+        # self.concur = 3
 
     def proxy(self):
         # return self.POOL[0];
@@ -69,15 +69,13 @@ class freeRotateProxyManager(object):
                 raise CloseSpider('no free proxies')
                 return False
         response = HtmlResponse(url='',body=r.text, encoding=r.encoding)
-        self.POOL = self.responseParser_xila(response)
+        p = self.responseParser_xila(response)
+        self.POOL
         # self.POOL.insert(0,'None')
         v = {}
-        for k in self.POOL :
-            v[k] = 0
-        self.scorePool = v;
-        self.badness = v.copy()
-        self.goodness = v.copy()
-
+        for k in p :
+            self.POOL.append(k)
+            self.scorePool[k] = 0;
 
     def responseParser_kdl(self, response):
         IP_SELECTOR = '#list > table > tbody > tr';
@@ -161,7 +159,9 @@ class freeRotateProxyManager(object):
 
         if proxy in self.POOL:
             if d[proxy] > self.tolerance :
-                logger.info('BOOKING.{} GOOD.{} BAD.{} for [{}]'.format(len(self.POOL),self.goodness[proxy], self.badness[proxy], proxy))
+                g = self.goodness.get(proxy, 0)
+                b = self.badness.get(proxy, 0)
+                logger.info('BOOKING.{} GOOD.{} BAD.{} for [{}]'.format(len(self.POOL),g ,b, proxy))
                 if len(self.POOL) <= 1:
                     self.get_free_prox(1)
                 else:
@@ -173,6 +173,8 @@ class freeRotateProxyManager(object):
         if self.badness.has_key(proxy):
             self.badness[proxy] += 1
             logger.info('BAD.{} for [{}]'.format(self.badness[proxy], proxy))
+        else:
+            self.badness[proxy] = 1
         return
 
     def goodProxy(self, proxy):
@@ -182,3 +184,5 @@ class freeRotateProxyManager(object):
         if self.goodness.has_key(proxy):
             self.goodness[proxy] += 1
             logger.info('GOOD.{} for [{}]'.format(self.goodness[proxy], proxy))
+        else:
+            self.goodness[proxy] = 1
