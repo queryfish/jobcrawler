@@ -46,7 +46,7 @@ class DoubanBookSpider(scrapy.Spider):
         "DUPEFILTER_DEBUG": True,
         "LOGSTATS_INTERVAL" : 60.0,
         # Configure maximum concurrent requests performed by Scrapy (default: 16)
-        "CONCURRENT_REQUESTS": 1,
+        "CONCURRENT_REQUESTS": 2,
         "DOWNLOAD_DELAY":0.8,
 
         "AUTOTHROTTLE_ENABLED": True,
@@ -56,7 +56,7 @@ class DoubanBookSpider(scrapy.Spider):
         "AUTOTHROTTLE_MAX_DELAY": 5,
         # The average number of requests Scrapy should be sending in parallel to
         # each remote server
-        "AUTOTHROTTLE_TARGET_CONCURRENCY": 5.0,
+        "AUTOTHROTTLE_TARGET_CONCURRENCY": 2.0,
         # Enable showing throttling stats for every response received:
         "AUTOTHROTTLE_DEBUG": True,
 
@@ -69,7 +69,7 @@ class DoubanBookSpider(scrapy.Spider):
             'scrapy.downloadermiddlewares.httpproxy.HttpProxyMiddleware': 110,
             # 'tutorial.middlewares_proxy.TunnelProxyMiddleware': 100,
             # 'tutorial.middlewares_rotate_proxy.RegularProxyMiddleware': 100,
-            'tutorial.middlewares_free_proxy.freeRotateProxyMiddleware': 100,
+            'tutorial.middlewares_free_proxy.fixedProxyMiddleware': 100,
             # 'scrapy.downloadermiddlewares.retry.RetryMiddleware': None,
             # 'tutorial.middlewares_rotate_proxy.CustomRetryMiddleware': 500,
             # 'scrapy.downloadermiddlewares.useragent.UserAgentMiddleware':2 ,
@@ -137,6 +137,7 @@ class DoubanBookSpider(scrapy.Spider):
             #probably being banned
             logger.error("wrong page ...");
             logger.error(response.request.url);
+            logger.error(response.body)
             return;
 
         DETAIL_BOOK_INFO_BLOCK_SEL = '#info';
@@ -198,14 +199,14 @@ class DoubanBookSpider(scrapy.Spider):
 
         qsize = self.crawler.engine.slot.scheduler.__len__();
         running = len(self.crawler.engine.slot.inprogress);
-        logger.debug('PENDING_QUEUE_SIZE: {}, RUNNING QUEUE SIZE: {}'.format(qsize, running));
+        logger.info('PENDING_QUEUE_SIZE: {}, RUNNING QUEUE SIZE: {}'.format(qsize, running));
 
         if (qsize+running < 100):
             newUrls = self.getSomeUrls(1000);
             for url in newUrls:
                 # if(len(url) > 0):
                 # logger.info('add to queue {}'.format(url));
-                logger.info('gonna queue request {}'.format(url));
+                # logger.info('gonna queue request {}'.format(url));
                 yield Request(url ,callback=self.parse);
 
         # if (qsize+running < 100):
