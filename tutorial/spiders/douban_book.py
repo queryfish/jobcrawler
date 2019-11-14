@@ -114,6 +114,10 @@ class DoubanBookSpider(scrapy.Spider):
             logger.error("wrong page ...");
             logger.error(response.request.url);
             logger.error(response.body)
+            if(resposne.body.index('你想访问的条目豆瓣不收录'))
+            if '你想访问的条目豆瓣不收录' in response.body:
+                errcode = '你想访问的条目豆瓣不收录'
+                res = self.collection.update({'doubanUrl':url}, {'$set':{'errorCode':errcode}}, upsert=True)
             return;
 
         DETAIL_BOOK_INFO_BLOCK_SEL = '#info';
