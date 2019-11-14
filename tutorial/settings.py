@@ -29,7 +29,7 @@ CONCURRENT_REQUESTS = 4
 # See also autothrottle settings and docs
 #5秒的下载延时 / 每秒
 # 2.0/CONCURRENT_REQUESTS
-DOWNLOAD_DELAY = .1
+DOWNLOAD_DELAY = .3
 # The download delay setting will honor only one of:
 # CONCURRENT_REQUESTS_PER_DOMAIN = 5
 #CONCURRENT_REQUESTS_PER_IP = 16
@@ -82,7 +82,7 @@ DOWNLOADER_MIDDLEWARES = {
 
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See http://doc.scrapy.org/en/latest/topics/autothrottle.html
-AUTOTHROTTLE_ENABLED = True
+AUTOTHROTTLE_ENABLED = False
 # The initial download delay
 AUTOTHROTTLE_START_DELAY = 0.1
 # The maximum download delay to be set in case of high latencies
