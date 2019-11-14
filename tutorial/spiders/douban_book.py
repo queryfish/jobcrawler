@@ -183,7 +183,7 @@ class DoubanBookSpider(scrapy.Spider):
                 # if(len(url) > 0):
                 # logger.info('add to queue {}'.format(url));
                 # logger.info('gonna queue request {}'.format(url));
-                yield Request(url ,callback=self.parse);
+                yield Request(url ,callback=self.parse, dont_filter=True);
 
         # if (qsize+running < 100):
         #     for item in items:
