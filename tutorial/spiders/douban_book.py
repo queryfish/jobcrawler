@@ -117,7 +117,7 @@ class DoubanBookSpider(scrapy.Spider):
             if '你想访问的条目豆瓣不收录' in response.body:
                 logger.error("你想访问的条目豆瓣不收录")
                 errcode = '你想访问的条目豆瓣不收录'
-                res = self.collection.update({'doubanUrl':url}, {'$set':{'errorCode':errcode}}, upsert=True)
+                res = self.collection.update({'doubanUrl':response.request.url}, {'$set':{'errorCode':errcode}}, upsert=True)
             return;
 
         DETAIL_BOOK_INFO_BLOCK_SEL = '#info';
