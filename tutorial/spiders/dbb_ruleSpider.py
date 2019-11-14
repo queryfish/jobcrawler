@@ -187,7 +187,7 @@ class DoubanBookCrawlSpider(CrawlSpider):
             # urlOnly['doubanUrl'] = href;
             self.addSomeUrls([href])
 
-        # qsize = self.crawler.engine.slot.scheduler.__len__();
-        # running = len(self.crawler.engine.slot.inprogress);
-        # logger.info('PENDING_QUEUE_SIZE: {}, RUNNING QUEUE SIZE: {}'.format(qsize, running));
+        qsize = self.crawler.engine.slot.scheduler.__len__();
+        running = len(self.crawler.engine.slot.inprogress);
+        logger.info('PENDING_QUEUE_SIZE: {}, RUNNING QUEUE SIZE: {}'.format(qsize, running));
         yield  bookItem;
