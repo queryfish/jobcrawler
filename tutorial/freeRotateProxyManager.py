@@ -156,9 +156,9 @@ class freeRotateProxyManager(object):
         d = self.scorePool
         if d.has_key(proxy):
             d[proxy] += 1;
-
+        tolerance = int(self.goodness.get("proxy",0)/500+self.tolerance)
         if proxy in self.POOL:
-            if d[proxy] > self.tolerance :
+            if d[proxy] > tolerance:
                 g = self.goodness.get(proxy, 0)
                 b = self.badness.get(proxy, 0)
                 logger.info('BOOKING.{} GOOD.{} BAD.{} for [{}]'.format(len(self.POOL),g ,b, proxy))
