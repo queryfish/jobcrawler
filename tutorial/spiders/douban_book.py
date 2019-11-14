@@ -179,6 +179,7 @@ class DoubanBookSpider(scrapy.Spider):
 
         if (qsize+running < 100):
             newUrls = self.getSomeUrls(1000);
+            logger.info('RePENDING THE QUEUE with {} items'.format(len(newUrls)))
             for url in newUrls:
                 # if(len(url) > 0):
                 # logger.info('add to queue {}'.format(url));
