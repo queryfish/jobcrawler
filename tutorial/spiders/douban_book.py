@@ -113,8 +113,9 @@ class DoubanBookSpider(scrapy.Spider):
             #probably being banned
             logger.error("wrong page ...");
             logger.error(response.request.url);
-            logger.error(response.body)
+            # logger.error(response.body)
             if '你想访问的条目豆瓣不收录' in response.body:
+                logger.error("你想访问的条目豆瓣不收录")
                 errcode = '你想访问的条目豆瓣不收录'
                 res = self.collection.update({'doubanUrl':url}, {'$set':{'errorCode':errcode}}, upsert=True)
             return;
