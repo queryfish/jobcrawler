@@ -34,7 +34,7 @@ class DoubanBookCrawlSpider(CrawlSpider):
     # handle_httpstatus_list = [301, 302];
 
     # start_urls = ['https://book.douban.com/subject/1089243/']
-    start_urls = []
+    start_urls = ['https://book.douban.com/review/best/']
     rules = (
         Rule(LinkExtractor(allow=(r'^https://book.douban.com/subject/\d+/$')), callback="parse_book", follow=True),
     )
