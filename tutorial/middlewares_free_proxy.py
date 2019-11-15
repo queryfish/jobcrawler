@@ -44,6 +44,7 @@ class fixedProxyMiddleware(object):
                 #     #actually should be banned proxy
                     self.proxyManager.badProxy(proxy)
                 else:
+                    logger.info('GOOD for [{}]'.format(request.url)
                     self.proxyManager.goodProxy(proxy)
 
             return response
