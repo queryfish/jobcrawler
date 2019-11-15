@@ -97,7 +97,7 @@ class DoubanBookCrawlSpider(CrawlSpider):
         formalSet = 'doubanBookUrlSet'
         if self.r.exists(tmpSet):
             self.r.delete(tmpSet)
-        if not self.r.exists(formalSet) or True:
+        if not self.r.exists(formalSet):
             res = self.collection.find({"doubanUrl":{"$ne":None}},{"doubanUrl":1, "_id":0});
             l = list(res)
             # for i in l :
@@ -135,17 +135,18 @@ class DoubanBookCrawlSpider(CrawlSpider):
         self.r.sadd(tmpSet, *urls.keys())
 
         diff = self.r.sdiff(tmpSet, formalSet)
+        logger.info('with the DIFF :{}'.format(len(diff)))
         if len(diff) == 0 :
-            logger.info("not a match {}".format(diff))
+            # logger.info("not a match {}".format(diff))
             return []
         else:
-            logger.info('before UNION :{}'.format(self.r.scard(formalSet)))
+            # logger.info('before UNION :{}'.format(self.r.scard(formalSet)))
             self.r.sadd(formalSet, *diff)
             # self.r.delete(tmpSet)
-            logger.info('DIFF LINKS :{}'.format(diff))
-            logger.info('after UNION :{}'.format(self.r.scard(formalSet)))
-            logger.info('with the DIFF :{}'.format(len(diff)))
-            raise CloseSpider('being banned')
+            # logger.info('DIFF LINKS :{}'.format(diff))
+            # logger.info('after UNION :{}'.format(self.r.scard(formalSet)))
+
+            # raise CloseSpider('being banned')
             return list(map(lambda x:urls[x], diff))
 
     def parse_book(self, response):
