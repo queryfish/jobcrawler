@@ -103,7 +103,7 @@ class DoubanBookCrawlSpider(CrawlSpider):
 
     def link_filter(self, links):
         # logger.info(links)
-        if links == None or len(links) == 0):
+        if links == None or len(links) == 0:
             return links
 
         urls = {}
@@ -113,13 +113,13 @@ class DoubanBookCrawlSpider(CrawlSpider):
         tmpSet = 'tmpUrlSet'
         formalSet = 'doubanBookUrlSet'
 
-        self.r.sadd(tmpSet, *urls.keys)
+        self.r.sadd(tmpSet, *urls.keys())
         logger.info(self.r.smembers(tmpSet))
         diff = self.r.sdiff(tmpSet, formalSet)
         self.r.sadd(formalSet, *diff)
         self.r.delete(tmpSet)
         logger.info('DIFF LINKS :{}'.format(links))
-        
+
         return list(map(lambda x:urls[x], diff))
 
     def parse_book(self, response):
