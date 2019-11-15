@@ -110,7 +110,7 @@ class DoubanBookCrawlSpider(CrawlSpider):
             for i in links:
                 count = self.collection.count({"doubanUrl":i.url})
                 if count == 0 :
-                    # logger.debug('{} Records for [{}] '.format(count, i.url))
+                    logger.debug('{} Records for [{}] '.format(count, i.url))
                     urls.append(i)
         return urls
 

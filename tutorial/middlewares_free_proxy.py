@@ -20,8 +20,8 @@ class fixedProxyMiddleware(object):
 
         def process_request(self, request, spider):
             url = request.url
-            if url.startswith('https://book.douban.com/tag/'):
-                return
+            # if url.startswith('https://book.douban.com/tag/'):
+                # return
             proxy  = self.proxyManager.proxy()
             request.meta['proxy'] = proxy  # 设置代理
             logger.info("REQ {} <- [{}]".format(request.url, request.meta['proxy']))
@@ -44,7 +44,7 @@ class fixedProxyMiddleware(object):
                 #     #actually should be banned proxy
                     self.proxyManager.badProxy(proxy)
                 else:
-                    logger.info('GOOD for [{}]'.format(request.url)
+                    logger.info('GOOD for [{}]'.format(request.url))
                     self.proxyManager.goodProxy(proxy)
 
             return response
