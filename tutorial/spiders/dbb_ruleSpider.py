@@ -104,11 +104,11 @@ class DoubanBookCrawlSpider(CrawlSpider):
             #     logger.info(i)
             urls = list(map(lambda x:x['doubanUrl'], l))
             logger.info("SMOKING GUN")
-            logger.info(self.r.smembers(formalSet))
+            # logger.info(self.r.smembers(formalSet))
             self.r.sadd(formalSet, *urls)
             logger.info(self.r.scard(formalSet))
-            self.r.delete(formalSet)
-            raise CloseSpider('being banned')
+            # self.r.delete(formalSet)
+            # raise CloseSpider('being banned')
 
     def __init__(self, *a, **kw):
         logger = logging.getLogger('scrapy.core.scraper')
