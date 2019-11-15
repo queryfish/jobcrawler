@@ -96,6 +96,8 @@ class DoubanBookCrawlSpider(CrawlSpider):
         logger = logging.getLogger('scrapy.core.scraper')
         logger.setLevel(logging.INFO)
         super(DoubanBookCrawlSpider, self).__init__(*a, **kw)
+        tmpSet = 'tmpUrlSet'
+        formalSet = 'doubanBookUrlSet'
         self.r.delete(tmpSet)
         self.r.delete(formalSet)
 
