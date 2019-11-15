@@ -92,14 +92,27 @@ class DoubanBookCrawlSpider(CrawlSpider):
         for url in urls:
             res = self.collection.update({'doubanUrl':url}, {'$set':{'doubanUrl':url}}, upsert=True)
 
+    def setupRedis(self):
+        tmpSet = 'tmpUrlSet'
+        formalSet = 'doubanBookUrlSet'
+        if self.r.exists(tmpSet):
+            self.r.delete(tmpSet)
+        if not self.r.exists(formalSet):
+            res = self.collection.find({"doubanUrl":{"$ne":None}},{"doubanUrl":1, "_id":0});
+            l = list(res)
+            # for i in l :
+            #     logger.info(i)
+            urls = list(map(lambda x:x['doubanUrl'], l))
+            # logger.info(self.r.smembers(formalSet))
+            self.r.sadd(formalSet, *urls)
+            logger.info(self.r.scard(formalSet))
+
+
     def __init__(self, *a, **kw):
         logger = logging.getLogger('scrapy.core.scraper')
         logger.setLevel(logging.INFO)
+        self.setupRedis()
         super(DoubanBookCrawlSpider, self).__init__(*a, **kw)
-        tmpSet = 'tmpUrlSet'
-        formalSet = 'doubanBookUrlSet'
-        self.r.delete(tmpSet)
-        self.r.delete(formalSet)
 
     def no_dupefilter(self, request):
         request.dont_filter = True
