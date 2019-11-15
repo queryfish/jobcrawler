@@ -38,7 +38,7 @@ class DoubanBookCrawlSpider(CrawlSpider):
     start_urls = ['https://book.douban.com/tag/?view=type&icn=index-sorttags-all']
     rules = (
         Rule(LinkExtractor(allow=(r'^https://book.douban.com/subject/\d+/$')), callback="parse_book", follow=True,process_links="link_filter", process_request="no_dupefilter"),
-        Rule(LinkExtractor(allow=(r'^https://book.douban.com/tag/')), follow=True),
+        Rule(LinkExtractor(allow=(r'^https://book.douban.com/tag/')), callback="parse_tag", follow=True, process_links="link_filter"),
     )
     custom_settings = {
         "LOG_LEVEL": 'DEBUG',
@@ -128,16 +128,23 @@ class DoubanBookCrawlSpider(CrawlSpider):
 
         urls = {}
         for l in links:
-            urls[l.url] = l
+            uniUrl = unicode(l.url, "utf-8")
+            urls[uniUrl] = l
 
         tmpSet = 'tmpUrlSet'
         formalSet = 'doubanBookUrlSet'
+        queueSet = 'queueSet'
         self.r.delete(tmpSet)
         self.r.sadd(tmpSet, *urls.keys())
-
         diff = self.r.sdiff(tmpSet, formalSet)
-        logger.info('with the DIFF :{}'.format(len(diff)))
+        if(len(diff) > 0):
+            self.r.sadd(queueSet, *diff)
+        # logger.info('with the DIFF :{}'.format(urls.keys()))
         return list(map(lambda x:urls[x], diff))
+        # l = []
+        # for i in diff:
+        #     l.append(urls[i])
+        # return l;
         # if len(diff) == 0 :
             # logger.info("not a match {}".format(diff))
             # return []
@@ -150,8 +157,23 @@ class DoubanBookCrawlSpider(CrawlSpider):
             # raise CloseSpider('being banned')
             # return list(map(lambda x:urls[x], diff))
 
+    def parse_tag(self, response):
+        qsize = self.crawler.engine.slot.scheduler.__len__();
+        running = len(self.crawler.engine.slot.inprogress);
+        logger.info('PENDING_QUEUE_SIZE: {}, RUNNING QUEUE SIZE: {}'.format(qsize, running));
+        formalSet = 'doubanBookUrlSet'
+        queueSet = 'queueSet'
+        url = response.request.url
+        self.r.srem(formalSet, url)
+        self.r.sadd(queueSet, url)
+
     def parse_book(self, response):
         formalSet = 'doubanBookUrlSet'
+        queueSet = 'queueSet'
+        url = response.request.url
+        self.r.srem(formalSet, url)
+        self.r.sadd(queueSet, url)
+
         self.r.sadd(formalSet, response.request.url)
         if response.status == 404 or response.status == 403:
             url = response.request.url
