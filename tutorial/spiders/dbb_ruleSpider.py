@@ -49,7 +49,7 @@ class DoubanBookCrawlSpider(CrawlSpider):
         # Configure maximum concurrent requests performed by Scrapy (default: 16)
         # "CONCURRENT_REQUESTS": 2,
         "DOWNLOAD_DELAY":0.9,
-        "DUPEFILTER_CLASS": 'scrapy.dupefilters.BaseDupeFilter',
+        # "DUPEFILTER_CLASS": 'scrapy.dupefilters.BaseDupeFilter',
 
         # Enable and configure HTTP caching (disabled by default)
         # See http://scrapy.readthedocs.org/en/latest/topics/downloader-middleware.html#httpcache-middleware-settings
@@ -97,16 +97,17 @@ class DoubanBookCrawlSpider(CrawlSpider):
         formalSet = 'doubanBookUrlSet'
         if self.r.exists(tmpSet):
             self.r.delete(tmpSet)
-        if not self.r.exists(formalSet):
-            res = self.collection.find({"doubanUrl":{"$ne":None}},{"doubanUrl":1, "_id":0});
-            l = list(res)
+        if self.r.exists(formalSet):
+            self.r.delete(formalSet)
+        res = self.collection.find({"$and":[{"doubanUrl":{"$ne":None}},{"doubanCrawlDate":{"$exists":True}}]},{"doubanUrl":1, "_id":0});
+        l = list(res)
             # for i in l :
             #     logger.info(i)
-            urls = list(map(lambda x:x['doubanUrl'], l))
-            logger.info("SMOKING GUN")
+        urls = list(map(lambda x:x['doubanUrl'], l))
+        logger.info("SMOKING GUN")
             # logger.info(self.r.smembers(formalSet))
-            self.r.sadd(formalSet, *urls)
-            logger.info(self.r.scard(formalSet))
+        self.r.sadd(formalSet, *urls)
+        logger.info(self.r.scard(formalSet))
             # self.r.delete(formalSet)
             # raise CloseSpider('being banned')
 
@@ -136,20 +137,22 @@ class DoubanBookCrawlSpider(CrawlSpider):
 
         diff = self.r.sdiff(tmpSet, formalSet)
         logger.info('with the DIFF :{}'.format(len(diff)))
-        if len(diff) == 0 :
+        return list(map(lambda x:urls[x], diff))
+        # if len(diff) == 0 :
             # logger.info("not a match {}".format(diff))
-            return []
-        else:
+            # return []
+        # else:
             # logger.info('before UNION :{}'.format(self.r.scard(formalSet)))
-            self.r.sadd(formalSet, *diff)
+            # self.r.sadd(formalSet, *diff)
             # self.r.delete(tmpSet)
             # logger.info('DIFF LINKS :{}'.format(diff))
             # logger.info('after UNION :{}'.format(self.r.scard(formalSet)))
-
             # raise CloseSpider('being banned')
-            return list(map(lambda x:urls[x], diff))
+            # return list(map(lambda x:urls[x], diff))
 
     def parse_book(self, response):
+        formalSet = 'doubanBookUrlSet'
+        self.r.sadd(formalSet, response.request.url)
         if response.status == 404 or response.status == 403:
             url = response.request.url
             errcode = response.status
