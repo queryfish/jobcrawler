@@ -117,10 +117,13 @@ class DoubanBookCrawlSpider(CrawlSpider):
         self.r.sadd(tmpSet, *urls.keys())
         logger.info(self.r.smembers(tmpSet))
         diff = self.r.sdiff(tmpSet, formalSet)
+        logger.info('before UNION :{}'.format(self.r.scard(formalSet)))
         self.r.sadd(formalSet, *diff)
 
         # self.r.delete(tmpSet)
-        logger.info('DIFF LINKS :{}'.format(links))
+        logger.info('DIFF LINKS :{}'.format(diff))
+        logger.info('after UNION :{}'.format(self.r.scard(formalSet)))
+        logger.info('with the DIFF :{}'.format(len(diff)))
         raise CloseSpider('being banned')
         return list(map(lambda x:urls[x], diff))
 
