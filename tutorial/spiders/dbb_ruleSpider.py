@@ -96,6 +96,8 @@ class DoubanBookCrawlSpider(CrawlSpider):
         logger = logging.getLogger('scrapy.core.scraper')
         logger.setLevel(logging.INFO)
         super(DoubanBookCrawlSpider, self).__init__(*a, **kw)
+        self.r.delete(tmpSet)
+        self.r.delete(formalSet)
 
     def no_dupefilter(self, request):
         request.dont_filter = True
@@ -112,8 +114,6 @@ class DoubanBookCrawlSpider(CrawlSpider):
 
         tmpSet = 'tmpUrlSet'
         formalSet = 'doubanBookUrlSet'
-        self.r.delete(tmpSet)
-        self.r.delete(formalSet)
         self.r.sadd(tmpSet, *urls.keys())
         logger.info(self.r.smembers(tmpSet))
         diff = self.r.sdiff(tmpSet, formalSet)
