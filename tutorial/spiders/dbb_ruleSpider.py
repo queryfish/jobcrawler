@@ -112,14 +112,16 @@ class DoubanBookCrawlSpider(CrawlSpider):
 
         tmpSet = 'tmpUrlSet'
         formalSet = 'doubanBookUrlSet'
-
+        self.r.delete(tmpSet)
+        self.r.delete(formalSet)
         self.r.sadd(tmpSet, *urls.keys())
         logger.info(self.r.smembers(tmpSet))
         diff = self.r.sdiff(tmpSet, formalSet)
         self.r.sadd(formalSet, *diff)
-        self.r.delete(tmpSet)
-        logger.info('DIFF LINKS :{}'.format(links))
 
+        # self.r.delete(tmpSet)
+        logger.info('DIFF LINKS :{}'.format(links))
+        raise CloseSpider('being banned')
         return list(map(lambda x:urls[x], diff))
 
     def parse_book(self, response):
