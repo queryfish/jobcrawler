@@ -16,7 +16,6 @@ import datetime
 import  random
 import redis
 from scrapy.conf import settings
-
 logger = logging.getLogger(__name__)
 
 
@@ -31,8 +30,9 @@ class DoubanBookCrawlSpider(CrawlSpider):
     step = 10;
     counter = 0;
     banned = 0;
-    # handle_httpstatus_list = [301, 302];
+    r = redis.Redis(host='localhost', port=6379, decode_responses=True)   # host是redis主机，需要redis服务端和客户端都启动 redis默认端口是6379
 
+    # handle_httpstatus_list = [301, 302];
     # start_urls = ['https://book.douban.com/subject/1089243/']
     # start_urls = ['https://book.douban.com/review/best/']
     start_urls = ['https://book.douban.com/tag/?view=type&icn=index-sorttags-all']
@@ -95,6 +95,14 @@ class DoubanBookCrawlSpider(CrawlSpider):
     def __init__(self, *a, **kw):
         logger = logging.getLogger('scrapy.core.scraper')
         logger.setLevel(logging.INFO)
+        tmpSet = 'tmpUrlSet'
+        formalSet = 'doubanBookUrlSet'
+        urls=['1','2','3','4']
+        self.r.sadd(tmpSet, *urls)
+        logger.info(self.r.smembers(tmpSet))
+        # r.sadd('a', *set([3,4]))
+        self.r.delete(tmpSet)
+
         super(DoubanBookCrawlSpider, self).__init__(*a, **kw)
         # urls = self.getSomeUrls(10)
         # for url in urls:
@@ -105,7 +113,9 @@ class DoubanBookCrawlSpider(CrawlSpider):
 
     def link_filter(self, links):
         # logger.info(links)
-        urls = []
+        urls = {}
+        for l in links:
+            urls[l.url] = l
         if(links != None and len(links)>0):
             for i in links:
                 count = self.collection.count({"doubanUrl":i.url})
