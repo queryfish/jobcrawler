@@ -97,16 +97,18 @@ class DoubanBookCrawlSpider(CrawlSpider):
         formalSet = 'doubanBookUrlSet'
         if self.r.exists(tmpSet):
             self.r.delete(tmpSet)
-        if not self.r.exists(formalSet):
+        if not self.r.exists(formalSet) or True:
             res = self.collection.find({"doubanUrl":{"$ne":None}},{"doubanUrl":1, "_id":0});
             l = list(res)
             # for i in l :
             #     logger.info(i)
             urls = list(map(lambda x:x['doubanUrl'], l))
-            # logger.info(self.r.smembers(formalSet))
+            logger.info("SMOKING GUN")
+            logger.info(self.r.smembers(formalSet))
             self.r.sadd(formalSet, *urls)
             logger.info(self.r.scard(formalSet))
-
+            self.r.delete(formalSet)
+            raise CloseSpider('being banned')
 
     def __init__(self, *a, **kw):
         logger = logging.getLogger('scrapy.core.scraper')
@@ -119,7 +121,7 @@ class DoubanBookCrawlSpider(CrawlSpider):
         return request;
 
     def link_filter(self, links):
-        logger.info("processing links : {}".format(links))
+        # logger.info("processing links : {}".format(links))
         if links == None or len(links) == 0:
             return links
 
