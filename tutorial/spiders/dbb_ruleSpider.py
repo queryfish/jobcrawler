@@ -95,34 +95,32 @@ class DoubanBookCrawlSpider(CrawlSpider):
     def __init__(self, *a, **kw):
         logger = logging.getLogger('scrapy.core.scraper')
         logger.setLevel(logging.INFO)
-        tmpSet = 'tmpUrlSet'
-        formalSet = 'doubanBookUrlSet'
-        urls=['1','2','3','4']
-        self.r.sadd(tmpSet, *urls)
-        logger.info(self.r.smembers(tmpSet))
-        # r.sadd('a', *set([3,4]))
-        self.r.delete(tmpSet)
-
         super(DoubanBookCrawlSpider, self).__init__(*a, **kw)
-        # urls = self.getSomeUrls(10)
-        # for url in urls:
-            # self.start_urls.append(url)
+
     def no_dupefilter(self, request):
         request.dont_filter = True
         return request;
 
     def link_filter(self, links):
         # logger.info(links)
+        if links == None or len(links) == 0):
+            return links
+
         urls = {}
         for l in links:
             urls[l.url] = l
-        if(links != None and len(links)>0):
-            for i in links:
-                count = self.collection.count({"doubanUrl":i.url})
-                if count == 0 :
-                    logger.debug('{} Records for [{}] '.format(count, i.url))
-                    urls.append(i)
-        return urls
+
+        tmpSet = 'tmpUrlSet'
+        formalSet = 'doubanBookUrlSet'
+
+        self.r.sadd(tmpSet, *urls.keys)
+        logger.info(self.r.smembers(tmpSet))
+        diff = self.r.sdiff(tmpSet, formalSet)
+        self.r.sadd(formalSet, *diff)
+        self.r.delete(tmpSet)
+        logger.info('DIFF LINKS :{}'.format(links))
+        
+        return list(map(lambda x:urls[x], diff))
 
     def parse_book(self, response):
         if response.status == 404 or response.status == 403:
