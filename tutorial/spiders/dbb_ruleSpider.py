@@ -34,36 +34,31 @@ class DoubanBookCrawlSpider(CrawlSpider):
     # handle_httpstatus_list = [301, 302];
 
     # start_urls = ['https://book.douban.com/subject/1089243/']
-    start_urls = ['https://book.douban.com/review/best/']
+    # start_urls = ['https://book.douban.com/review/best/']
+    start_urls = ['https://book.douban.com/tag/?view=type&icn=index-sorttags-all']
     rules = (
-        Rule(LinkExtractor(allow=(r'^https://book.douban.com/subject/\d+/$')), callback="parse_book", follow=True),
+        Rule(LinkExtractor(allow=(r'^https://book.douban.com/subject/\d+/$')), callback="parse_book", follow=True,process_links="link_filter", process_request="no_dupefilter"),
+        Rule(LinkExtractor(allow=(r'^https://book.douban.com/tag/')), follow=True),
     )
     custom_settings = {
-        "LOG_LEVEL": 'INFO',
+        "LOG_LEVEL": 'DEBUG',
         "LOG_STDOUT" : True,
         # "LOG_FILE": './dbb_logfile.log',
-        "HTTPERROR_ALLOWED_CODES":[403,404],
-        # Obey robots.txt rules
-        #ROBOTSTXT_OBEY = True
-        "RETRY_ENABLED": False,
-        #RETRY_TIMES = 1
-        "DOWNLOAD_TIMEOUT" : 7.5,
         # "DUPEFILTER_DEBUG": True,
         "LOGSTATS_INTERVAL" : 60.0,
         # Configure maximum concurrent requests performed by Scrapy (default: 16)
         # "CONCURRENT_REQUESTS": 2,
         "DOWNLOAD_DELAY":0.9,
+        "DUPEFILTER_CLASS": 'scrapy.dupefilters.BaseDupeFilter',
 
-        "AUTOTHROTTLE_ENABLED": True,
-        # The initial download delay
-        "AUTOTHROTTLE_START_DELAY": 1,
-        # The maximum download delay to be set in case of high latencies
-        "AUTOTHROTTLE_MAX_DELAY": 8,
-        # The average number of requests Scrapy should be sending in parallel to
-        # each remote server
-        "AUTOTHROTTLE_TARGET_CONCURRENCY": 4.0,
-        # Enable showing throttling stats for every response received:
-        "AUTOTHROTTLE_DEBUG": True,
+        # Enable and configure HTTP caching (disabled by default)
+        # See http://scrapy.readthedocs.org/en/latest/topics/downloader-middleware.html#httpcache-middleware-settings
+        # "HTTPCACHE_ENABLED": True,
+        # "HTTPCACHE_EXPIRATION_SECS": 0,
+        # "HTTPCACHE_DIR": 'httpcache',
+        # "HTTPCACHE_IGNORE_HTTP_CODES":[],
+        # "HTTPCACHE_STORAGE":'scrapy.extensions.httpcache.FilesystemCacheStorage',
+        # "HTTP_PROXY": 'http://127.0.0.1:8123/',
 
         "ITEM_PIPELINES":{
             'tutorial.pipelines.DoubanBookPipeline': 300,
@@ -81,7 +76,6 @@ class DoubanBookCrawlSpider(CrawlSpider):
             'User-Agent':'Mozilla/5.0 (Linux; Android 8.0; Pixel 2 Build/OPD3.170816.012) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/66.0.3359.117 Mobile Safari/537.36',
             'Referer':'https://www.douban.com/',
             'X-Requested-With':"XMLHttpRequest"
-            # "cookie":"lastCity=101020100; JSESSIONID=""; Hm_lvt_194df3105ad7148dcf2b98a91b5e727a=1532401467,1532435274,1532511047,1532534098; __c=1532534098; __g=-; __l=l=%2Fwww.zhipin.com%2F&r=; toUrl=https%3A%2F%2Fwww.zhipin.com%2Fc101020100-p100103%2F; Hm_lpvt_194df3105ad7148dcf2b98a91b5e727a=1532581213; __a=4090516.1532500938.1532516360.1532534098.11.3.7.11"
         }
     }
 
@@ -102,9 +96,23 @@ class DoubanBookCrawlSpider(CrawlSpider):
         logger = logging.getLogger('scrapy.core.scraper')
         logger.setLevel(logging.INFO)
         super(DoubanBookCrawlSpider, self).__init__(*a, **kw)
-        urls = self.getSomeUrls(10)
-        for url in urls:
-            self.start_urls.append(url)
+        # urls = self.getSomeUrls(10)
+        # for url in urls:
+            # self.start_urls.append(url)
+    def no_dupefilter(self, request):
+        request.dont_filter = True
+        return request;
+
+    def link_filter(self, links):
+        # logger.info(links)
+        urls = []
+        if(links != None and len(links)>0):
+            for i in links:
+                count = self.collection.count({"doubanUrl":i.url})
+                if count == 0 :
+                    # logger.debug('{} Records for [{}] '.format(count, i.url))
+                    urls.append(i)
+        return urls
 
     def parse_book(self, response):
         if response.status == 404 or response.status == 403:
@@ -175,7 +183,7 @@ class DoubanBookCrawlSpider(CrawlSpider):
         # bookItem['doubanISBN']=
         self.counter += 1;
         proxy = response.request.meta.get('proxy','Bare')
-        logger.info(u'NO.{} {} [from {}]'.format(self.counter, bookItem['doubanBookName'], proxy));
+        logger.info(u'NO.{} {} [from {}]'.format(self.counter, bookItem['doubanBookName'], response.request.url));
 
         items = response.css(REC_SECTION_SEL);
 
