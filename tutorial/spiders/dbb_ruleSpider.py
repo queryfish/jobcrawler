@@ -129,8 +129,9 @@ class DoubanBookCrawlSpider(CrawlSpider):
 
         tmpSet = 'tmpUrlSet'
         formalSet = 'doubanBookUrlSet'
+        self.r.delete(tmpSet)
         self.r.sadd(tmpSet, *urls.keys())
-        logger.info(self.r.smembers(tmpSet))
+
         diff = self.r.sdiff(tmpSet, formalSet)
         logger.info('before UNION :{}'.format(self.r.scard(formalSet)))
         self.r.sadd(formalSet, *diff)
