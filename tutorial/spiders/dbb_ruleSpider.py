@@ -119,7 +119,7 @@ class DoubanBookCrawlSpider(CrawlSpider):
         return request;
 
     def link_filter(self, links):
-        # logger.info(links)
+        logger.info("processing links : {}".format(links))
         if links == None or len(links) == 0:
             return links
 
