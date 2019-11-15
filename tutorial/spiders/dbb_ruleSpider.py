@@ -136,7 +136,7 @@ class DoubanBookCrawlSpider(CrawlSpider):
         if len(diff) == 0 :
             logger.info("not a match {}".format(diff))
             return []
-        else
+        else:
             logger.info('before UNION :{}'.format(self.r.scard(formalSet)))
             self.r.sadd(formalSet, *diff)
             # self.r.delete(tmpSet)
