@@ -15,6 +15,7 @@ import  time
 import datetime
 import  random
 import redis
+import re
 from scrapy.conf import settings
 logger = logging.getLogger(__name__)
 
@@ -112,7 +113,14 @@ class DoubanBookCrawlSpider(CrawlSpider):
         self.r.sadd(formalSet, *urls)
         logger.info(self.r.scard(formalSet))
             # self.r.delete(formalSet)
-            # raise CloseSpider('being banned')
+
+        if self.r.exists('queueSet'):
+            q = self.r.smembers('queueSet')
+            for e in q:
+                if re.match(r'^https://book.douban.com/subject/\d+/$', e) :
+                    self.r.sadd('bookQueueSet', e)
+                    self.r.srem('queueSet', e)
+        raise CloseSpider('being banned')
 
     def __init__(self, *a, **kw):
         logger = logging.getLogger('scrapy.core.scraper')
