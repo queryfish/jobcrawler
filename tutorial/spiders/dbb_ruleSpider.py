@@ -136,7 +136,7 @@ class DoubanBookCrawlSpider(CrawlSpider):
         queueSet = 'queueSet'
         self.r.delete(tmpSet)
         self.r.sadd(tmpSet, *urls.keys())
-        diff = self.r.sdiff(tmpSet, formalSet)
+        diff = self.r.sdiff(tmpSet, formalSet, queueSet)
         if(len(diff) > 0):
             self.r.sadd(queueSet, *diff)
         # logger.info('with the DIFF :{}'.format(urls.keys()))
