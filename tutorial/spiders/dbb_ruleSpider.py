@@ -89,7 +89,7 @@ class DoubanBookCrawlSpider(CrawlSpider):
         # return urls
         queueSet = 'bookQueueSet'
         urls = self.r.srandmember(queueSet, count)
-        map(lambda x:self.r.srem(queueSet, x), urls)
+        # map(lambda x:self.r.srem(queueSet, x), urls)
         return urls
 
     def addSomeUrls(self, urls):
