@@ -39,7 +39,7 @@ class DoubanBookCrawlSpider(CrawlSpider):
     start_urls = ['https://book.douban.com/tag/?view=type&icn=index-sorttags-all']
     rules = (
         Rule(LinkExtractor(allow=(r'^https://book.douban.com/subject/\d+/$')), callback="parse_book", follow=True,process_links="link_filter", process_request="no_dupefilter"),
-        Rule(LinkExtractor(allow=(r'^https://book.douban.com/tag/')), callback="parse_tag", follow=True, process_links="link_filter"),
+        # Rule(LinkExtractor(allow=(r'^https://book.douban.com/tag/')), callback="parse_tag", follow=True, process_links="link_filter"),
     )
     custom_settings = {
         "LOG_LEVEL": 'DEBUG',
@@ -87,7 +87,7 @@ class DoubanBookCrawlSpider(CrawlSpider):
         #     urls.append(post['doubanUrl']);
         # logger.info('fetch {} new url from mongo'.format(len(urls)));
         # return urls
-        queueSet = 'queueSet'
+        queueSet = 'bookQueueSet'
         urls = self.r.srandmember(queueSet, count)
         map(lambda x:self.r.srem(queueSet, x), urls)
         return urls
@@ -120,7 +120,7 @@ class DoubanBookCrawlSpider(CrawlSpider):
                 if re.match(r'^https://book.douban.com/subject/\d+/$', e) :
                     self.r.sadd('bookQueueSet', e)
                     self.r.srem('queueSet', e)
-        raise CloseSpider('being banned')
+        # raise CloseSpider('being banned')
 
     def __init__(self, *a, **kw):
         logger = logging.getLogger('scrapy.core.scraper')
@@ -145,13 +145,13 @@ class DoubanBookCrawlSpider(CrawlSpider):
 
         tmpSet = 'tmpUrlSet'
         formalSet = 'doubanBookUrlSet'
-        queueSet = 'queueSet'
+        queueSet = 'bookQueueSet'
         self.r.delete(tmpSet)
         self.r.sadd(tmpSet, *urls.keys())
         diff = self.r.sdiff(tmpSet, formalSet, queueSet)
         if(len(diff) > 0):
             self.r.sadd(queueSet, *diff)
-        # logger.info('with the DIFF :{}'.format(urls.keys()))
+        logger.info('with the DIFF :{}'.format(len(diff)))
         return list(map(lambda x:urls[x], diff))
         # l = []
         # for i in diff:
@@ -181,12 +181,12 @@ class DoubanBookCrawlSpider(CrawlSpider):
 
     def parse_book(self, response):
         formalSet = 'doubanBookUrlSet'
-        queueSet = 'queueSet'
+        queueSet = 'bookQueueSet'
         url = response.request.url
-        self.r.srem(formalSet, url)
-        self.r.sadd(queueSet, url)
+        self.r.srem(queueSet, url)
+        self.r.sadd(formalSet, url)
 
-        self.r.sadd(formalSet, response.request.url)
+        # self.r.sadd(formalSet, response.request.url)
         if response.status == 404 or response.status == 403:
             url = response.request.url
             errcode = response.status
@@ -269,5 +269,8 @@ class DoubanBookCrawlSpider(CrawlSpider):
 
         qsize = self.crawler.engine.slot.scheduler.__len__();
         running = len(self.crawler.engine.slot.inprogress);
-        logger.info('PENDING_QUEUE_SIZE: {}, RUNNING QUEUE SIZE: {}'.format(qsize, running));
+        logger.info('TOTAL Q_SIZE: {}, PENDING_QUEUE_SIZE: {}, RUNNING QUEUE SIZE: {}'.format(qsize+running, qsize, running));
+        if(qsize+running < 100):
+            for r in self.getSomeUrls(100):
+                yield Request(r,callback=self.parse_book, dont_filter=True);
         yield  bookItem;
