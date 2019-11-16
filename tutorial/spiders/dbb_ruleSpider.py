@@ -48,9 +48,8 @@ class DoubanBookCrawlSpider(CrawlSpider):
         "LOGSTATS_INTERVAL" : 60.0,
         # Configure maximum concurrent requests performed by Scrapy (default: 16)
         # "CONCURRENT_REQUESTS": 2,
-        "DOWNLOAD_DELAY":0.9,
+        # "DOWNLOAD_DELAY":0.9,
         # "DUPEFILTER_CLASS": 'scrapy.dupefilters.BaseDupeFilter',
-
         # Enable and configure HTTP caching (disabled by default)
         # See http://scrapy.readthedocs.org/en/latest/topics/downloader-middleware.html#httpcache-middleware-settings
         # "HTTPCACHE_ENABLED": True,
@@ -80,12 +79,16 @@ class DoubanBookCrawlSpider(CrawlSpider):
     }
 
     def getSomeUrls(self, count):
-        res = self.collection.find({"$and":[{"doubanUrl":{"$ne":None}},{"errorCode":{"$exists":False}},{"doubanCrawlDate":{"$exists":False}}]}).limit(count);
-        urls = [];
-        for post in res:
-            # print(post)
-            urls.append(post['doubanUrl']);
-        logger.info('fetch {} new url from mongo'.format(len(urls)));
+        # res = self.collection.find({"$and":[{"doubanUrl":{"$ne":None}},{"errorCode":{"$exists":False}},{"doubanCrawlDate":{"$exists":False}}]}).limit(count);
+        # urls = [];
+        # for post in res:
+        #     # print(post)
+        #     urls.append(post['doubanUrl']);
+        # logger.info('fetch {} new url from mongo'.format(len(urls)));
+        # return urls
+        queueSet = 'queueSet'
+        urls = self.r.srandmember(queueSet, count)
+        map(lambda x:self.r.srem(queueSet, x), urls)
         return urls
 
     def addSomeUrls(self, urls):
@@ -115,6 +118,7 @@ class DoubanBookCrawlSpider(CrawlSpider):
         logger = logging.getLogger('scrapy.core.scraper')
         logger.setLevel(logging.INFO)
         self.setupRedis()
+        map(lambda x:self.start_urls.append(x), self.getSomeUrls(10))
         super(DoubanBookCrawlSpider, self).__init__(*a, **kw)
 
     def no_dupefilter(self, request):
@@ -247,13 +251,13 @@ class DoubanBookCrawlSpider(CrawlSpider):
 
         items = response.css(REC_SECTION_SEL);
 
-        for item in items:
-            # print('extracting href from alink')
-            # print(detail_url);
-            href = (item.css('a::attr(href)').extract()[0]);
-            urlOnly = doubanBookItem();
-            # urlOnly['doubanUrl'] = href;
-            self.addSomeUrls([href])
+        # for item in items:
+        #     # print('extracting href from alink')
+        #     # print(detail_url);
+        #     href = (item.css('a::attr(href)').extract()[0]);
+        #     urlOnly = doubanBookItem();
+        #     # urlOnly['doubanUrl'] = href;
+        #     self.addSomeUrls([href])
 
         qsize = self.crawler.engine.slot.scheduler.__len__();
         running = len(self.crawler.engine.slot.inprogress);
