@@ -38,11 +38,11 @@ class DoubanBookCrawlSpider(CrawlSpider):
     # start_urls = ['https://book.douban.com/review/best/']
     start_urls = ['https://book.douban.com/tag/?view=type&icn=index-sorttags-all']
     rules = (
-        Rule(LinkExtractor(allow=(r'^https://book.douban.com/subject/\d+/$')), callback="parse_book", follow=True,process_links="link_filter", process_request="no_dupefilter"),
-        # Rule(LinkExtractor(allow=(r'^https://book.douban.com/tag/')), callback="parse_tag", follow=True, process_links="link_filter"),
+        Rule(LinkExtractor(allow=(r'^https://book.douban.com/subject/\d+/$')), callback="parse_book", follow=True,process_links="booklink_filter", process_request="no_dupefilter"),
+        Rule(LinkExtractor(allow=(r'^https://book.douban.com/tag/')), follow=True),
     )
     custom_settings = {
-        "LOG_LEVEL": 'DEBUG',
+        "LOG_LEVEL": 'INFO',
         "LOG_STDOUT" : True,
         # "LOG_FILE": './dbb_logfile.log',
         # "DUPEFILTER_DEBUG": True,
@@ -133,7 +133,7 @@ class DoubanBookCrawlSpider(CrawlSpider):
         request.dont_filter = True
         return request;
 
-    def link_filter(self, links):
+    def booklink_filter(self, links):
         # logger.info("processing links : {}".format(links))
         if links == None or len(links) == 0:
             return links
@@ -168,6 +168,27 @@ class DoubanBookCrawlSpider(CrawlSpider):
             # logger.info('after UNION :{}'.format(self.r.scard(formalSet)))
             # raise CloseSpider('being banned')
             # return list(map(lambda x:urls[x], diff))
+
+    def taglink_filter(self, links):
+        # logger.info("processing links : {}".format(links))
+        if links == None or len(links) == 0:
+            return links
+
+        urls = {}
+        for l in links:
+            uniUrl = unicode(l.url, "utf-8")
+            urls[uniUrl] = l
+
+        tmpSet = 'tmpUrlSet'
+        formalSet = 'doubanBookUrlSet'
+        queueSet = 'tagQueueSet'
+        self.r.delete(tmpSet)
+        self.r.sadd(tmpSet, *urls.keys())
+        diff = self.r.sdiff(tmpSet, formalSet, queueSet)
+        if(len(diff) > 0):
+            self.r.sadd(queueSet, *diff)
+        logger.info('with the DIFF :{}'.format(len(diff)))
+        return list(map(lambda x:urls[x], diff))
 
     def parse_tag(self, response):
         qsize = self.crawler.engine.slot.scheduler.__len__();
