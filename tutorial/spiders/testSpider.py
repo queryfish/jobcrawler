@@ -21,9 +21,9 @@ logger = logging.getLogger(__name__)
 
 
 #zhipin 爬虫
-class DoubanBookCrawlSpider(CrawlSpider):
+class DoubanBookCacheTester(CrawlSpider):
     handle_httpstatus_list = [404, 403]
-    name = "dbbCrawler"
+    name = "cacheTester"
     allowed_domains = ["douban.com"]
     client = pymongo.MongoClient(host="127.0.0.1", port=27017)
     db = client['sobooks']
@@ -36,37 +36,34 @@ class DoubanBookCrawlSpider(CrawlSpider):
     # handle_httpstatus_list = [301, 302];
     # start_urls = ['https://book.douban.com/subject/1089243/']
     # start_urls = ['https://book.douban.com/review/best/']
-    start_urls = ['https://book.douban.com/tag/?view=type&icn=index-sorttags-all']
+    # start_urls = ['https://book.douban.com/tag/?view=type&icn=index-sorttags-all']
+    start_urls = []
     rules = (
-        Rule(LinkExtractor(allow=(r'^https://book.douban.com/subject/\d+/$')), callback="parse_book", follow=True,process_links="booklink_filter", process_request="no_dupefilter"),
-        Rule(LinkExtractor(allow=(r'^https://book.douban.com/tag/')), callback="parse_tag", follow=True, process_links="taglink_filter"),
+        # Rule(LinkExtractor(allow=(r'^https://book.douban.com/subject/\d+/$')), callback="parse_book", follow=True,process_links="booklink_filter", process_request="no_dupefilter"),
+        # Rule(LinkExtractor(allow=(r'^https://book.douban.com/tag/')), callback="parse_tag", follow=False),
     )
     custom_settings = {
         "LOG_LEVEL": 'DEBUG',
         "LOG_STDOUT" : True,
         # "LOG_FILE": './dbb_logfile.log',
         # "DUPEFILTER_DEBUG": True,
+        "DOWNLOAD_DELAY": 2,
+        "CONCURRENT_REQUESTS": 1,
         "LOGSTATS_INTERVAL" : 60.0,
-        # Configure maximum concurrent requests performed by Scrapy (default: 16)
-        # "CONCURRENT_REQUESTS": 2,
-        # "DOWNLOAD_DELAY":0.9,
-        # "DUPEFILTER_CLASS": 'scrapy.dupefilters.BaseDupeFilter',
-        # Enable and configure HTTP caching (disabled by default)
-        # See http://scrapy.readthedocs.org/en/latest/topics/downloader-middleware.html#httpcache-middleware-settings
-        # "HTTPCACHE_ENABLED": False,
-        # "HTTPCACHE_EXPIRATION_SECS": 0,
-        # "HTTPCACHE_DIR": 'httpcache',
-        # "HTTPCACHE_IGNORE_HTTP_CODES":[],
-        # "HTTPCACHE_STORAGE":'scrapy.extensions.httpcache.FilesystemCacheStorage',
-        # "HTTP_PROXY": 'http://127.0.0.1:8123/',
+        "HTTPCACHE_ENABLED": True,
+        "HTTPCACHE_EXPIRATION_SECS": 0,
+        "HTTPCACHE_DIR": 'httpcache',
+        "HTTPCACHE_IGNORE_HTTP_CODES":[],
+        "HTTPCACHE_STORAGE":'scrapy.extensions.httpcache.FilesystemCacheStorage',
+        "HTTP_PROXY": 'http://127.0.0.1:8123/',
 
         "ITEM_PIPELINES":{
             'tutorial.pipelines.DoubanBookPipeline': 300,
         },
         "DOWNLOADER_MIDDLEWARES":{
             'tutorial.middlewares.RandomUserAgent': 2,
-            'scrapy.downloadermiddlewares.httpproxy.HttpProxyMiddleware': 110,
-            'tutorial.middlewares_free_proxy.fixedProxyMiddleware': 100,
+            # 'scrapy.downloadermiddlewares.httpproxy.HttpProxyMiddleware': 110,
+            # 'tutorial.middlewares_free_proxy.fixedProxyMiddleware': 100,
             # 'scrapy.downloadermiddlewares.retry.RetryMiddleware': None,
             # 'tutorial.middlewares_rotate_proxy.CustomRetryMiddleware': 500,
         },
@@ -80,13 +77,6 @@ class DoubanBookCrawlSpider(CrawlSpider):
     }
 
     def getSomeUrls(self, count):
-        # res = self.collection.find({"$and":[{"doubanUrl":{"$ne":None}},{"errorCode":{"$exists":False}},{"doubanCrawlDate":{"$exists":False}}]}).limit(count);
-        # urls = [];
-        # for post in res:
-        #     # print(post)
-        #     urls.append(post['doubanUrl']);
-        # logger.info('fetch {} new url from mongo'.format(len(urls)));
-        # return urls
         queueSet = 'bookQueueSet'
         urls = self.r.srandmember(queueSet, count)
         # map(lambda x:self.r.srem(queueSet, x), urls)
@@ -115,93 +105,55 @@ class DoubanBookCrawlSpider(CrawlSpider):
             self.r.delete(formalSet)
         res = self.collection.find({"$and":[{"doubanUrl":{"$ne":None}},{"doubanCrawlDate":{"$exists":True}}]},{"doubanUrl":1, "_id":0});
         l = list(res)
+            # for i in l :
+            #     logger.info(i)
         urls = list(map(lambda x:x['doubanUrl'], l))
         logger.info("SMOKING GUN")
+            # logger.info(self.r.smembers(formalSet))
         self.r.sadd(formalSet, *urls)
         logger.info(self.r.scard(formalSet))
+            # self.r.delete(formalSet)
+
+        if self.r.exists('queueSet'):
+            q = self.r.smembers('queueSet')
+            for e in q:
+                if re.match(r'^https://book.douban.com/subject/\d+/$', e) :
+                    self.r.sadd('bookQueueSet', e)
+                    self.r.srem('queueSet', e)
+        # raise CloseSpider('being banned')
 
     def __init__(self, *a, **kw):
         logger = logging.getLogger('scrapy.core.scraper')
         logger.setLevel(logging.INFO)
-        self.setupRedis()
-        # map(lambda x:self.start_urls.append(x), self.getSomeUrls(10))
-        super(DoubanBookCrawlSpider, self).__init__(*a, **kw)
+        # self.setupRedis()
+        map(lambda x:self.start_urls.append(x), self.getSomeUrls(100))
+        super(DoubanBookCacheTester, self).__init__(*a, **kw)
 
-    def no_dupefilter(self, request):
-        request.dont_filter = True
-        return request;
-
-    def booklink_filter(self, links):
-        # logger.info("processing links : {}".format(links))
-        if links == None or len(links) == 0:
-            return links
-
-        urls = {}
-        for l in links:
-            uniUrl = unicode(l.url, "utf-8")
-            urls[uniUrl] = l
-
-        tmpSet = 'tmpUrlSet'
-        formalSet = 'doubanBookUrlSet'
-        queueSet = 'bookQueueSet'
-        self.r.delete(tmpSet)
-        self.r.sadd(tmpSet, *urls.keys())
-        diff = self.r.sdiff(tmpSet, formalSet, queueSet)
-        if(len(diff) > 0):
-            self.r.sadd(queueSet, *diff)
-        logger.info('with the DIFF :{}'.format(len(diff)))
-        return list(map(lambda x:urls[x], diff))
-        # l = []
-        # for i in diff:
-        #     l.append(urls[i])
-        # return l;
-        # if len(diff) == 0 :
-            # logger.info("not a match {}".format(diff))
-            # return []
-        # else:
-            # logger.info('before UNION :{}'.format(self.r.scard(formalSet)))
-            # self.r.sadd(formalSet, *diff)
-            # self.r.delete(tmpSet)
-            # logger.info('DIFF LINKS :{}'.format(diff))
-            # logger.info('after UNION :{}'.format(self.r.scard(formalSet)))
-            # raise CloseSpider('being banned')
-            # return list(map(lambda x:urls[x], diff))
-
-    def taglink_filter(self, links):
-        if links == None or len(links) == 0:
-            return links
-
-        urls = {}
-        for l in links:
-            uniUrl = unicode(l.url, "utf-8")
-            urls[uniUrl] = l
-
-        tmpSet = 'tmpUrlSet'
-        queueSet = 'tagQueueSet'
-        self.r.delete(tmpSet)
-        self.r.sadd(tmpSet, *urls.keys())
-        diff = self.r.sdiff(tmpSet, queueSet)
-        logger.info('TAG DIFF :{}'.format(len(diff)))
-        if(len(diff) > 0):
-            return list(map(lambda x:urls[x], diff))
-        else:
-            return []
-
-    def parse_tag(self, response):
+    def parse_something(self, response):
         qsize = self.crawler.engine.slot.scheduler.__len__();
         running = len(self.crawler.engine.slot.inprogress);
         logger.info('PENDING_QUEUE_SIZE: {}, RUNNING QUEUE SIZE: {}'.format(qsize, running));
 
-        queueSet = 'tagQueueSet'
-        url = response.request.url
-        self.r.sadd(queueSet, url)
+        if(qsize+running < 100):
+            for r in self.getSomeUrls(100):
+                self.start_urls.append(r)
 
-    def parse_book(self, response):
         formalSet = 'doubanBookUrlSet'
-        queueSet = 'bookQueueSet'
         url = response.request.url
-        self.r.srem(queueSet, url)
         self.r.sadd(formalSet, url)
+
+    def parse2(self, response):
+        testSet = 'testSet'
+        url = response.request.url
+        logger.info("Get response ITEM from [{}]".format(url))
+        self.r.sadd(testSet, url)
+        yield Request(url,callback=self.parse, dont_filter=True);
+
+
+    def parse(self, response):
+        testSet = 'testSet'
+        url = response.request.url
+        self.r.sadd(testSet, url)
 
         # self.r.sadd(formalSet, response.request.url)
         if response.status == 404 or response.status == 403:
@@ -275,23 +227,6 @@ class DoubanBookCrawlSpider(CrawlSpider):
         logger.info(u'NO.{} {} [from {}]'.format(self.counter, bookItem['doubanBookName'], response.request.url));
 
         items = response.css(REC_SECTION_SEL);
-
-        urls = list(map(lambda x:(x.css('a::attr(href)').extract()[0]), items))
-        # self.r.sadd(bookQueueSet, *urls)
-        # for item in items:
-        #     # print('extracting href from alink')
-        #     # print(detail_url);
-            # href = (item.css('a::attr(href)').extract()[0]);
-        #     urlOnly = doubanBookItem();
-        #     # urlOnly['doubanUrl'] = href;
-        # self.addSomeUrls(urls)
-
-        qsize = self.crawler.engine.slot.scheduler.__len__();
-        running = len(self.crawler.engine.slot.inprogress);
-        pending = len(self.start_urls)
-        logger.info('TOTAL Q_SIZE: {}, PENDING_QUEUE_SIZE: {}, RUNNING QUEUE SIZE: {}'.format(qsize+running, qsize, running));
-        # if(qsize+running < 100):
-            # for r in self.getSomeUrls(100):
-                # self.start_urls.append(r)
-                # yield Request(r,callback=self.parse_book, dont_filter=True);
-        yield  bookItem;
+        logger.info("Get response ITEM from [{}]".format(url))
+        # logger.info("Get response ITEM {}".format(bookItem))
+        yield Request(url,callback=self.parse, dont_filter=True);
