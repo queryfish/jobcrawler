@@ -94,8 +94,18 @@ class DoubanBookCrawlSpider(CrawlSpider):
         return urls
 
     def addSomeUrls(self, urls):
-        for url in urls:
-            res = self.collection.update({'doubanUrl':url}, {'$set':{'doubanUrl':url}}, upsert=True)
+        # for url in urls:
+        #     res = self.collection.update({'doubanUrl':url}, {'$set':{'doubanUrl':url}}, upsert=True)
+        tmpSet = 'tmpUrlSet'
+        formalSet = 'doubanBookUrlSet'
+        queueSet = 'bookQueueSet'
+        self.r.delete(tmpSet)
+        self.r.sadd(tmpSet, *urls)
+        diff = self.r.sdiff(tmpSet, formalSet, queueSet)
+        if(len(diff) > 0):
+            self.r.sadd(queueSet, *diff)
+        logger.info('with the DIFF :{}'.format(len(diff)))
+
 
     def setupRedis(self):
         tmpSet = 'tmpUrlSet'
@@ -284,20 +294,22 @@ class DoubanBookCrawlSpider(CrawlSpider):
 
         items = response.css(REC_SECTION_SEL);
 
+        urls = list(map(lambda x:(x.css('a::attr(href)').extract()[0]), items))
+        # self.r.sadd(bookQueueSet, *urls)
         # for item in items:
         #     # print('extracting href from alink')
         #     # print(detail_url);
-        #     href = (item.css('a::attr(href)').extract()[0]);
+            # href = (item.css('a::attr(href)').extract()[0]);
         #     urlOnly = doubanBookItem();
         #     # urlOnly['doubanUrl'] = href;
-        #     self.addSomeUrls([href])
+        self.addSomeUrls(urls)
 
         qsize = self.crawler.engine.slot.scheduler.__len__();
         running = len(self.crawler.engine.slot.inprogress);
         pending = len(self.start_urls)
-        logger.info('TOTAL Q_SIZE: {}, PENDING_QUEUE_SIZE: {}, RUNNING QUEUE SIZE: {}'.format(qsize+running, qsize, running, pending));
-        if(qsize+running+pending < 100):
+        logger.info('TOTAL Q_SIZE: {}, PENDING_QUEUE_SIZE: {}, RUNNING QUEUE SIZE: {}'.format(qsize+running, qsize, running));
+        if(qsize+running < 100):
             for r in self.getSomeUrls(100):
-                self.start_urls.append(r)
-                # yield Request(r,callback=self.parse_book, dont_filter=True);
+                # self.start_urls.append(r)
+                yield Request(r,callback=self.parse_book, dont_filter=True);
         yield  bookItem;
