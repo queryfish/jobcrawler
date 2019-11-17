@@ -124,8 +124,8 @@ class DoubanBookCrawlSpider(CrawlSpider):
         # raise CloseSpider('being banned')
 
     def __init__(self, *a, **kw):
-        # logger = logging.getLogger('scrapy.core.scraper')
-        # logger.setLevel(logging.INFO)
+        logger = logging.getLogger('scrapy.core.scraper')
+        logger.setLevel(logging.INFO)
         self.setupRedis()
         map(lambda x:self.start_urls.append(x), self.getSomeUrls(100))
         super(DoubanBookCrawlSpider, self).__init__(*a, **kw)
