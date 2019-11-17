@@ -294,8 +294,9 @@ class DoubanBookCrawlSpider(CrawlSpider):
 
         qsize = self.crawler.engine.slot.scheduler.__len__();
         running = len(self.crawler.engine.slot.inprogress);
-        logger.info('TOTAL Q_SIZE: {}, PENDING_QUEUE_SIZE: {}, RUNNING QUEUE SIZE: {}'.format(qsize+running, qsize, running));
-        if(qsize+running < 100):
+        pending = len(self.start_urls)
+        logger.info('TOTAL Q_SIZE: {}, PENDING_QUEUE_SIZE: {}, RUNNING QUEUE SIZE: {}'.format(qsize+running, qsize, running, pending));
+        if(qsize+running+pending < 100):
             for r in self.getSomeUrls(100):
                 self.start_urls.append(r)
                 # yield Request(r,callback=self.parse_book, dont_filter=True);
