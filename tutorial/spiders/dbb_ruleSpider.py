@@ -302,7 +302,7 @@ class DoubanBookCrawlSpider(CrawlSpider):
             # href = (item.css('a::attr(href)').extract()[0]);
         #     urlOnly = doubanBookItem();
         #     # urlOnly['doubanUrl'] = href;
-        self.addSomeUrls(urls)
+        # self.addSomeUrls(urls)
 
         qsize = self.crawler.engine.slot.scheduler.__len__();
         running = len(self.crawler.engine.slot.inprogress);
