@@ -36,10 +36,11 @@ class DoubanBookCrawlSpider(CrawlSpider):
     # handle_httpstatus_list = [301, 302];
     # start_urls = ['https://book.douban.com/subject/1089243/']
     # start_urls = ['https://book.douban.com/review/best/']
-    start_urls = ['https://book.douban.com/tag/?view=type&icn=index-sorttags-all']
+    # start_urls = ['https://book.douban.com/tag/?view=type&icn=index-sorttags-all']
+    start_urls = []
     rules = (
         Rule(LinkExtractor(allow=(r'^https://book.douban.com/subject/\d+/$')), callback="parse_book", follow=True,process_links="booklink_filter", process_request="no_dupefilter"),
-        Rule(LinkExtractor(allow=(r'^https://book.douban.com/tag/')), follow=True),
+        Rule(LinkExtractor(allow=(r'^https://book.douban.com/tag/')), follow=False),
     )
     custom_settings = {
         "LOG_LEVEL": 'INFO',
@@ -123,8 +124,8 @@ class DoubanBookCrawlSpider(CrawlSpider):
         # raise CloseSpider('being banned')
 
     def __init__(self, *a, **kw):
-        logger = logging.getLogger('scrapy.core.scraper')
-        logger.setLevel(logging.INFO)
+        # logger = logging.getLogger('scrapy.core.scraper')
+        # logger.setLevel(logging.INFO)
         self.setupRedis()
         map(lambda x:self.start_urls.append(x), self.getSomeUrls(10))
         super(DoubanBookCrawlSpider, self).__init__(*a, **kw)
