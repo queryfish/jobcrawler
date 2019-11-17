@@ -40,10 +40,10 @@ class DoubanBookCrawlSpider(CrawlSpider):
     start_urls = []
     rules = (
         Rule(LinkExtractor(allow=(r'^https://book.douban.com/subject/\d+/$')), callback="parse_book", follow=True,process_links="booklink_filter", process_request="no_dupefilter"),
-        Rule(LinkExtractor(allow=(r'^https://book.douban.com/tag/')), callback="parse_tag", follow=False),
+        # Rule(LinkExtractor(allow=(r'^https://book.douban.com/tag/')), callback="parse_tag", follow=False),
     )
     custom_settings = {
-        "LOG_LEVEL": 'INFO',
+        "LOG_LEVEL": 'DEBUG',
         "LOG_STDOUT" : True,
         # "LOG_FILE": './dbb_logfile.log',
         # "DUPEFILTER_DEBUG": True,
