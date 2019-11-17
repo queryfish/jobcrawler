@@ -127,7 +127,7 @@ class DoubanBookCrawlSpider(CrawlSpider):
         # logger = logging.getLogger('scrapy.core.scraper')
         # logger.setLevel(logging.INFO)
         self.setupRedis()
-        map(lambda x:self.start_urls.append(x), self.getSomeUrls(10))
+        map(lambda x:self.start_urls.append(x), self.getSomeUrls(100))
         super(DoubanBookCrawlSpider, self).__init__(*a, **kw)
 
     def no_dupefilter(self, request):
