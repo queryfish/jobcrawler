@@ -40,7 +40,7 @@ class DoubanBookCrawlSpider(CrawlSpider):
     start_urls = []
     rules = (
         Rule(LinkExtractor(allow=(r'^https://book.douban.com/subject/\d+/$')), callback="parse_book", follow=True,process_links="booklink_filter", process_request="no_dupefilter"),
-        Rule(LinkExtractor(allow=(r'^https://book.douban.com/tag/')), follow=False),
+        Rule(LinkExtractor(allow=(r'^https://book.douban.com/tag/')), callback="parse_tag", follow=False),
     )
     custom_settings = {
         "LOG_LEVEL": 'INFO',
@@ -195,11 +195,14 @@ class DoubanBookCrawlSpider(CrawlSpider):
         qsize = self.crawler.engine.slot.scheduler.__len__();
         running = len(self.crawler.engine.slot.inprogress);
         logger.info('PENDING_QUEUE_SIZE: {}, RUNNING QUEUE SIZE: {}'.format(qsize, running));
+
+        if(qsize+running < 100):
+            for r in self.getSomeUrls(100):
+                self.start_urls.append(r)
+
         formalSet = 'doubanBookUrlSet'
-        queueSet = 'queueSet'
         url = response.request.url
-        self.r.srem(formalSet, url)
-        self.r.sadd(queueSet, url)
+        self.r.sadd(formalSet, url)
 
     def parse_book(self, response):
         formalSet = 'doubanBookUrlSet'
