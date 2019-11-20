@@ -203,7 +203,7 @@ class DoubanBookBeatles(CrawlSpider):
         if(qsize+running < 100):
             for r in self.getSomeUrls(100):
                 # self.start_urls.append(r)
-                yield Request(r,callback=self.parse_book, dont_filter=True);
+                yield Request(r,callback=self.parse, dont_filter=True);
 
         logger.info('TOTAL Q_SIZE: {}, PENDING_QUEUE_SIZE: {}, RUNNING QUEUE SIZE: {}'.format(qsize+running, qsize, running));
         yield  bookItem;
