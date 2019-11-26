@@ -117,7 +117,8 @@ class DoubanBookCrawlSpider(CrawlSpider):
         l = list(res)
         urls = list(map(lambda x:x['doubanUrl'], l))
         logger.info("SMOKING GUN")
-        self.r.sadd(formalSet, *urls)
+        if(len(urls) > 0 ):
+            self.r.sadd(formalSet, *urls);
         logger.info(self.r.scard(formalSet))
 
     def __init__(self, *a, **kw):
